@@ -1,0 +1,16 @@
+{
+  "name": "context-hub-extensions",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node tools/build-extension.mjs plugins/demo.counter",
+    "hash": "node tools/hash-extension.mjs plugins/demo.counter",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "esbuild": "^0.28.2",
+    "typescript": "~6"
+  }
+}
