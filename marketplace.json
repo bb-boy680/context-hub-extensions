@@ -13,7 +13,7 @@
         "en": "Adds a counter to the header.",
         "zh-cn": "在标题栏里加一个计数器。"
       },
-      "icon": "icons/demo.counter.svg",
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJEZW1vIENvdW50ZXIiPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcng9IjE0IiBmaWxsPSIjMDA1MmZmIiAvPgogIDxwYXRoIGQ9Ik0yMCA0MFYyNG0xMiAxNlYyMG0xMiAyMHYtOCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgLz4KPC9zdmc+Cg==",
       "author": "Context Hub",
       "category": "integration",
       "permissions": ["storage.self"],
@@ -22,11 +22,34 @@
           "version": "1.0.0",
           "source": {
             "type": "git",
-            "url": "https://github.com/example/context-hub-extensions",
-            "commit": "6d968680ad695bee495fcda17e522ab106db69bb",
+            "url": "D:/work-space/context-hub-extensions",
+            "commit": "1bae8fec549b7160ba24ad440ad9785e32abb459",
             "path": "plugins/demo.counter"
           },
           "integrity": "a704e9f798edb951402f296089db47bcde591f66c47f7df353b23184319148f1"
+        }
+      ]
+    },
+    {
+      "id": "demo.other",
+      "title": { "en": "Demo Other", "zh-cn": "演示 Other" },
+      "description": {
+        "en": "A second extension for trying the market.",
+        "zh-cn": "用来试用市场的第二个扩展。"
+      },
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJEZW1vIENvdW50ZXIiPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcng9IjE0IiBmaWxsPSIjMDA1MmZmIiAvPgogIDxwYXRoIGQ9Ik0yMCA0MFYyNG0xMiAxNlYyMG0xMiAyMHYtOCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgLz4KPC9zdmc+Cg==",
+      "author": "Context Hub",
+      "category": "integration",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "source": {
+            "type": "git",
+            "url": "D:/work-space/context-hub-extensions",
+            "commit": "1bae8fec549b7160ba24ad440ad9785e32abb459",
+            "path": "plugins/demo.other"
+          },
+          "integrity": "acad641b37e811610d4dc17777c83eac19b49a5dacd5f718732bbd58f7791129"
         }
       ]
     }
