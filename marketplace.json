@@ -24,7 +24,6 @@
           "source": {
             "type": "git",
             "url": "D:/work-space/context-hub-extensions",
-            "commit": "1bae8fec549b7160ba24ad440ad9785e32abb459",
             "path": "plugins/demo.counter"
           },
           "integrity": "a704e9f798edb951402f296089db47bcde591f66c47f7df353b23184319148f1"
@@ -48,7 +47,6 @@
           "source": {
             "type": "git",
             "url": "D:/work-space/context-hub-extensions",
-            "commit": "1bae8fec549b7160ba24ad440ad9785e32abb459",
             "path": "plugins/demo.other"
           },
           "integrity": "acad641b37e811610d4dc17777c83eac19b49a5dacd5f718732bbd58f7791129"

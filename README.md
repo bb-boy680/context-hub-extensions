@@ -2,7 +2,7 @@
 
 A first-party extension market for Context Hub. The repository is static: the
 hub reads `marketplace.json` over HTTPS and installs one plugin directory at a
-time, pinned to a git commit.
+time.
 
 ## Layout
 
@@ -48,9 +48,7 @@ it names (plus anything the plugin reads at runtime) matter after install;
    pnpm build
    ```
 
-5. Add the plugin to `marketplace.json` (see below) and commit the plugin
-   directory first. The commit recorded in the index must contain that
-   directory.
+5. Add the plugin to `marketplace.json` (see below) and commit both.
 
 ## `marketplace.json`
 
@@ -73,7 +71,6 @@ it names (plus anything the plugin reads at runtime) matter after install;
           "source": {
             "type": "git",
             "url": "https://github.com/example/context-hub-extensions",
-            "commit": "<40-character commit SHA>",
             "path": "plugins/demo.counter"
           },
           "integrity": "<64-character directory hash>"
@@ -90,22 +87,21 @@ Rules enforced by the hub:
   `en` entry; locale ids are lowercase (`zh-cn`, not `zh-CN`).
 - `icon` is a relative path resolved against this file's URL, an absolute
   `https:` URL, or an inline `data:image/...;base64,` URL up to 32 KiB.
-- `source.type` is `git`; `url` must be `https:`; `commit` is a full 40-char
-  lowercase SHA; `path` stays inside the repository.
+- `source.type` is `git`; `url` must be `https:`; `path` stays inside the
+  repository.
 - `integrity` is the output of `tools/hash-extension.mjs` for the plugin
-  directory at that commit.
+  directory. The hub clones the default branch and refuses an install whose
+  hash differs, so update the index whenever the plugin changes.
 - The first listed version is the recommended one.
 
 ## Updating a plugin
 
 1. Change `src/index.tsx` and rebuild `index.js`.
-2. Commit the plugin directory.
-3. Compute the new `integrity` and point the version entry at the new commit.
-4. Commit `marketplace.json`.
+2. Compute the new `integrity` and update the version entry.
+3. Commit the plugin and `marketplace.json`.
 
-The index and the plugin must be in the same repository. A commit recorded in
-the index must be reachable from a branch: the hub fetches that exact SHA with
-`git fetch --depth 1 <url> <commit>`.
+The index and the plugin must be in the same repository; the hub clones its
+default branch and checks the directory hash.
 
 ## Replace the placeholder URL
 
@@ -116,6 +112,6 @@ or a fragment.
 
 ## Trust
 
-The hub treats a market as first-party, trusted content. It pins a commit and
-verifies the directory hash, but it does not sign or sandbox plugin code, and
-`permissions` in the manifest are display-only. Only add indexes you control.
+The hub treats a market as first-party, trusted content. It verifies the
+directory hash, but it does not sign or sandbox plugin code, and `permissions`
+in the manifest are display-only. Only add indexes you control.
