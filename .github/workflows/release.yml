@@ -48,6 +48,29 @@ jobs:
           else
             node scripts/changelog.mjs --to "$TAG" --repo "$REPO" > release-notes.md
           fi
+      - name: update changelog
+        env:
+          TAG: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          PREV=$(git describe --tags --abbrev=0 "$TAG^" 2>/dev/null || true)
+          git restore --source=HEAD -- marketplace.json plugins/*/lib 2>/dev/null || true
+          git fetch origin main
+          git checkout main
+          if [ -n "$PREV" ]; then
+            node scripts/changelog.mjs --from "$PREV" --to "$TAG" --repo "$REPO" --changelog CHANGELOG.md
+          else
+            node scripts/changelog.mjs --to "$TAG" --repo "$REPO" --changelog CHANGELOG.md
+          fi
+          if git diff --quiet -- CHANGELOG.md; then
+            echo "changelog already carries $TAG"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          git commit -m "chore(release): update changelog for $TAG [skip ci]"
+          git push origin main
       - name: publish release
         env:
           GH_TOKEN: ${{ github.token }}

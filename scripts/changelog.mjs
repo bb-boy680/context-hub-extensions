@@ -90,8 +90,11 @@ export function buildSection({ commits, tag, previousTag = "", repo, date }) {
 }
 
 export function prependChangelog(existing, section) {
-  const firstLine = section.split("\n")[0]
-  if (firstLine && existing.includes(firstLine)) return existing
+  const firstLine = section.split("\n")[0] ?? ""
+  const tag = /^## (\S+)/.exec(firstLine)?.[1]
+  /* Match by tag, not the whole heading: a re-release may carry a new date. */
+  if (tag !== undefined && existing.includes(`## ${tag} `)) return existing
+  if (tag === undefined && firstLine !== "" && existing.includes(firstLine)) return existing
 
   const header = "# Changelog\n\n"
   const body = existing.startsWith(header)
