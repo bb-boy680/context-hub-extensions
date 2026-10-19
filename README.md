@@ -13,7 +13,7 @@ marketplace.json             generated on main by CI; never edit by hand
 scripts/build-marketplace.mjs
 plugins/<id>/                one complete plugin project; <id> equals plugin.yaml's id
   package.json               project metadata; version and `main` are the only source
-  plugin.yaml                identity, API version, presentation, permissions, services
+  plugin.yaml                identity, Context Hub version range, presentation, permissions, services
   build.mjs                  esbuild build into lib/index.js
   tsconfig.json              type checking for src/
   src/                       source
@@ -77,7 +77,8 @@ id: skills.sh
 name:
   en: skills.sh
   zh-cn: skills.sh
-apiVersion: "^0.1"
+engines:
+  contextHub: ">=0.0.1-beta.5 <0.7.0"
 description:
   en: Search the public skills.sh catalog and install a result into this hub.
   zh-cn: 搜索公开的 skills.sh 技能目录，并把结果安装到本 hub。
@@ -88,6 +89,10 @@ inject: [skillRegistries]
 ```
 
 - `name` and `description` are a string or a locale table with an `en` entry.
+- `engines.contextHub` is required: the npm semver range of Context Hub
+  versions this plugin supports, e.g. `">=0.1.0 <0.7.0"`. The hub compares it
+  with its own application version and refuses to install or update a package
+  outside the range.
 - `icon` must be an image inside the plugin directory for a market plugin. The
   generator inlines it into the index; a lucide name only works after install.
 - `inject` lists every kernel service the plugin reads.
@@ -110,8 +115,8 @@ each `plugins/*/{plugin.yaml,package.json}` and writes `marketplace.json`:
 
 - `title` / `description` come from this file.
 - each plugin's `title` / `description` come from `plugin.yaml`.
-- `versions[0].version` is `package.json.version`; `apiVersion` is
-  `plugin.yaml.apiVersion`.
+- `versions[0].version` is `package.json.version`; `engines` is copied from
+  `plugin.yaml.engines`.
 - `source` points at the repository's `plugins/<id>` directory.
 - the icon is inlined as a `data:image/...;base64,` URL.
 - plugins are sorted by id; no timestamps, so two builds are byte-identical.
@@ -120,6 +125,7 @@ Rules enforced by the generator:
 
 - `plugin.json` must not exist; the format is `plugin.yaml`.
 - `plugin.yaml` must not declare `version` or `entry`.
+- `plugin.yaml.engines.contextHub` must be a non-empty semver range.
 - `package.json.version` is required, and `main` (or `index.js`) must exist.
 - `name` / `description` tables must include `en`.
 - category and permission values must match the hub's enums.

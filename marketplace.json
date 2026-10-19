@@ -30,7 +30,9 @@
       "versions": [
         {
           "version": "0.1.0",
-          "apiVersion": "^0.1",
+          "engines": {
+            "contextHub": ">=0.0.1-beta.5 <0.7.0"
+          },
           "source": {
             "type": "git",
             "url": "https://github.com/bb-boy680/context-hub-extensions",
@@ -58,7 +60,9 @@
       "versions": [
         {
           "version": "0.1.0",
-          "apiVersion": "^0.1",
+          "engines": {
+            "contextHub": ">=0.0.1-beta.5 <0.7.0"
+          },
           "source": {
             "type": "git",
             "url": "https://github.com/bb-boy680/context-hub-extensions",

@@ -189,7 +189,8 @@ async function pluginEntry(dir, defaults) {
   if (manifest.entry !== undefined) {
     fail(`plugin "${dir}" declares entry in plugin.yaml; it belongs in package.json main`)
   }
-  const apiVersion = text(manifest.apiVersion, `plugin "${dir}" apiVersion`)
+  const engines = object(manifest.engines, `plugin "${dir}" engines`)
+  const contextHub = text(engines.contextHub, `plugin "${dir}" engines.contextHub`)
   const pkg = await packageFile(pluginDir, dir)
   const author =
     manifest.author === undefined
@@ -219,7 +220,7 @@ async function pluginEntry(dir, defaults) {
     versions: [
       {
         version: pkg.version,
-        apiVersion,
+        engines: { contextHub },
         source: {
           type: "git",
           url: defaults.repository,
