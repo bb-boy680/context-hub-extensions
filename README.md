@@ -5,11 +5,15 @@ workspace: every plugin under `plugins/` is a complete, independently
 buildable package, and the hub reads the generated `marketplace.json` to list
 and install one plugin directory at a time.
 
+See [docs/publishing.md](docs/publishing.md) for the pull-request and release
+flow, including the branch protection rules.
+
 ## Layout
 
 ```text
 marketplace.yaml             hand-written market metadata (title, repository, author)
 marketplace.json             built by CI on the pull request; never edit by hand
+docs/publishing.md           how to publish a plugin and cut a release
 scripts/build-marketplace.mjs
 plugins/<id>/                one complete plugin project; <id> equals plugin.yaml's id
   package.json               project metadata; version and `main` are the only source
