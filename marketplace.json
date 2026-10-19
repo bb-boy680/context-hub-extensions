@@ -1,0 +1,71 @@
+{
+  "format": 1,
+  "title": {
+    "en": "Context Hub Extensions",
+    "zh-cn": "Context Hub 扩展"
+  },
+  "description": {
+    "en": "First-party extensions for Context Hub.",
+    "zh-cn": "Context Hub 的第一方扩展。"
+  },
+  "plugins": [
+    {
+      "id": "claude.code",
+      "title": {
+        "en": "Claude Code",
+        "zh-cn": "Claude Code"
+      },
+      "description": {
+        "en": "Deliver skills, memory and MCP servers to Claude Code.",
+        "zh-cn": "将技能、记忆和 MCP 服务器交付给 Claude Code。"
+      },
+      "icon": "data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjU2IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSI1NiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBzdHlsZT0iZmxleDogMCAwIGF1dG87IGxpbmUtaGVpZ2h0OiAxOyI+PHRpdGxlPkNsYXVkZSBDb2RlPC90aXRsZT48cGF0aCBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yMC45OTggMTAuOTQ5SDI0djMuMTAyaC0zdjMuMDI4aC0xLjQ4N1YyMEgxOHYtMi45MjFoLTEuNDg3VjIwSDE1di0yLjkyMUg5VjIwSDcuNDg4di0yLjkyMUg2VjIwSDQuNDg3di0yLjkyMUgzVjE0LjA1SDBWMTAuOTVoM1Y1aDE3Ljk5OHY1Ljk0OXpNNiAxMC45NDloMS40ODhWOC4xMDJINnYyLjg0N3ptMTAuNTEgMEgxOFY4LjEwMmgtMS40OXYyLjg0N3oiIGZpbGw9IiNEOTc3NTciIGZpbGwtcnVsZT0iZXZlbm9kZCI+PC9wYXRoPjwvc3ZnPg==",
+      "author": "Context Hub",
+      "category": "agent",
+      "permissions": [
+        "assets.read",
+        "assets.write",
+        "filesystem"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0",
+          "apiVersion": "^0.1",
+          "source": {
+            "type": "git",
+            "url": "https://github.com/bb-boy680/context-hub-extensions",
+            "path": "plugins/claude.code"
+          }
+        }
+      ]
+    },
+    {
+      "id": "skills.sh",
+      "title": {
+        "en": "skills.sh",
+        "zh-cn": "skills.sh"
+      },
+      "description": {
+        "en": "Search the public skills.sh catalog and install a result into this hub.",
+        "zh-cn": "搜索公开的 skills.sh 技能目录，并把结果安装到本 hub。"
+      },
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDUyZmYiIHN0cm9rZS13aWR0aD0iMS44IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjx0aXRsZT5za2lsbHMuc2g8L3RpdGxlPjxwYXRoIGQ9Im0yIDcgNC40MS00LjQxQTIgMiAwIDAgMSA3LjgzIDJoOC4zNGEyIDIgMCAwIDEgMS40Mi41OUwyMiA3Ii8+PHBhdGggZD0iTTQgMTJ2OGEyIDIgMCAwIDAgMiAyaDEyYTIgMiAwIDAgMCAyLTJ2LTgiLz48cGF0aCBkPSJNMTUgMjJ2LTRhMiAyIDAgMCAwLTItMmgtMmEyIDIgMCAwIDAtMiAydjQiLz48cGF0aCBkPSJNMiA3aDIwIi8+PHBhdGggZD0iTTIyIDd2M2EyIDIgMCAwIDEtMiAyIDIuNyAyLjcgMCAwIDEtMS41OS0uNjMuNy43IDAgMCAwLS44MiAwQTIuNyAyLjcgMCAwIDEgMTYgMTJhMi43IDIuNyAwIDAgMS0xLjU5LS42My43LjcgMCAwIDAtLjgyIDBBMi43IDIuNyAwIDAgMSAxMiAxMmEyLjcgMi43IDAgMCAxLTEuNTktLjYzLjcuNyAwIDAgMC0uODIgMEEyLjcgMi43IDAgMCAxIDggMTJhMi43IDIuNyAwIDAgMS0xLjU5LS42My43LjcgMCAwIDAtLjgyIDBBMi43IDIuNyAwIDAgMSA0IDEyYTIgMiAwIDAgMS0yLTJWNyIvPjwvc3ZnPgo=",
+      "author": "Context Hub",
+      "category": "source",
+      "permissions": [
+        "network"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0",
+          "apiVersion": "^0.1",
+          "source": {
+            "type": "git",
+            "url": "https://github.com/bb-boy680/context-hub-extensions",
+            "path": "plugins/skills.sh"
+          }
+        }
+      ]
+    }
+  ]
+}
