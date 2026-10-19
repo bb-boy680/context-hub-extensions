@@ -1,0 +1,13 @@
+id: claude.code
+name:
+  en: Claude Code
+  zh-cn: Claude Code
+apiVersion: "^0.1"
+description:
+  en: Deliver skills, memory and MCP servers to Claude Code.
+  zh-cn: 将技能、记忆和 MCP 服务器交付给 Claude Code。
+icon: assets/icon.svg
+category: agent
+permissions: [assets.read, assets.write, filesystem]
+inject: [skills, prompts, mcp, plugins, targets, locales]
+author: Context Hub

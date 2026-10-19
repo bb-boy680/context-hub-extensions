@@ -1,0 +1,10 @@
+id: demo.other
+name:
+  en: Demo Other
+  zh-cn: 演示其他
+apiVersion: "^0.1"
+description:
+  en: A second extension for trying the market.
+  zh-cn: 用于试用市场的第二个扩展。
+icon: assets/icon.svg
+category: integration

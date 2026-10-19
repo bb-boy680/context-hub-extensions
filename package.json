@@ -5,7 +5,11 @@
   "packageManager": "pnpm@10.33.4",
   "engines": { "node": ">=20" },
   "scripts": {
-    "build": "pnpm -r build",
+    "build": "pnpm -r build && pnpm build:marketplace",
+    "build:marketplace": "node scripts/build-marketplace.mjs",
     "typecheck": "pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "js-yaml": "^5.5.0"
   }
 }

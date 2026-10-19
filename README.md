@@ -2,23 +2,25 @@
 
 A first-party extension market for Context Hub. The repository is a pnpm
 workspace: every plugin under `plugins/` is a complete, independently
-buildable package, and the hub reads `marketplace.json` to list and install
-one plugin directory at a time.
+buildable package, and the hub reads the generated `marketplace.json` to list
+and install one plugin directory at a time.
 
 ## Layout
 
 ```text
-marketplace.json          the index the hub reads
-icons/                    list images shown before a plugin is installed
-plugins/<id>/             one complete plugin project; <id> equals plugin.json's id
-  package.json            package metadata; main names the built entry
-  build.mjs               esbuild build into lib/index.js
-  tsconfig.json           type checking for src/
-  src/                    source
-  plugin.json             kernel manifest; entry equals package.json main
-  lib/index.js            committed build output the hub loads
-  README.md               what this plugin does
-pnpm-workspace.yaml       plugins/* are workspace packages
+marketplace.yaml             hand-written market metadata (title, repository, author)
+marketplace.json             generated index; never edit by hand
+scripts/build-marketplace.mjs
+plugins/<id>/                one complete plugin project; <id> equals plugin.yaml's id
+  package.json               project metadata; version and `main` are the only source
+  plugin.yaml                identity, API version, presentation, permissions, services
+  build.mjs                  esbuild build into lib/index.js
+  tsconfig.json              type checking for src/
+  src/                       source
+  assets/                    icons and other pictures the plugin ships
+  lib/index.js               committed build output the hub loads
+  README.md                  what this plugin does
+pnpm-workspace.yaml          plugins/* are workspace packages
 ```
 
 `lib/` is committed because Context Hub installs by cloning the repository and
@@ -28,7 +30,7 @@ step that could carry the build output.
 ## Write a plugin
 
 1. Copy `plugins/demo.counter` and change the directory name, `package.json`'s
-   `name` and `version`, `plugin.json`'s `id` and `version`, and the entry code.
+   `name` and `version`, `plugin.yaml`'s `id` and metadata, and the entry code.
    The directory name must equal the manifest id.
 2. Write normal React in `src/index.tsx`:
 
@@ -53,76 +55,91 @@ step that could carry the build output.
    pnpm build
    ```
 
-5. Keep `package.json`'s `main` and `plugin.json`'s `entry` identical
-   (`lib/index.js`). The hub refuses to install a plugin whose two declarations
-   disagree.
-6. Add the plugin to `marketplace.json` (see below) and commit the source and
-   the built `lib/index.js`.
+5. Keep `package.json`'s `main` pointing at the built entry
+   (normally `lib/index.js`). Do not add `version` or `entry` to
+   `plugin.yaml`; the hub refuses a manifest that declares them.
+6. Commit the source, the built `lib/index.js`, and the regenerated
+   `marketplace.json`.
 
-## `marketplace.json`
+## `plugin.yaml`
 
-```json
-{
-  "format": 1,
-  "title": { "en": "Context Hub Extensions", "zh-cn": "Context Hub 扩展" },
-  "plugins": [
-    {
-      "id": "demo.counter",
-      "title": { "en": "Demo Counter", "zh-cn": "演示计数器" },
-      "description": { "en": "Adds a counter to the header.", "zh-cn": "在标题栏里加一个计数器。" },
-      "icon": "icons/demo.counter.svg",
-      "author": "Context Hub",
-      "category": "integration",
-      "permissions": ["storage.self"],
-      "versions": [
-        {
-          "version": "1.0.0",
-          "apiVersion": "^0.1",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/example/context-hub-extensions",
-            "path": "plugins/demo.counter"
-          }
-        }
-      ]
-    }
-  ]
-}
+```yaml
+id: demo.counter
+name:
+  en: Demo Counter
+  zh-cn: 演示计数器
+apiVersion: "^0.1"
+description:
+  en: Adds a counter to the header.
+  zh-cn: 在标题栏里加一个计数器。
+icon: assets/icon.svg
+category: integration
+permissions: [storage.self]
+inject: [header]
 ```
 
-Rules enforced by the hub:
+- `name` and `description` are a string or a locale table with an `en` entry.
+- `icon` must be an image inside the plugin directory for a market plugin. The
+  generator inlines it into the index; a lucide name only works after install.
+- `inject` lists every kernel service the plugin reads.
 
-- `title` and `description` are strings or `{ "<locale>": "text" }` with an
-  `en` entry; locale ids are lowercase (`zh-cn`, not `zh-CN`).
-- `icon` is a relative path resolved against this file's URL, an absolute
-  `https:` URL, or an inline `data:image/...;base64,` URL up to 32 KiB.
-- `source.type` is `git`; `url` must be `https:`; `path` stays inside the
-  repository.
-- `version` must equal the plugin's `package.json` and `plugin.json` versions.
-  The hub reads both files after cloning and refuses an install when they
-  disagree; there is no separate content hash.
-- The first listed version is the recommended one.
+## `marketplace.yaml`
+
+```yaml
+title:
+  en: Context Hub Extensions
+  zh-cn: Context Hub 扩展
+description:
+  en: First-party extensions for Context Hub.
+  zh-cn: Context Hub 的第一方扩展。
+repository: https://github.com/bb-boy680/context-hub-extensions
+author: Context Hub
+```
+
+`pnpm build` runs `scripts/build-marketplace.mjs`, which reads this file and
+each `plugins/*/{plugin.yaml,package.json}` and writes `marketplace.json`:
+
+- `title` / `description` come from this file.
+- each plugin's `title` / `description` come from `plugin.yaml`.
+- `versions[0].version` is `package.json.version`; `apiVersion` is
+  `plugin.yaml.apiVersion`.
+- `source` points at the repository's `plugins/<id>` directory.
+- the icon is inlined as a `data:image/...;base64,` URL.
+- plugins are sorted by id; no timestamps, so two builds are byte-identical.
+
+Rules enforced by the generator:
+
+- `plugin.json` must not exist; the format is `plugin.yaml`.
+- `plugin.yaml` must not declare `version` or `entry`.
+- `package.json.version` is required, and `main` (or `index.js`) must exist.
+- `name` / `description` tables must include `en`.
+- category and permission values must match the hub's enums.
+- `marketplace.json` is refused when a plugin is incomplete, so a broken
+  package never reaches the index.
+
+For local verification against a checkout, generate an index whose source
+points at that checkout instead of the published URL:
+
+```sh
+MARKETPLACE_REPOSITORY="$(pwd)" node scripts/build-marketplace.mjs
+```
+
+Do not commit that variant; the committed index must name the published HTTPS
+repository.
 
 ## Updating a plugin
 
-1. Change `src/index.tsx` and rebuild: `pnpm build`.
-2. Raise the version in the plugin's `package.json` and `plugin.json` together.
-3. Update the version entry in `marketplace.json`.
-4. Commit the plugin source, `lib/index.js` and `marketplace.json`.
+1. Change `src/` and run `pnpm build` from the repository root (this rebuilds
+   every plugin and regenerates the index).
+2. Raise the version in the plugin's `package.json`.
+3. Commit the source, `lib/index.js` and `marketplace.json`.
 
 The index and the plugins must be in the same repository; the hub clones its
-default branch and checks the directory hash.
-
-## Replace the placeholder URL
-
-`marketplace.json` currently points at the local checkout
-`D:/work-space/context-hub-extensions` so the market can be tested without a
-network. Replace it with the real HTTPS repository URL before publishing. The
-URL must not contain credentials, a query or a fragment.
+default branch.
 
 ## Trust
 
 The hub treats a market as first-party, trusted content. It checks that the
-index, `package.json` and `plugin.json` agree on the version, but it does not
-sign or sandbox plugin code, and `permissions` in the manifest are display-only.
-Only add indexes you control.
+index version equals `package.json` and that permissions match the manifest,
+but it does not sign or sandbox plugin code, and `permissions` in the manifest
+are display-only. Only add indexes you control.
