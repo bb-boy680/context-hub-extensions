@@ -152,9 +152,36 @@ on the pull request names the published HTTPS repository.
 3. Open a pull request to main. The workflow runs lint, typecheck, test and
    build, then commits `lib/` and `marketplace.json` back to the pull request
    branch. Merge after the checks pass.
+4. Tag the merge commit when this is a release; see below.
 
 The index and the plugins must be in the same repository; the hub clones its
 default branch.
+
+## Release
+
+The market updates as soon as a pull request merges; a tag is only for the
+GitHub Release and the changelog.
+
+1. Merge the plugin pull request. Its branch already carries the CI-built
+   `lib/` and `marketplace.json`.
+2. Tag the merge commit and push the tag:
+
+   ```sh
+   git checkout main
+   git pull --ff-only
+   git tag v0.2.0
+   git push origin v0.2.0
+   ```
+
+3. `release.yml` runs lint, typecheck, test and build, creates (or updates) the
+   GitHub Release from the commits since the previous tag, then opens a
+   `chore/release-vX` pull request that updates `CHANGELOG.md` and merges it.
+   That pull request is created with the Actions token, so it has no CI run of
+   its own; main still only ever receives pull requests.
+
+Tags point at commits that are already on main, so branch protection does not
+affect them. A tag without a merged release pull request would name a commit
+whose artifacts are stale; tag after the merge.
 
 ## CI
 
@@ -164,10 +191,13 @@ install, lint, typecheck, test, build, then commit the generated `lib/` and
 `[skip ci]` and an actor guard keep that commit from starting another run. The
 job skips pull requests from forks, which the token cannot write.
 
-main requires a pull request and has no bypass list, so the workflow never
-pushes there. A human push while a build is running can make the bot push
-non-fast-forward; update the branch and let the next run rebuild. Do not
-force-push.
+main requires a pull request and has no bypass list, so neither workflow pushes
+there directly. The release workflow opens a pull request for `CHANGELOG.md`
+and merges it with the Actions token; that token's pull request does not start
+another workflow run.
+
+A human push while a build is running can make the bot push non-fast-forward;
+update the branch and let the next run rebuild. Do not force-push.
 
 ## Trust
 
