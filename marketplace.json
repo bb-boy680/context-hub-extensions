@@ -29,7 +29,7 @@
       ],
       "versions": [
         {
-          "version": "0.1.0",
+          "version": "0.1.1",
           "engines": {
             "contextHub": ">=0.0.1-beta.5 <0.7.0"
           },
