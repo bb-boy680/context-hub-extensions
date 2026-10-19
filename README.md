@@ -1,31 +1,36 @@
 # Context Hub Extensions
 
-A first-party extension market for Context Hub. The repository is static: the
-hub reads `marketplace.json` over HTTPS and installs one plugin directory at a
-time.
+A first-party extension market for Context Hub. The repository is a pnpm
+workspace: every plugin under `plugins/` is a complete, independently
+buildable package, and the hub reads `marketplace.json` to list and install
+one plugin directory at a time.
 
 ## Layout
 
 ```text
 marketplace.json          the index the hub reads
 icons/                    list images shown before a plugin is installed
-plugins/<id>/             one extension per directory; <id> equals plugin.json's id
-  plugin.json             kernel manifest
-  src/                    source (not installed; kept for development)
-  index.js                committed build output (installed)
+plugins/<id>/             one complete plugin project; <id> equals plugin.json's id
+  package.json            package metadata; main names the built entry
+  build.mjs               esbuild build into lib/index.js
+  tsconfig.json           type checking for src/
+  src/                    source
+  plugin.json             kernel manifest; entry equals package.json main
+  lib/index.js            committed build output the hub loads
   README.md               what this plugin does
-tools/build-extension.mjs builds src/index.tsx into index.js
 tools/hash-extension.mjs  computes the integrity value stored in the index
+pnpm-workspace.yaml       plugins/* are workspace packages
 ```
 
-A plugin directory is copied to the hub as-is. Only `plugin.json` and the files
-it names (plus anything the plugin reads at runtime) matter after install;
-`src/` and `README.md` are harmless passengers.
+`lib/` is committed because Context Hub installs by cloning the repository and
+importing the entry file directly. Unlike an npm package, there is no publish
+step that could carry the build output.
 
 ## Write a plugin
 
-1. Copy `plugins/demo.counter` and change the directory name, `plugin.json`'s
-   `id`, and the entry code. The directory name must equal the id.
+1. Copy `plugins/demo.counter` and change the directory name, `package.json`'s
+   `name` and `version`, `plugin.json`'s `id` and `version`, and the entry code.
+   The directory name must equal the manifest id.
 2. Write normal React in `src/index.tsx`:
 
    ```tsx
@@ -41,14 +46,19 @@ it names (plus anything the plugin reads at runtime) matter after install;
    through an import map; bundling a copy would break hooks.
 3. Do not import any other package. UI components come from `ctx.ui`, icons
    from `ctx.icons` / `ctx.icon(name)`.
-4. Build and commit the output:
+4. Build and check:
 
    ```sh
    pnpm install
+   pnpm typecheck
    pnpm build
    ```
 
-5. Add the plugin to `marketplace.json` (see below) and commit both.
+5. Keep `package.json`'s `main` and `plugin.json`'s `entry` identical
+   (`lib/index.js`). The hub refuses to install a plugin whose two declarations
+   disagree.
+6. Add the plugin to `marketplace.json` (see below) and commit the source and
+   the built `lib/index.js`.
 
 ## `marketplace.json`
 
@@ -68,6 +78,7 @@ it names (plus anything the plugin reads at runtime) matter after install;
       "versions": [
         {
           "version": "1.0.0",
+          "apiVersion": "^0.1",
           "source": {
             "type": "git",
             "url": "https://github.com/example/context-hub-extensions",
@@ -90,25 +101,27 @@ Rules enforced by the hub:
 - `source.type` is `git`; `url` must be `https:`; `path` stays inside the
   repository.
 - `integrity` is the output of `tools/hash-extension.mjs` for the plugin
-  directory. The hub clones the default branch and refuses an install whose
-  hash differs, so update the index whenever the plugin changes.
+  directory, including `lib/`. The hub clones the default branch and refuses an
+  install whose hash differs, so update the index whenever the plugin changes.
 - The first listed version is the recommended one.
 
 ## Updating a plugin
 
-1. Change `src/index.tsx` and rebuild `index.js`.
-2. Compute the new `integrity` and update the version entry.
-3. Commit the plugin and `marketplace.json`.
+1. Change `src/index.tsx` and rebuild: `pnpm build`.
+2. Compute the new `integrity`: `pnpm --filter <plugin> hash` or
+   `node tools/hash-extension.mjs plugins/<id>`.
+3. Update the version entry in `marketplace.json`.
+4. Commit the plugin source, `lib/index.js` and `marketplace.json`.
 
-The index and the plugin must be in the same repository; the hub clones its
+The index and the plugins must be in the same repository; the hub clones its
 default branch and checks the directory hash.
 
 ## Replace the placeholder URL
 
-`marketplace.json` currently points at
-`https://github.com/example/context-hub-extensions`. Replace it with the real
-repository URL before publishing. The URL must not contain credentials, a query
-or a fragment.
+`marketplace.json` currently points at the local checkout
+`D:/work-space/context-hub-extensions` so the market can be tested without a
+network. Replace it with the real HTTPS repository URL before publishing. The
+URL must not contain credentials, a query or a fragment.
 
 ## Trust
 

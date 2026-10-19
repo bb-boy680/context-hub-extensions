@@ -1,4 +1,4 @@
-// ../context-hub-extensions/plugins/demo.counter/src/index.tsx
+// src/index.tsx
 import { useState } from "react";
 import { jsxs } from "react/jsx-runtime";
 function Counter() {

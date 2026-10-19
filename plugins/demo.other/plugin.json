@@ -5,6 +5,6 @@
   "apiVersion": "^0.1",
   "description": "A second extension for trying the market.",
   "icon": "sparkles",
-  "entry": "index.js",
+  "entry": "lib/index.js",
   "category": "integration"
 }

@@ -1,12 +1,16 @@
 # demo.counter
 
-A minimal extension written as a normal React component.
+A complete plugin project written as a normal React component.
 
-- `src/index.tsx` is the source. It imports `react` and uses JSX like any other
-  React project.
-- `index.js` is the build output committed alongside it, so the hub needs no
-  build tools to install this plugin.
-- `plugin.json` is the kernel manifest. `id` must equal the directory name.
+```text
+package.json    package metadata; main is the runtime entry (lib/index.js)
+build.mjs       esbuild build into lib/index.js
+tsconfig.json   type checking for src/
+src/index.tsx   source; imports React and uses JSX like any React project
+plugin.json     kernel manifest; entry must equal package.json main
+lib/index.js    committed build output the hub loads
+README.md       this file
+```
 
 ## Build
 
@@ -15,9 +19,16 @@ pnpm install
 pnpm build
 ```
 
-The build marks `react`, `react-dom`, `react/jsx-runtime` and
-`react/jsx-dev-runtime` as external. The hub serves those names from its own
-React instance through the page's import map, so the plugin must not bundle
-them.
+From this directory the same commands work with `pnpm build`, `pnpm typecheck`
+and `pnpm hash`; the repository root runs them for every plugin with `pnpm -r`.
 
-Do not edit `index.js` by hand; change `src/index.tsx` and rebuild.
+`lib/index.js` is committed because Context Hub installs by cloning the
+repository and importing the entry file directly. There is no npm publish step
+that could carry the build output, so the built file has to be in git.
+
+Do not edit `lib/index.js` by hand. Change `src/index.tsx`, run `pnpm build`,
+then `pnpm hash` and update the integrity value in `marketplace.json`.
+
+React, `react-dom`, `react/jsx-runtime` and `react/jsx-dev-runtime` stay
+external. The hub page maps those names to its own single React instance
+through an import map; bundling a copy would break hooks.

@@ -1,22 +1,21 @@
 /**
- * Build one plugin's `src/index.tsx` into the `index.js` the hub installs.
+ * Build this plugin into the `lib/index.js` the hub installs.
  *
  * React and its runtime modules stay external: the hub page maps those names
  * to its own single React instance, and bundling a second copy would break
- * hooks.
+ * hooks. `absWorkingDir` keeps the bundle's path banner independent of the
+ * cwd, so the same source produces the same bytes on every machine.
  */
 import { build } from "esbuild"
 import path from "node:path"
+import { fileURLToPath } from "node:url"
 
-const dir = process.argv[2]
-if (dir === undefined) {
-  console.error("usage: node tools/build-extension.mjs <plugin-dir>")
-  process.exit(2)
-}
+const dir = path.dirname(fileURLToPath(import.meta.url))
 
 await build({
-  entryPoints: [path.join(dir, "src", "index.tsx")],
-  outfile: path.join(dir, "index.js"),
+  absWorkingDir: dir,
+  entryPoints: ["src/index.tsx"],
+  outfile: path.join(dir, "lib", "index.js"),
   bundle: true,
   format: "esm",
   platform: "browser",
