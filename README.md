@@ -9,7 +9,7 @@ and install one plugin directory at a time.
 
 ```text
 marketplace.yaml             hand-written market metadata (title, repository, author)
-marketplace.json             generated on main by CI; never edit by hand
+marketplace.json             built by CI on the pull request; never edit by hand
 scripts/build-marketplace.mjs
 plugins/<id>/                one complete plugin project; <id> equals plugin.yaml's id
   package.json               project metadata; version and `main` are the only source
@@ -18,16 +18,19 @@ plugins/<id>/                one complete plugin project; <id> equals plugin.yam
   tsconfig.json              type checking for src/
   src/                       source
   assets/                    icons and other pictures the plugin ships
-  lib/index.js               generated on main by CI; ignored on source branches
+  lib/index.js               built by CI on the pull request; ignored on source branches
   README.md                  what this plugin does
 pnpm-workspace.yaml          plugins/* are workspace packages
 ```
 
 Context Hub installs by cloning the repository's default branch and importing
 the entry file directly. The main branch therefore carries `lib/` and
-`marketplace.json`, but they are produced by the build workflow, not committed
-from a source branch. `.gitignore` keeps them out of local commits; the bot
-commit on main is the only copy the hub reads.
+`marketplace.json`, built by the workflow on the pull request branch and merged
+with it. `.gitignore` keeps them out of local commits; the bot commit on the PR
+branch is the only copy the hub reads after the merge.
+
+Main is protected by a ruleset that requires a pull request and has no bypass
+list. Nobody pushes to main directly, administrators included.
 
 ## Write a plugin
 
@@ -67,8 +70,8 @@ commit on main is the only copy the hub reads.
 5. Keep `package.json`'s `main` pointing at the built entry
    (normally `lib/index.js`). Do not add `version` or `entry` to
    `plugin.yaml`; the hub refuses a manifest that declares them.
-6. Commit the source only. The main-branch workflow builds and commits
-   `lib/index.js` and `marketplace.json`.
+6. Commit the source only. The pull-request workflow builds and commits
+   `lib/index.js` and `marketplace.json` to the PR branch.
 
 ## `plugin.yaml`
 
@@ -140,29 +143,31 @@ MARKETPLACE_REPOSITORY="$(pwd)" node scripts/build-marketplace.mjs
 ```
 
 Do not commit that variant, or any other `marketplace.json`; the CI-built index
-on main names the published HTTPS repository.
+on the pull request names the published HTTPS repository.
 
 ## Updating a plugin
 
 1. Change `src/` and raise the version in the plugin's `package.json`.
 2. Commit the source only.
-3. Merge to main. The workflow runs lint, typecheck, test and build, then
-   commits `lib/` and `marketplace.json` back to main.
+3. Open a pull request to main. The workflow runs lint, typecheck, test and
+   build, then commits `lib/` and `marketplace.json` back to the pull request
+   branch. Merge after the checks pass.
 
 The index and the plugins must be in the same repository; the hub clones its
 default branch.
 
 ## CI
 
-`.github/workflows/build-market.yml` runs on every push to main: install,
-lint, typecheck, test, build, then commit the generated `lib/` and
-`marketplace.json` back as `github-actions[bot]`. `[skip ci]` and an actor guard
-keep that commit from starting another run.
+`.github/workflows/build-market.yml` runs on every pull request to main:
+install, lint, typecheck, test, build, then commit the generated `lib/` and
+`marketplace.json` back to the pull request branch as `github-actions[bot]`.
+`[skip ci]` and an actor guard keep that commit from starting another run. The
+job skips pull requests from forks, which the token cannot write.
 
-The workflow needs write access to main. If branch protection blocks direct
-pushes, allow the Actions bot to bypass it; otherwise the commit step fails and
-main keeps the old artifacts. A human push while a build is running can make the
-bot push non-fast-forward; the next push rebuilds. Do not force-push.
+main requires a pull request and has no bypass list, so the workflow never
+pushes there. A human push while a build is running can make the bot push
+non-fast-forward; update the branch and let the next run rebuild. Do not
+force-push.
 
 ## Trust
 

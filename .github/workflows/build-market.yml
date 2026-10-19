@@ -1,36 +1,41 @@
-# Build the installable market on main.
+# Build the installable market on a pull request.
 #
 # Source branches do not commit `plugins/*/lib/` or `marketplace.json`; both are
-# ignored there. This workflow runs the checks on every push to main, builds the
-# plugins and the index, and commits those generated files back as the bot. The
-# hub reads the raw index from main and clones main for the plugin files, so
-# this bot commit is what makes an install possible.
+# ignored there. This workflow runs the checks on every pull request to main,
+# builds the plugins and the index, and commits those generated files back to
+# the pull request's own branch as the bot. The hub reads the raw index from
+# main and clones main for the plugin files, so the artifacts have to be in the
+# branch before it merges.
 #
-# The push must be allowed by branch protection: give github-actions[bot] write
-# access (or a bypass) on main, otherwise the commit step fails and main keeps
-# the old artifacts. A push generated with GITHUB_TOKEN does not start another
-# workflow run; `[skip ci]` and the actor guard are a second line of defense.
+# main is protected by the "main: pull requests only" ruleset: nobody,
+# administrators included, pushes to it directly, and the ruleset has no bypass
+# list. This workflow therefore never pushes to main. The bot commit to the PR
+# branch carries `[skip ci]`, and the actor guard is a second line of defense.
+#
+# A pull request from a fork cannot be written with GITHUB_TOKEN, so the job
+# skips forks; this repository expects first-party branches.
 name: build-market
 
 on:
-  push:
+  pull_request:
     branches: [main]
 
 permissions:
   contents: write
 
 concurrency:
-  group: build-market-${{ github.ref }}
+  group: build-market-${{ github.head_ref }}
   cancel-in-progress: false
 
 jobs:
   build:
-    if: github.actor != 'github-actions[bot]'
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
       - uses: pnpm/action-setup@v4
         with:
@@ -54,4 +59,4 @@ jobs:
             exit 0
           fi
           git commit -m "chore: build market artifacts [skip ci]"
-          git push
+          git push origin HEAD:${{ github.head_ref }}
