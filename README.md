@@ -18,7 +18,6 @@ plugins/<id>/             one complete plugin project; <id> equals plugin.json's
   plugin.json             kernel manifest; entry equals package.json main
   lib/index.js            committed build output the hub loads
   README.md               what this plugin does
-tools/hash-extension.mjs  computes the integrity value stored in the index
 pnpm-workspace.yaml       plugins/* are workspace packages
 ```
 
@@ -83,8 +82,7 @@ step that could carry the build output.
             "type": "git",
             "url": "https://github.com/example/context-hub-extensions",
             "path": "plugins/demo.counter"
-          },
-          "integrity": "<64-character directory hash>"
+          }
         }
       ]
     }
@@ -100,16 +98,15 @@ Rules enforced by the hub:
   `https:` URL, or an inline `data:image/...;base64,` URL up to 32 KiB.
 - `source.type` is `git`; `url` must be `https:`; `path` stays inside the
   repository.
-- `integrity` is the output of `tools/hash-extension.mjs` for the plugin
-  directory, including `lib/`. The hub clones the default branch and refuses an
-  install whose hash differs, so update the index whenever the plugin changes.
+- `version` must equal the plugin's `package.json` and `plugin.json` versions.
+  The hub reads both files after cloning and refuses an install when they
+  disagree; there is no separate content hash.
 - The first listed version is the recommended one.
 
 ## Updating a plugin
 
 1. Change `src/index.tsx` and rebuild: `pnpm build`.
-2. Compute the new `integrity`: `pnpm --filter <plugin> hash` or
-   `node tools/hash-extension.mjs plugins/<id>`.
+2. Raise the version in the plugin's `package.json` and `plugin.json` together.
 3. Update the version entry in `marketplace.json`.
 4. Commit the plugin source, `lib/index.js` and `marketplace.json`.
 
@@ -125,6 +122,7 @@ URL must not contain credentials, a query or a fragment.
 
 ## Trust
 
-The hub treats a market as first-party, trusted content. It verifies the
-directory hash, but it does not sign or sandbox plugin code, and `permissions`
-in the manifest are display-only. Only add indexes you control.
+The hub treats a market as first-party, trusted content. It checks that the
+index, `package.json` and `plugin.json` agree on the version, but it does not
+sign or sandbox plugin code, and `permissions` in the manifest are display-only.
+Only add indexes you control.

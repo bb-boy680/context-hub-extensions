@@ -19,15 +19,16 @@ pnpm install
 pnpm build
 ```
 
-From this directory the same commands work with `pnpm build`, `pnpm typecheck`
-and `pnpm hash`; the repository root runs them for every plugin with `pnpm -r`.
+From this directory the same commands work with `pnpm build` and
+`pnpm typecheck`; the repository root runs them for every plugin with `pnpm -r`.
 
 `lib/index.js` is committed because Context Hub installs by cloning the
 repository and importing the entry file directly. There is no npm publish step
 that could carry the build output, so the built file has to be in git.
 
 Do not edit `lib/index.js` by hand. Change `src/index.tsx`, run `pnpm build`,
-then `pnpm hash` and update the integrity value in `marketplace.json`.
+then raise the version in `package.json` and `plugin.json` together and update
+the version entry in `marketplace.json`.
 
 React, `react-dom`, `react/jsx-runtime` and `react/jsx-dev-runtime` stay
 external. The hub page maps those names to its own single React instance

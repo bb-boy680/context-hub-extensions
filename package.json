@@ -6,7 +6,6 @@
   "engines": { "node": ">=20" },
   "scripts": {
     "build": "pnpm -r build",
-    "typecheck": "pnpm -r typecheck",
-    "hash": "pnpm -r hash"
+    "typecheck": "pnpm -r typecheck"
   }
 }

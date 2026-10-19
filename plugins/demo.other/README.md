@@ -22,4 +22,5 @@ pnpm build
 
 `lib/index.js` is committed because Context Hub installs by cloning the
 repository and importing the entry file directly. After changing the source,
-run `pnpm build`, then `pnpm hash`, and update `marketplace.json`.
+run `pnpm build`, raise the version in `package.json` and `plugin.json`
+together, and update the version entry in `marketplace.json`.

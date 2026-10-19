@@ -25,8 +25,7 @@
             "type": "git",
             "url": "D:/work-space/context-hub-extensions",
             "path": "plugins/demo.counter"
-          },
-          "integrity": "2becf9e2633950b81dda0819c8d4e52281b2b5d52ac8f89ad631cf1441510855"
+          }
         }
       ]
     },
@@ -48,8 +47,7 @@
             "type": "git",
             "url": "D:/work-space/context-hub-extensions",
             "path": "plugins/demo.other"
-          },
-          "integrity": "6bd7bb96780932c5b025bc57fb325014384aeabe5443f2e012bd243bc19dc040"
+          }
         }
       ]
     }

@@ -8,8 +8,7 @@
   "files": ["lib", "src", "plugin.json", "README.md"],
   "scripts": {
     "build": "node build.mjs",
-    "typecheck": "tsc --noEmit",
-    "hash": "node ../../tools/hash-extension.mjs ."
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/react": "^19",
