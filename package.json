@@ -7,9 +7,15 @@
   "scripts": {
     "build": "pnpm -r build && pnpm build:marketplace",
     "build:marketplace": "node scripts/build-marketplace.mjs",
+    "lint": "eslint plugins",
+    "test": "pnpm -r --if-present test",
     "typecheck": "pnpm -r typecheck"
   },
   "devDependencies": {
-    "js-yaml": "^5.5.0"
+    "@eslint/js": "^10",
+    "eslint": "^10",
+    "globals": "^17",
+    "js-yaml": "^5.5.0",
+    "typescript-eslint": "^8"
   }
 }

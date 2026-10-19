@@ -1,3 +1,7 @@
 node_modules/
 .DS_Store
 *.log
+
+# Built by the main-branch workflow and committed by the bot.
+plugins/*/lib/
+/marketplace.json

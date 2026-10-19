@@ -1,0 +1,13 @@
+id: skills.sh
+name:
+  en: skills.sh
+  zh-cn: skills.sh
+apiVersion: "^0.1"
+description:
+  en: Search the public skills.sh catalog and install a result into this hub.
+  zh-cn: 搜索公开的 skills.sh 技能目录，并把结果安装到本 hub。
+icon: assets/icon.svg
+category: source
+permissions: [network]
+inject: [skillRegistries]
+author: Context Hub

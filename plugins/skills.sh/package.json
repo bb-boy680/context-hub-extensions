@@ -1,6 +1,6 @@
 {
-  "name": "demo.counter",
-  "version": "1.0.0",
+  "name": "skills.sh",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "main": "lib/index.js",
@@ -16,11 +16,12 @@
   ],
   "scripts": {
     "build": "node build.mjs",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/react": "^19",
     "esbuild": "^0.28.2",
-    "typescript": "~6"
+    "typescript": "~6",
+    "vitest": "^5.0.5"
   }
 }

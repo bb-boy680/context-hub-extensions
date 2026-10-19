@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- this file mirrors untyped host boundaries */
 /**
  * The part of Context Hub's extension contracts this plugin uses.
  *

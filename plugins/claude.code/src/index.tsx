@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- the plugin scope is a service bag, typed by the kernel */
 /**
  * Claude Code as a Context Hub extension, installed from the market.
  *

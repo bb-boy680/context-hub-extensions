@@ -9,7 +9,7 @@ and install one plugin directory at a time.
 
 ```text
 marketplace.yaml             hand-written market metadata (title, repository, author)
-marketplace.json             generated index; never edit by hand
+marketplace.json             generated on main by CI; never edit by hand
 scripts/build-marketplace.mjs
 plugins/<id>/                one complete plugin project; <id> equals plugin.yaml's id
   package.json               project metadata; version and `main` are the only source
@@ -18,21 +18,26 @@ plugins/<id>/                one complete plugin project; <id> equals plugin.yam
   tsconfig.json              type checking for src/
   src/                       source
   assets/                    icons and other pictures the plugin ships
-  lib/index.js               committed build output the hub loads
+  lib/index.js               generated on main by CI; ignored on source branches
   README.md                  what this plugin does
 pnpm-workspace.yaml          plugins/* are workspace packages
 ```
 
-`lib/` is committed because Context Hub installs by cloning the repository and
-importing the entry file directly. Unlike an npm package, there is no publish
-step that could carry the build output.
+Context Hub installs by cloning the repository's default branch and importing
+the entry file directly. The main branch therefore carries `lib/` and
+`marketplace.json`, but they are produced by the build workflow, not committed
+from a source branch. `.gitignore` keeps them out of local commits; the bot
+commit on main is the only copy the hub reads.
 
 ## Write a plugin
 
-1. Copy `plugins/demo.counter` and change the directory name, `package.json`'s
-   `name` and `version`, `plugin.yaml`'s `id` and metadata, and the entry code.
-   The directory name must equal the manifest id.
-2. Write normal React in `src/index.tsx`:
+1. Copy `plugins/claude.code` for a plugin with a React surface, or
+   `plugins/skills.sh` for one that only registers a service. Change the
+   directory name, `package.json`'s `name` and `version`, `plugin.yaml`'s `id`
+   and metadata, and the entry code. The directory name must equal the manifest
+   id.
+2. Write the entry in `src/index.tsx` when it renders React, or `src/index.ts`
+   when it does not. A React entry looks like:
 
    ```tsx
    import React, { useState } from "react"
@@ -51,31 +56,35 @@ step that could carry the build output.
 
    ```sh
    pnpm install
+   pnpm lint
    pnpm typecheck
+   pnpm test
    pnpm build
    ```
+
+   The generated `lib/` and `marketplace.json` are ignored; do not commit them.
 
 5. Keep `package.json`'s `main` pointing at the built entry
    (normally `lib/index.js`). Do not add `version` or `entry` to
    `plugin.yaml`; the hub refuses a manifest that declares them.
-6. Commit the source, the built `lib/index.js`, and the regenerated
-   `marketplace.json`.
+6. Commit the source only. The main-branch workflow builds and commits
+   `lib/index.js` and `marketplace.json`.
 
 ## `plugin.yaml`
 
 ```yaml
-id: demo.counter
+id: skills.sh
 name:
-  en: Demo Counter
-  zh-cn: 演示计数器
+  en: skills.sh
+  zh-cn: skills.sh
 apiVersion: "^0.1"
 description:
-  en: Adds a counter to the header.
-  zh-cn: 在标题栏里加一个计数器。
+  en: Search the public skills.sh catalog and install a result into this hub.
+  zh-cn: 搜索公开的 skills.sh 技能目录，并把结果安装到本 hub。
 icon: assets/icon.svg
-category: integration
-permissions: [storage.self]
-inject: [header]
+category: source
+permissions: [network]
+inject: [skillRegistries]
 ```
 
 - `name` and `description` are a string or a locale table with an `en` entry.
@@ -124,18 +133,30 @@ points at that checkout instead of the published URL:
 MARKETPLACE_REPOSITORY="$(pwd)" node scripts/build-marketplace.mjs
 ```
 
-Do not commit that variant; the committed index must name the published HTTPS
-repository.
+Do not commit that variant, or any other `marketplace.json`; the CI-built index
+on main names the published HTTPS repository.
 
 ## Updating a plugin
 
-1. Change `src/` and run `pnpm build` from the repository root (this rebuilds
-   every plugin and regenerates the index).
-2. Raise the version in the plugin's `package.json`.
-3. Commit the source, `lib/index.js` and `marketplace.json`.
+1. Change `src/` and raise the version in the plugin's `package.json`.
+2. Commit the source only.
+3. Merge to main. The workflow runs lint, typecheck, test and build, then
+   commits `lib/` and `marketplace.json` back to main.
 
 The index and the plugins must be in the same repository; the hub clones its
 default branch.
+
+## CI
+
+`.github/workflows/build-market.yml` runs on every push to main: install,
+lint, typecheck, test, build, then commit the generated `lib/` and
+`marketplace.json` back as `github-actions[bot]`. `[skip ci]` and an actor guard
+keep that commit from starting another run.
+
+The workflow needs write access to main. If branch protection blocks direct
+pushes, allow the Actions bot to bypass it; otherwise the commit step fails and
+main keeps the old artifacts. A human push while a build is running can make the
+bot push non-fast-forward; the next push rebuilds. Do not force-push.
 
 ## Trust
 
