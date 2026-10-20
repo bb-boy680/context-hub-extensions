@@ -1,0 +1,14 @@
+id: codex
+name:
+  en: Codex
+  zh-cn: Codex
+engines:
+  contextHub: ">=0.2.0 <0.7.0"
+description:
+  en: Deliver skills, prompts, memory, MCP servers and plugin packs to Codex.
+  zh-cn: 将技能、提示词、记忆、MCP 服务器和插件包交付给 Codex。
+icon: assets/icon.svg
+category: agent
+permissions: [assets.read, assets.write, filesystem]
+inject: [skills, prompts, mcp, plugins, targets, locales]
+author: Context Hub

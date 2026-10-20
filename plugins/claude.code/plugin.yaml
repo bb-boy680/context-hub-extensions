@@ -3,10 +3,10 @@ name:
   en: Claude Code
   zh-cn: Claude Code
 engines:
-  contextHub: ">=0.0.1-beta.5 <0.7.0"
+  contextHub: ">=0.2.0 <0.7.0"
 description:
-  en: Deliver skills, memory and MCP servers to Claude Code.
-  zh-cn: 将技能、记忆和 MCP 服务器交付给 Claude Code。
+  en: Deliver skills, prompts, memory and MCP servers to Claude Code.
+  zh-cn: 将技能、提示词、记忆和 MCP 服务器交付给 Claude Code。
 icon: assets/icon.svg
 category: agent
 permissions: [assets.read, assets.write, filesystem]

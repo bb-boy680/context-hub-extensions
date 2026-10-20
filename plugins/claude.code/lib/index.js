@@ -15,6 +15,7 @@ var GLOBAL_LOCATIONS = [
   { label: "Skills", path: "~/.claude/skills/<name>/SKILL.md" },
   { label: "Commands", path: "~/.claude/commands/<name>.md" },
   { label: "Rules", path: "~/.claude/rules/<name>.md" },
+  { label: "Agents", path: "~/.claude/agents/<name>.md" },
   { label: "Memory", path: "~/.claude/CLAUDE.md" },
   { label: "MCP servers", path: "~/.claude.json" },
   { label: "Hooks", path: "~/.claude/settings.json" }
@@ -23,9 +24,10 @@ var PROJECT_LOCATIONS = [
   { label: "Skills", path: ".claude/skills/<name>/SKILL.md" },
   { label: "Commands", path: ".claude/commands/<name>.md" },
   { label: "Rules", path: ".claude/rules/<name>.md" },
+  { label: "Agents", path: ".claude/agents/<name>.md" },
   { label: "Memory", path: "CLAUDE.md" }
 ];
-var SUPPORTS = ["skill", "mcp", "memory", "hook"];
+var SUPPORTS = ["skill", "mcp", "memory", "hook", "agent"];
 function normalizeProjectPath(value) {
   return value.replace(/\\/g, "/").replace(/\/+$/, "").toLowerCase();
 }
@@ -201,13 +203,27 @@ var claudeCodeInstaller = {
 // src/messages.ts
 var claudeCodeMessages = {
   "claudeCode.tab": "Claude Code",
+  "claudeCode.menu.documents": "Add to a memory file",
   "claudeCode.menu.instructions": "Add to CLAUDE.md",
   "claudeCode.menu.instructions.remove": "Remove from CLAUDE.md",
   "claudeCode.error.refused": "The hub could not read or write Claude Code's config files.",
   "claudeCode.error.unknownPlace": "Claude Code has no client file called {place}.",
+  "claudeCode.error.unknownForm": "Claude Code has no prompt action called {form}.",
   "claudeCode.error.noProject": "Claude Code has no record for this folder in {file}, so it has nowhere to keep the switch.",
   "claudeCode.error.noWorkspace": "No workspace is open, so there is no project to switch.",
   "claudeCode.error.machineScope": "Claude Code keeps the switch in a project's record, so a machine-wide place has none."
+};
+var claudeCodeZhMessages = {
+  "claudeCode.tab": "Claude Code",
+  "claudeCode.menu.documents": "\u6DFB\u52A0\u5230\u8BB0\u5FC6\u6587\u4EF6",
+  "claudeCode.menu.instructions": "\u6DFB\u52A0\u5230 CLAUDE.md",
+  "claudeCode.menu.instructions.remove": "\u4ECE CLAUDE.md \u79FB\u9664",
+  "claudeCode.error.refused": "\u8BFB\u5199 Claude Code \u7684\u914D\u7F6E\u6587\u4EF6\u5931\u8D25\u3002",
+  "claudeCode.error.unknownPlace": "Claude Code \u6CA1\u6709\u540D\u4E3A {place} \u7684\u5BA2\u6237\u7AEF\u6587\u4EF6\u3002",
+  "claudeCode.error.unknownForm": "Claude Code \u6CA1\u6709\u540D\u4E3A {form} \u7684\u63D0\u793A\u8BCD\u64CD\u4F5C\u3002",
+  "claudeCode.error.noProject": "Claude Code \u5728 {file} \u91CC\u6CA1\u6709\u8FD9\u4E2A\u6587\u4EF6\u5939\u7684\u8BB0\u5F55\uFF0C\u6CA1\u6709\u5730\u65B9\u653E\u8FD9\u4E2A\u5F00\u5173\u3002",
+  "claudeCode.error.noWorkspace": "\u5F53\u524D\u6CA1\u6709\u5DE5\u4F5C\u533A\uFF0C\u6CA1\u6709\u53EF\u5207\u6362\u7684\u9879\u76EE\u3002",
+  "claudeCode.error.machineScope": "Claude Code \u628A\u5F00\u5173\u8BB0\u5728\u9879\u76EE\u7684\u8BB0\u5F55\u91CC\uFF0C\u6574\u673A\u4F4D\u7F6E\u6CA1\u6709\u53EF\u5199\u7684\u5730\u65B9\u3002"
 };
 
 // src/provider.ts
@@ -339,6 +355,178 @@ function messageOf(error) {
   return error instanceof Error ? error.message : String(error);
 }
 
+// src/prompts.ts
+var INSTRUCTIONS = "claude";
+function formsOf(memory) {
+  const forms = [
+    {
+      id: "commands",
+      labelKey: "prompts.menu.commands",
+      removeLabelKey: "prompts.menu.commands.remove"
+    },
+    {
+      id: "rule",
+      labelKey: "prompts.menu.rule",
+      removeLabelKey: "prompts.menu.rule.remove"
+    },
+    {
+      id: "agent",
+      labelKey: "prompts.menu.agent",
+      removeLabelKey: "prompts.menu.agent.remove"
+    }
+  ];
+  if (memory) {
+    forms.push({
+      id: "instructions",
+      labelKey: "claudeCode.menu.documents",
+      options: [
+        {
+          id: INSTRUCTIONS,
+          labelKey: "claudeCode.menu.instructions",
+          removeLabelKey: "claudeCode.menu.instructions.remove"
+        }
+      ]
+    });
+  }
+  return forms;
+}
+function targetOf(tools, place, prompt, form, option) {
+  const declared = place.forms.find((one) => one.id === form);
+  const offered = declared !== void 0 && (declared.options === void 0 || declared.options.length === 0 ? option === void 0 : option !== void 0 && declared.options.some((one) => one.id === option));
+  if (!offered) {
+    throw new tools.PromptError("claudeCode.error.unknownForm", {
+      form: option === void 0 ? form : `${form}:${option}`
+    });
+  }
+  const slug = `${tools.slugOf(prompt.name)}.md`;
+  if (form === "commands") return { scope: place.scope, file: `${CLAUDE_CODE_COMMAND_DIR}/${slug}` };
+  if (form === "rule") return { scope: place.scope, file: `${CLAUDE_CODE_RULE_DIR}/${slug}` };
+  if (form === "agent") return { scope: place.scope, file: `${CLAUDE_CODE_AGENT_DIR}/${slug}` };
+  if (form === "instructions") {
+    return { scope: place.scope, file: CLAUDE_CODE_GLOBAL_INSTRUCTION_FILE };
+  }
+  throw new tools.PromptError("claudeCode.error.unknownForm", {
+    form: option === void 0 ? form : `${form}:${option}`
+  });
+}
+function refused(tools, failure) {
+  const message = failure instanceof Error ? failure.message : String(failure);
+  return new tools.PromptError("claudeCode.error.refused", void 0, message);
+}
+function createClaudeCodePrompts(icon, tools) {
+  const places = [
+    {
+      id: "claude-code",
+      agent: CLAUDE_CODE_ID,
+      labelKey: "claudeCode.tab",
+      icon,
+      scope: "workspace",
+      order: 20,
+      where: ".claude",
+      forms: formsOf(false)
+    },
+    {
+      id: "claude-code-global",
+      agent: CLAUDE_CODE_ID,
+      labelKey: "claudeCode.tab",
+      icon,
+      scope: "global",
+      order: 20,
+      where: "~/.claude",
+      forms: formsOf(true)
+    }
+  ];
+  const placeOf = (id) => {
+    const found = places.find((one) => one.id === id);
+    if (found === void 0) {
+      throw new tools.PromptError("claudeCode.error.unknownPlace", { place: id });
+    }
+    return found;
+  };
+  const read = async (io, ref) => {
+    try {
+      return await io.files.read(ref);
+    } catch (failure) {
+      throw refused(tools, failure);
+    }
+  };
+  return {
+    id: CLAUDE_CODE_ID,
+    places,
+    async held(io, place, prompt) {
+      const one = placeOf(place);
+      const slug = tools.slugOf(prompt.name);
+      const answer = {};
+      for (const form of one.forms) {
+        if (form.id === "instructions") {
+          const text = await read(io, targetOf(tools, one, prompt, form.id, INSTRUCTIONS));
+          if (text === null) continue;
+          const there = tools.withoutSection(text, slug) !== null;
+          for (const option of form.options ?? []) {
+            if (there) answer[`${form.id}:${option.id}`] = true;
+          }
+          continue;
+        }
+        if (await read(io, targetOf(tools, one, prompt, form.id)) !== null) {
+          answer[form.id] = true;
+        }
+      }
+      return answer;
+    },
+    async install(io, place, prompt, form, option) {
+      const one = placeOf(place);
+      const ref = targetOf(tools, one, prompt, form, option);
+      try {
+        if (form === "instructions") {
+          const existing = await io.files.read(ref);
+          await io.files.write(
+            ref,
+            tools.withSection(existing, {
+              slug: tools.slugOf(prompt.name),
+              title: prompt.name,
+              body: prompt.prompt
+            })
+          );
+          return;
+        }
+        await io.files.write(
+          ref,
+          tools.commandFile({
+            name: prompt.name,
+            description: prompt.description,
+            body: prompt.prompt,
+            /* A command and an agents file carry the frontmatter; a rule is the
+               prompt as it was written. */
+            frontmatter: form !== "rule"
+          })
+        );
+      } catch (failure) {
+        throw refused(tools, failure);
+      }
+    },
+    async remove(io, place, prompt, form, option) {
+      const one = placeOf(place);
+      const ref = targetOf(tools, one, prompt, form, option);
+      try {
+        if (form === "instructions") {
+          const existing = await io.files.read(ref);
+          if (existing === null) return false;
+          const next = tools.withoutSection(existing, tools.slugOf(prompt.name));
+          if (next === null) return false;
+          if (next.trim() === "") await io.files.remove(ref);
+          else await io.files.write(ref, next);
+          return true;
+        }
+        if (await io.files.read(ref) === null) return false;
+        await io.files.remove(ref);
+        return true;
+      } catch (failure) {
+        throw refused(tools, failure);
+      }
+    }
+  };
+}
+
 // src/index.tsx
 import { jsx } from "react/jsx-runtime";
 var ClaudeCodeIcon = ({ className, "aria-hidden": ariaHidden }) => /* @__PURE__ */ jsx("svg", { viewBox: "0 0 24 24", className, "aria-hidden": ariaHidden, children: /* @__PURE__ */ jsx(
@@ -370,46 +558,10 @@ function skillPlaces(icon) {
     }
   ];
 }
-function promptPlaces(icon) {
-  return [
-    {
-      id: "claude-code",
-      agent: CLAUDE_CODE_ID,
-      labelKey: "claudeCode.tab",
-      icon,
-      scope: "workspace",
-      commandDir: CLAUDE_CODE_COMMAND_DIR,
-      ruleDir: CLAUDE_CODE_RULE_DIR,
-      agentDir: CLAUDE_CODE_AGENT_DIR,
-      order: 20
-    },
-    {
-      id: "claude-code-global",
-      agent: CLAUDE_CODE_ID,
-      labelKey: "claudeCode.tab",
-      icon,
-      scope: "global",
-      commandDir: CLAUDE_CODE_COMMAND_DIR,
-      ruleDir: CLAUDE_CODE_RULE_DIR,
-      agentDir: CLAUDE_CODE_AGENT_DIR,
-      documents: [
-        {
-          id: "claude",
-          labelKey: "claudeCode.menu.instructions",
-          removeLabelKey: "claudeCode.menu.instructions.remove",
-          file: CLAUDE_CODE_GLOBAL_INSTRUCTION_FILE
-        }
-      ],
-      order: 20
-    }
-  ];
-}
 function apply(ctx) {
   const icon = ClaudeCodeIcon;
-  const skillPlacesHere = skillPlaces(icon);
-  const promptPlacesHere = promptPlaces(icon);
-  ctx.skills.register({ id: CLAUDE_CODE_ID, places: skillPlacesHere });
-  ctx.prompts.register({ id: CLAUDE_CODE_ID, places: promptPlacesHere });
+  ctx.skills.register({ id: CLAUDE_CODE_ID, places: skillPlaces(icon) });
+  ctx.prompts.register(createClaudeCodePrompts(icon, ctx.prompts.tools));
   ctx.mcp.register(createClaudeCodeMcp(ctx.mcp.tools));
   ctx.plugins.register(claudeCodeInstaller);
   ctx.targets.register({
@@ -427,6 +579,11 @@ function apply(ctx) {
     id: "en",
     label: "English",
     messages: claudeCodeMessages
+  });
+  ctx.locales.register({
+    id: "zh-CN",
+    label: "\u7B80\u4F53\u4E2D\u6587",
+    messages: claudeCodeZhMessages
   });
 }
 export {

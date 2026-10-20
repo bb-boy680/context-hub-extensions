@@ -99,6 +99,7 @@ export const GLOBAL_LOCATIONS: ClaudeCodeLocation[] = [
   { label: "Skills", path: "~/.claude/skills/<name>/SKILL.md" },
   { label: "Commands", path: "~/.claude/commands/<name>.md" },
   { label: "Rules", path: "~/.claude/rules/<name>.md" },
+  { label: "Agents", path: "~/.claude/agents/<name>.md" },
   { label: "Memory", path: "~/.claude/CLAUDE.md" },
   { label: "MCP servers", path: "~/.claude.json" },
   { label: "Hooks", path: "~/.claude/settings.json" },
@@ -109,11 +110,12 @@ export const PROJECT_LOCATIONS: ClaudeCodeLocation[] = [
   { label: "Skills", path: ".claude/skills/<name>/SKILL.md" },
   { label: "Commands", path: ".claude/commands/<name>.md" },
   { label: "Rules", path: ".claude/rules/<name>.md" },
+  { label: "Agents", path: ".claude/agents/<name>.md" },
   { label: "Memory", path: "CLAUDE.md" },
 ]
 
 /** The asset kinds Claude Code accepts, in the order a panel lists them. */
-export const SUPPORTS = ["skill", "mcp", "memory", "hook"] as const
+export const SUPPORTS = ["skill", "mcp", "memory", "hook", "agent"] as const
 
 /**
  * A folder compared the way Claude Code spells it: forward slashes, no trailing
