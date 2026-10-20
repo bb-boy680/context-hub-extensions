@@ -21,8 +21,9 @@ import {
   PROJECT_LOCATIONS,
   SUPPORTS,
 } from "./locations.ts"
-import { codexMessages } from "./messages.ts"
+import { codexMessages, codexZhMessages } from "./messages.ts"
 import { createCodexMcp } from "./provider.ts"
+import { createCodexPrompts } from "./prompts.ts"
 
 /**
  * The brand mark in its own colours. The shell sizes every icon with a class,
@@ -94,6 +95,7 @@ export function apply(ctx: CodexScope): void {
   const icon = CodexIcon
 
   ctx.skills.register({ id: CODEX_ID, places: skillPlaces(icon) })
+  ctx.prompts.register(createCodexPrompts(ctx.prompts.tools, ctx.mcp.tools, icon))
   ctx.mcp.register(createCodexMcp(ctx.mcp.tools))
   ctx.plugins.register(codexInstaller)
 
@@ -103,12 +105,19 @@ export function apply(ctx: CodexScope): void {
     icon,
     supports: [...SUPPORTS],
     locations: [...GLOBAL_LOCATIONS, ...PROJECT_LOCATIONS],
-    format: "Markdown skills and instructions; TOML for configuration and MCP servers",
+    format:
+      "Markdown skills and instructions; TOML agents, configuration and MCP servers",
   })
 
   ctx.locales.register({
     id: "en",
     label: "English",
     messages: codexMessages,
+  })
+
+  ctx.locales.register({
+    id: "zh-CN",
+    label: "简体中文",
+    messages: codexZhMessages,
   })
 }

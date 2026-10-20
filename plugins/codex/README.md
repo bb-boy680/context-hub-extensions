@@ -1,23 +1,24 @@
 # codex
 
 Codex as a Context Hub extension. Installing it registers the places Codex
-reads skills from, its MCP file, the plugin installer the Plugins page drives,
-and the target descriptor the shell uses.
+reads skills from, its prompt provider, its MCP file, the plugin installer the
+Plugins page drives, and the target descriptor the shell uses.
 
 ```text
 package.json      package metadata; version and main (lib/index.js)
 plugin.yaml       kernel manifest; no version or entry
 build.mjs         esbuild build into lib/index.js
 tsconfig.json     type checking for src/ and __test__/
-vitest.config.ts  unit tests for the installer and provider
+vitest.config.ts  unit tests for the installer and providers
 src/index.tsx     brand mark and the apply(scope) registrations
 src/locations.ts  where Codex keeps its files
+src/prompts.ts    Codex's prompt provider
 src/provider.ts   Codex's TOML MCP file reader/writer
 src/installer.ts  Codex's plugin installer
 src/messages.ts   English strings for the rows
 assets/icon.svg   the image the market index inlines
-__test__/         installer and provider tests
-lib/index.js      build output the hub loads; CI commits it on the PR branch
+__test__/         installer, MCP provider and prompt provider tests
+lib/index.js      build output the hub loads; CI builds it on the PR branch
 README.md         this file
 ```
 
@@ -25,19 +26,45 @@ README.md         this file
 
 - Skills places: `.codex/skills` in the workspace and `~/.codex/skills` for the
   machine.
+- Prompt provider:
+  - `codex-global` (machine-wide): `instructions` adds a marked section to
+    `~/.codex/AGENTS.md`; `agent` writes `~/.codex/agents/<slug>.toml`.
+  - `codex` (workspace): `agent` writes `.codex/agents/<slug>.toml`.
+  - The project's `AGENTS.md` is not registered here: it is the Hub's shared
+    workspace place, and registering it again would list one file twice.
 - MCP provider: `~/.codex/config.toml`, table `[mcp_servers]`, with Codex's
   `enabled` field as the switch.
 - Plugin installer: `codex plugin marketplace add` and `codex plugin add`; one
   machine-wide place, with no per-plugin enable/disable.
-- Target: id `hub.target.codex`, supporting skills, MCP and memory, with the
-  paths Codex reads.
+- Target: id `hub.target.codex`, supporting skills, MCP, memory and agents, with
+  the paths Codex reads.
 - English messages under the `codex.*` namespace.
 
 The shared workspace `.agents/skills` place belongs to the Hub skills module and
-is not registered again here. Project `AGENTS.md` is delivered by the Hub's
-shared prompts place; this extension does not register a prompts provider.
-Codex's global `~/.codex/AGENTS.md` is listed on the target but is not written
-by this extension.
+is not registered again here.
+
+## Prompt delivery details
+
+A generated agent role is TOML with the fields Codex discovers:
+
+```toml
+# context-hub:<slug>
+name = "Code Review"
+description = "Reads the diff and says what it changes"
+developer_instructions = "Review the diff.\nReport what it changes."
+```
+
+All three values are written as TOML basic strings. The first-line marker is
+the ownership record: a file without it belongs to a person, so the provider
+refuses to overwrite it and `remove` leaves it alone.
+
+Codex reads `~/.codex/AGENTS.override.md` in place of `~/.codex/AGENTS.md` when
+the override is non-empty. The provider therefore reports the instruction
+section as not held while an override is in effect, and `install` refuses with
+`codex.error.override` rather than writing a section Codex would ignore. An
+empty or whitespace-only override does not win, and the section is written
+normally. Removing a section does not consult the override, so a stale section
+can still be cleaned up.
 
 ## Requirements
 

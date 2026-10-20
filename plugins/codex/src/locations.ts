@@ -23,6 +23,22 @@ export const CODEX_CONFIG_FILE = ".codex/config.toml"
 /** The user-level instructions file Codex reads; `AGENTS.override.md` wins when present. */
 export const CODEX_GLOBAL_INSTRUCTION_FILE = ".codex/AGENTS.md"
 
+/**
+ * The user-level override Codex reads in place of `AGENTS.md`.
+ *
+ * A non-empty file here wins outright, so a prompt added to `AGENTS.md` would
+ * never be read. The provider checks it before writing and refuses rather than
+ * reporting a delivery that Codex ignores.
+ */
+export const CODEX_GLOBAL_OVERRIDE_FILE = ".codex/AGENTS.override.md"
+
+/**
+ * Where Codex discovers agent roles, under both roots: one TOML file per role,
+ * found recursively. `name`, `description` and `developer_instructions` are the
+ * fields a generated role carries.
+ */
+export const CODEX_AGENT_DIR = ".codex/agents"
+
 /** One place either scope reads assets from. */
 export interface CodexLocation {
   /** What the path holds, e.g. "Skills". */
@@ -35,6 +51,7 @@ export interface CodexLocation {
 export const GLOBAL_LOCATIONS: CodexLocation[] = [
   { label: "Skills", path: `~/${CODEX_SKILL_DIR}/<name>/SKILL.md` },
   { label: "Instructions", path: `~/${CODEX_GLOBAL_INSTRUCTION_FILE}` },
+  { label: "Agents", path: `~/${CODEX_AGENT_DIR}/<name>.toml` },
   { label: "Config", path: `~/${CODEX_CONFIG_FILE}` },
 ]
 
@@ -42,7 +59,8 @@ export const GLOBAL_LOCATIONS: CodexLocation[] = [
 export const PROJECT_LOCATIONS: CodexLocation[] = [
   { label: "Project skills", path: `${CODEX_SKILL_DIR}/<name>/SKILL.md` },
   { label: "Instructions", path: "AGENTS.md" },
+  { label: "Agents", path: `${CODEX_AGENT_DIR}/<name>.toml` },
 ]
 
 /** The asset kinds Codex accepts, in the order a panel lists them. */
-export const SUPPORTS = ["skill", "mcp", "memory"] as const
+export const SUPPORTS = ["skill", "mcp", "memory", "agent"] as const

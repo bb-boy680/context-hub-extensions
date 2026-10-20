@@ -13,7 +13,109 @@ export type ExtensionIcon = (props: {
 }) => unknown
 
 export type SkillPlace = any
-export type PromptPlace = any
+
+/** What a prompt provider is given: one prompt as the library stores it. */
+export interface Prompt {
+  name: string
+  description: string
+  prompt: string
+}
+
+export type PromptScope = "workspace" | "global"
+
+/** One file under one of the client's roots. */
+export interface PromptRef {
+  scope: PromptScope
+  file: string
+}
+
+/** The client-file port a provider reads and writes through. */
+export interface PromptFiles {
+  read(ref: PromptRef): Promise<string | null>
+  write(ref: PromptRef, text: string): Promise<void>
+  remove(ref: PromptRef): Promise<void>
+  workspace(): Promise<string | null>
+}
+
+export interface PromptIo {
+  files: PromptFiles
+  workspace(): Promise<string | null>
+}
+
+export interface PromptFormOption {
+  id: string
+  labelKey: string
+  removeLabelKey?: string
+}
+
+export interface PromptForm {
+  id: string
+  labelKey: string
+  removeLabelKey?: string
+  options?: readonly PromptFormOption[]
+}
+
+export interface PromptPlace {
+  id: string
+  agent: string
+  labelKey: string
+  icon: ExtensionIcon
+  scope: PromptScope
+  order: number
+  generatedOnly?: boolean
+  where?: string
+  forms: readonly PromptForm[]
+}
+
+export type PromptHeld = Readonly<Record<string, boolean>>
+
+/** A failure a provider names, so the page shows its own localized sentence. */
+export interface PromptErrorConstructor {
+  new (
+    key: string,
+    params?: Record<string, string>,
+    detail?: string
+  ): Error & { key: string; params?: Record<string, string> }
+}
+
+/** The file-naming and section rules the hub hands to a provider. */
+export interface PromptTools {
+  slugOf(name: string): string
+  describeBody(body: string): string
+  commandFile(input: {
+    name: string
+    description: string
+    body: string
+    frontmatter: boolean
+  }): string
+  withSection(
+    existing: string | null,
+    input: { slug: string; title: string; body: string }
+  ): string
+  withoutSection(existing: string, slug: string): string | null
+  PromptError: PromptErrorConstructor
+}
+
+export interface PromptProvider {
+  id: string
+  shared?: boolean
+  places: readonly PromptPlace[]
+  held(io: PromptIo, place: string, prompt: Prompt): Promise<PromptHeld>
+  install(
+    io: PromptIo,
+    place: string,
+    prompt: Prompt,
+    form: string,
+    option?: string
+  ): Promise<void>
+  remove(
+    io: PromptIo,
+    place: string,
+    prompt: Prompt,
+    form: string,
+    option?: string
+  ): Promise<boolean>
+}
 
 export type PluginTools = any
 export type PluginSwitches = Record<string, Record<string, boolean>>

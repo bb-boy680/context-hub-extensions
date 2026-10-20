@@ -63,6 +63,7 @@ function fakeTools(
         calls.lines.push([text, table, name])
         return options.lines?.(text, table, name) ?? [1, 2]
       },
+      writeTomlString: (value) => JSON.stringify(value),
       readDeclaration: () =>
         options.declaration ?? { transport: "stdio", command: "declared", args: [], env: {} },
       writeDeclaration: () => options.written ?? { command: "written" },

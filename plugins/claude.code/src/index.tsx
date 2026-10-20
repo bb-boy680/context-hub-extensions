@@ -11,21 +11,18 @@
  * Nothing here imports a hub package. React is external and mapped by the
  * page's import map; the services arrive through the context.
  */
-import type { ExtensionIcon, PromptPlace, SkillPlace } from "./contracts.ts"
+import type { ExtensionIcon, SkillPlace } from "./contracts.ts"
 import { claudeCodeInstaller } from "./installer.ts"
 import {
-  CLAUDE_CODE_AGENT_DIR,
-  CLAUDE_CODE_COMMAND_DIR,
-  CLAUDE_CODE_GLOBAL_INSTRUCTION_FILE,
   CLAUDE_CODE_ID,
-  CLAUDE_CODE_RULE_DIR,
   CLAUDE_CODE_SKILL_DIR,
   GLOBAL_LOCATIONS,
   PROJECT_LOCATIONS,
   SUPPORTS,
 } from "./locations.ts"
-import { claudeCodeMessages } from "./messages.ts"
+import { claudeCodeMessages, claudeCodeZhMessages } from "./messages.ts"
 import { createClaudeCodeMcp } from "./provider.ts"
+import { createClaudeCodePrompts } from "./prompts.ts"
 
 /**
  * The brand mark in its own colours. The shell sizes every icon with a class,
@@ -66,50 +63,6 @@ function skillPlaces(icon: ExtensionIcon): SkillPlace[] {
 }
 
 /**
- * Where this agent takes a prompt, under both roots it reads: commands as one
- * file each, rules as one file each.
- *
- * Only the machine-wide memory file is offered as something a prompt can be
- * added to; the project's `CLAUDE.md` is a shared file, and an action that
- * silently edits it under the same words as a private file would hide the
- * difference.
- */
-function promptPlaces(icon: ExtensionIcon): PromptPlace[] {
-  return [
-    {
-      id: "claude-code",
-      agent: CLAUDE_CODE_ID,
-      labelKey: "claudeCode.tab",
-      icon,
-      scope: "workspace",
-      commandDir: CLAUDE_CODE_COMMAND_DIR,
-      ruleDir: CLAUDE_CODE_RULE_DIR,
-      agentDir: CLAUDE_CODE_AGENT_DIR,
-      order: 20,
-    },
-    {
-      id: "claude-code-global",
-      agent: CLAUDE_CODE_ID,
-      labelKey: "claudeCode.tab",
-      icon,
-      scope: "global",
-      commandDir: CLAUDE_CODE_COMMAND_DIR,
-      ruleDir: CLAUDE_CODE_RULE_DIR,
-      agentDir: CLAUDE_CODE_AGENT_DIR,
-      documents: [
-        {
-          id: "claude",
-          labelKey: "claudeCode.menu.instructions",
-          removeLabelKey: "claudeCode.menu.instructions.remove",
-          file: CLAUDE_CODE_GLOBAL_INSTRUCTION_FILE,
-        },
-      ],
-      order: 20,
-    },
-  ]
-}
-
-/**
  * Register everything this integration contributes.
  *
  * `inject` in `plugin.yaml` names every service read below, so Cordis waits
@@ -117,11 +70,12 @@ function promptPlaces(icon: ExtensionIcon): PromptPlace[] {
  */
 export function apply(ctx: any): void {
   const icon = ClaudeCodeIcon
-  const skillPlacesHere = skillPlaces(icon)
-  const promptPlacesHere = promptPlaces(icon)
 
-  ctx.skills.register({ id: CLAUDE_CODE_ID, places: skillPlacesHere })
-  ctx.prompts.register({ id: CLAUDE_CODE_ID, places: promptPlacesHere })
+  ctx.skills.register({ id: CLAUDE_CODE_ID, places: skillPlaces(icon) })
+
+  /* The prompt provider writes through the hub's file port and names files
+     with the hub's rules, so it needs no imports beyond React. */
+  ctx.prompts.register(createClaudeCodePrompts(icon, ctx.prompts.tools))
 
   /* The toolkit comes off the same service, which is how it reaches a plugin
      installed as a folder: such a directory imports nothing. */
@@ -145,5 +99,11 @@ export function apply(ctx: any): void {
     id: "en",
     label: "English",
     messages: claudeCodeMessages,
+  })
+
+  ctx.locales.register({
+    id: "zh-CN",
+    label: "简体中文",
+    messages: claudeCodeZhMessages,
   })
 }

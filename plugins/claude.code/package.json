@@ -8,11 +8,13 @@
   "files": ["lib", "src", "assets", "plugin.yaml", "README.md"],
   "scripts": {
     "build": "node build.mjs",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/react": "^19",
     "esbuild": "^0.28.2",
-    "typescript": "~6"
+    "typescript": "~6",
+    "vitest": "^5.0.5"
   }
 }
