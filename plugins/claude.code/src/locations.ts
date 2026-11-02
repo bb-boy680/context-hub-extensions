@@ -55,6 +55,14 @@ export const CLAUDE_CODE_SETTINGS_FILE = ".claude/settings.json"
 /** The node that file keeps the switches under, keyed by plugin id. */
 export const CLAUDE_CODE_ENABLED_KEY = "enabledPlugins"
 
+/** File roots used by the plugin installer, resolved by the host. */
+export const CLAUDE_PLUGIN_ROOTS = {
+  configDir: ".claude",
+  configEnv: "CLAUDE_CONFIG_DIR",
+  pluginsDir: "plugins",
+  pluginsEnv: "CLAUDE_CODE_PLUGIN_CACHE_DIR",
+} as const
+
 /**
  * Where Claude Code reads slash commands, relative to the workspace and to the
  * home directory alike: `.claude/commands` under a project, `~/.claude/commands`

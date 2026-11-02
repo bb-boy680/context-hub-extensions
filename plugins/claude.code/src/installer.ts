@@ -1,311 +1,380 @@
-/**
- * How Claude Code installs a plugin, as the extension that knows Claude Code.
- *
- * A pack reaches Claude Code through a marketplace, so this registers the hub's
- * own library root as one and then asks the client to install from it by name.
- * The directory itself is what makes the packs visible, and it is read from the
- * tools rather than assumed, because the hub decides where its library lives.
- *
- * `installed_plugins.json`, the versioned cache, and the settings that record an
- * enablement are all Claude Code's own documents, with their own history — so
- * nothing here writes them. The client's CLI already does, reports JSON, and
- * takes the scope and the enable switch as flags.
- *
- * Types only, and they come from the plugins module because that module owns the
- * contract an installer is written against. A type import is erased, so at run
- * time this extension reads nothing from that package: the registry to register
- * into and the tools to run a program with arrive through the `plugins` service.
- */
 import type {
+  PluginDisk,
+  PluginDiskChange,
+  PluginDiskRef,
+  PluginDiskRoots,
   PluginHeld,
   PluginInstaller,
+  PluginJsonTools,
   PluginPlace,
-  PluginSwitches,
   PluginTools,
 } from "./contracts.ts"
-
+import { CLAUDE_CODE_ID, CLAUDE_CODE_SETTINGS_FILE, CLAUDE_PLUGIN_ROOTS } from "./locations.ts"
 import {
-  CLAUDE_CODE_ENABLED_KEY,
-  CLAUDE_CODE_ID,
-  CLAUDE_CODE_SETTINGS_FILE,
-  normalizeProjectPath,
-} from "./locations.ts"
+  effective,
+  heldFromState,
+  marketplacePack,
+  readState,
+  sameProject,
+  type InstalledRecord,
+  type PluginState,
+} from "./plugin-state.ts"
 
-/** The marketplace name the hub's library is registered under. */
-const MARKETPLACE = "context-hub"
-
-/** The client's program, and the flag that makes it report one JSON result. */
-const PROGRAM = "claude"
-const JSON_FLAG = "--json"
-
-/** The client's own name, as its rows read on both pages. */
 const LABEL = "Claude Code"
-
-/**
- * The places this client keeps a pack in, in the order its own menu lists them.
- *
- * Both are switchable: each writes its own settings file, so switching one moves
- * that file and nothing beside it. Claude Code also has a `local` scope, which
- * writes a file the person keeps to themselves and this side never reads, so
- * nothing here offers it.
- */
+const MARKETPLACE = "context-hub"
 const PLACES: readonly PluginPlace[] = [
-  {
-    id: "claude-code-user",
-    label: LABEL,
-    scope: "global",
-    scopeWord: "user",
-    switchable: true,
-    file: CLAUDE_CODE_SETTINGS_FILE,
-  },
-  {
-    id: "claude-code-project",
-    label: LABEL,
-    scope: "workspace",
-    scopeWord: "project",
-    switchable: true,
-    file: CLAUDE_CODE_SETTINGS_FILE,
-    /* The repository's file decides over the machine's, so a pack the machine
-       switched on can still be switched off for one repository — which is why
-       this place is offered for a pack only the machine holds. */
-    overrides: ["user"],
-  },
+  { id: "claude-code-user", label: LABEL, scope: "global", scopeWord: "user", switchable: true, file: CLAUDE_CODE_SETTINGS_FILE },
+  { id: "claude-code-project", label: LABEL, scope: "workspace", scopeWord: "project", switchable: true, file: CLAUDE_CODE_SETTINGS_FILE, overrides: ["user"] },
 ]
-
-/**
- * What one place's settings file records about plugin enablement.
- *
- * Read where it sits rather than asked of the client: the client answers once
- * per pack, so it cannot say which of two files a pack is on in. A file that is
- * not there, or holds nothing this build can read, answers with nothing — the
- * caller then has the client's own answer left to report.
- *
- * @param tools — the tools the installer was handed, which reach the files.
- * @param place — the place whose file is read.
- */
-async function switchesAt(
-  tools: PluginTools,
-  place: PluginPlace
-): Promise<Record<string, boolean>> {
-  const files = tools.files
-  if (files === null || place.file === undefined) return {}
-  const text = await files.read({ scope: place.scope, file: place.file }).catch(() => null)
-  if (text === null) return {}
-  try {
-    /* A byte-order mark is a file's own business, not JSON's. */
-    const document = JSON.parse(text.replace(/^\uFEFF/, "")) as Record<string, unknown>
-    const recorded = document[CLAUDE_CODE_ENABLED_KEY]
-    if (typeof recorded !== "object" || recorded === null) return {}
-    return Object.fromEntries(
-      Object.entries(recorded).filter((entry): entry is [string, boolean] => {
-        return typeof entry[1] === "boolean"
-      })
-    )
-  } catch {
-    return {}
-  }
+const SETTINGS: Record<string, PluginDiskRef> = {
+  user: { root: "config", path: "settings.json" },
+  project: { root: "workspace", path: ".claude/settings.json" },
+  local: { root: "workspace", path: ".claude/settings.local.json" },
 }
 
-/**
- * Register the library root as a marketplace, and report the root.
- *
- * The catalog is rewritten first: a marketplace registered around an index that
- * does not yet list a pack would leave that pack invisible, and this is the only
- * moment the two are known to be in step.
- */
-async function ensureMarketplace(tools: PluginTools): Promise<string> {
-  await tools.syncMarketplace()
-  const root = await tools.root()
-  /* Adding a marketplace that is already registered is reported as such rather
-     than as a failure, so this needs no remembered state to stay idempotent. */
-  await tools.run(PROGRAM, ["plugin", "marketplace", "add", root, JSON_FLAG])
-  return root
+function diskOf(tools: PluginTools): PluginDisk {
+  if (tools.disk === undefined) throw new Error("This Context Hub version does not support plugin file operations")
+  return tools.disk
 }
 
-/** Read one result line of the client's JSON report, or nothing. */
-function reportOf(output: string): { installPath?: string } {
-  try {
-    const parsed: unknown = JSON.parse(output.trim().split("\n").at(-1) ?? "")
-    return typeof parsed === "object" && parsed !== null ? (parsed as { installPath?: string }) : {}
-  } catch {
-    /* A client that printed prose still succeeded or failed by its exit code. */
-    return {}
-  }
-}
-
-/** The first value that is a non-empty string, or nothing. */
-function firstString(...values: unknown[]): string | undefined {
-  for (const value of values) {
-    if (typeof value === "string" && value !== "") return value
-  }
-  return undefined
-}
-
-/**
- * The pack list this client prints, read into the shape this hub records one by.
- *
- * A line this build cannot use is dropped rather than guessed at, and an answer
- * that is not a list yields nothing: a client that printed prose still exited
- * with its own code, and inventing packs out of prose would be worse than
- * reporting none.
- *
- * An id reads `<pack>@<marketplace>` — including the client's own words for a
- * pack that came from no marketplace, such as `skills-dir`. The directory is the
- * client's own answer to where it loads the pack from: a pack it reads in place
- * names that folder, and one it copied names the copy.
- *
- * What the pack itself carries is not in this answer, so `pack` reads empty
- * here; {@link PluginInstaller.held} fills it in by reading each directory.
- *
- * A record that names the project it belongs to is kept only when that is the
- * folder in use: the client keeps one record per folder and names the folder in
- * it, so another repository's record says nothing about this one — read as this
- * one's, it would draw a pack this repository does not hold and offer an
- * uninstall that cannot find it. A record naming no folder is kept, because
- * nothing says it is a project's: the machine-wide places are not folders.
- *
- * @param output — what `claude plugin list --json` printed.
- * @param folder — the folder in use, or `null` when this form cannot name one.
- * @returns one entry per installed pack, in the order the client listed them.
- */
-export function readHeld(output: string, folder: string | null = null): PluginHeld[] {
-  let parsed: unknown
-  try {
-    parsed = JSON.parse(output)
-  } catch {
-    return []
-  }
-  if (!Array.isArray(parsed)) return []
-  const found: PluginHeld[] = []
-  for (const value of parsed) {
-    if (typeof value !== "object" || value === null) continue
-    const entry = value as Record<string, unknown>
-    if (typeof entry.id !== "string" || typeof entry.scope !== "string") continue
-    const at = entry.id.lastIndexOf("@")
-    if (at <= 0 || at === entry.id.length - 1) continue
-    const project = firstString(entry.projectPath)
-    if (
-      folder !== null &&
-      project !== undefined &&
-      normalizeProjectPath(project) !== normalizeProjectPath(folder)
-    ) {
-      continue
-    }
-    const path = firstString(entry.readFromFolder, entry.installPath)
-    found.push({
-      name: entry.id.slice(0, at),
-      id: entry.id,
-      version: typeof entry.version === "string" ? entry.version : "",
-      scope: entry.scope,
-      enabled: entry.enabled === true,
-      marketplace: entry.id.slice(at + 1),
-      ...(path === undefined ? {} : { source: { kind: "local", path } }),
-      pack: { name: "", version: "", description: "" },
-    })
-  }
-  return found
-}
-
-/**
- * The folder in use, as the client's own project records name it, or `null` when
- * this form cannot say which folder that is.
- *
- * A form with no host behind it holds no files, and a hub with no workspace open
- * has no folder: neither is a folder to compare a record against, so both answer
- * `null` and a caller keeps every record rather than dropping the ones it cannot
- * place.
- */
-async function folderInUse(tools: PluginTools): Promise<string | null> {
-  return (await tools.files?.workspace().catch(() => null)) ?? null
-}
-
-/**
- * Fill in what each pack says about itself, reading it where the pack sits.
- *
- * The client's own list names packs and directories and nothing more, so the
- * reading happens here rather than in that answer. A pack whose directory the
- * client did not name keeps the empty fields it was read with: there is nothing
- * to read, and saying so is better than failing the whole scan.
- */
 async function withPacks(tools: PluginTools, packs: PluginHeld[]): Promise<PluginHeld[]> {
-  return Promise.all(
-    packs.map(async (pack) =>
-      pack.source === undefined
-        ? pack
-        : { ...pack, pack: await tools.describe(pack.source.path, pack.name).catch(() => pack.pack) }
-    )
-  )
+  return Promise.all(packs.map(async (pack) => pack.source === undefined
+    ? pack
+    : { ...pack, pack: await tools.describe(pack.source.path, pack.name).catch(() => pack.pack) }))
 }
 
-/** Claude Code, as the plugins module uses it. */
-export const claudeCodeInstaller: PluginInstaller = {
-  id: CLAUDE_CODE_ID,
-  label: LABEL,
-  places: PLACES,
+function join(root: string, relative: string): string {
+  const separator = root.includes("\\") ? "\\" : "/"
+  return `${root.replace(/[\\/]+$/, "")}${separator}${relative.replace(/\//g, separator)}`
+}
 
-  available: (tools) => tools.has(PROGRAM),
+function normalized(value: string, platform: PluginDiskRoots["platform"]): string {
+  const clean = value.replace(/\\/g, "/").replace(/\/+$/, "")
+  return platform === "win32" ? clean.toLowerCase() : clean
+}
 
-  async held(tools) {
-    return withPacks(
-      tools,
-      readHeld(await tools.run(PROGRAM, ["plugin", "list", JSON_FLAG]), await folderInUse(tools))
-    )
-  },
+function versionSegment(version: string): string {
+  if (version === "") return "unknown"
+  if (/[<>:"|?*\\/]/.test(version) || [...version].some((char) => char.codePointAt(0)! < 32) || version.startsWith(".") || version !== version.trim() ||
+      /[. ]$/.test(version) || /^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?$/i.test(version)) {
+    throw new Error(`invalid plugin version: ${version}`)
+  }
+  return version
+}
 
-  async switches(tools) {
-    /* Each place's file, read once and answered for every pack in it. */
-    const recorded: PluginSwitches = {}
-    for (const place of PLACES) {
-      recorded[place.scopeWord] = await switchesAt(tools, place)
+function manifestOf(json: PluginJsonTools, raw: string | null, where: string): Record<string, unknown> | null {
+  if (raw === null) return null
+  try {
+    return json.readJsonObject(raw) ?? {}
+  } catch (error) {
+    throw new Error(`cannot read ${where}: ${error instanceof Error ? error.message : String(error)}`, { cause: error })
+  }
+}
+
+function dependenciesOf(manifest: Record<string, unknown> | null): string[] {
+  const value = manifest?.dependencies
+  if (value === undefined) return []
+  if (!Array.isArray(value)) throw new Error("invalid plugin dependencies")
+  return value.map((one) => {
+    if (typeof one === "string" && one !== "") return one
+    if (typeof one === "object" && one !== null && typeof (one as { name?: unknown }).name === "string") {
+      return (one as { name: string }).name
     }
-    return recorded
-  },
+    throw new Error("invalid plugin dependency")
+  })
+}
 
-  async install(id, scope, tools) {
-    await ensureMarketplace(tools)
-    const report = reportOf(
-      await tools.run(PROGRAM, [
-        "plugin",
-        "install",
-        `${id}@${MARKETPLACE}`,
-        "--scope",
-        scope,
-        JSON_FLAG,
-        "-y",
-      ])
-    )
-    return {
-      message: `${id} installed for Claude Code at ${scope} scope`,
-      location: report.installPath,
+function writable(scope: string, id: string): void {
+  if (scope !== "user" && scope !== "project") throw new Error(`${scope} installs are read-only`)
+  if (id.lastIndexOf("@") <= 0 || id.endsWith("@")) throw new Error("invalid plugin identity")
+  const marketplace = id.slice(id.lastIndexOf("@") + 1)
+  if (marketplace === "skills-dir" || marketplace === "synced" || marketplace === "inline") {
+    throw new Error(`${marketplace} plugins are read-only`)
+  }
+}
+
+function assertUnmanaged(state: PluginState, id: string): void {
+  if (state.index.plugins[id]?.some((record) => record.scope === "managed")) {
+    throw new Error(`${id} is controlled by managed policy`)
+  }
+}
+
+function atScope(records: readonly InstalledRecord[], scope: string, roots: PluginDiskRoots): InstalledRecord[] {
+  return records.filter((record) => record.scope === scope &&
+    (scope === "user" || (record.projectPath !== undefined && roots.workspace !== null && sameProject(record.projectPath, roots.workspace, roots.platform))))
+}
+
+function withSwitch(state: PluginState, scope: string, id: string, on: boolean | undefined, json: PluginJsonTools): PluginDiskChange | null {
+  const ref = SETTINGS[scope]
+  if (ref === undefined) throw new Error(`${scope} installs are read-only`)
+  const raw = state.raw[scope as "user"]
+  const recorded = state.switches[scope]?.[id]
+  if (recorded === on) return null
+  return { ref, before: raw, after: json.editJson(raw, ["enabledPlugins", id], on) }
+}
+
+async function sourceOf(disk: PluginDisk, roots: PluginDiskRoots, json: PluginJsonTools, state: PluginState, id: string, record: InstalledRecord | undefined): Promise<string | null> {
+  const marketplace = id.slice(id.lastIndexOf("@") + 1)
+  return await marketplacePack(disk, roots, json, state.markets[marketplace], id.slice(0, id.lastIndexOf("@"))) ??
+    record?.installPath ?? null
+}
+
+async function dependenciesAt(disk: PluginDisk, roots: PluginDiskRoots, json: PluginJsonTools, directory: string | null): Promise<string[]> {
+  if (directory === null) throw new Error("cannot verify plugin dependencies without its source directory")
+  const raw = await disk.readExternal(roots, directory, ".claude-plugin/plugin.json")
+  return dependenciesOf(manifestOf(json, raw, "plugin.json"))
+}
+
+async function assertNotRequired(disk: PluginDisk, roots: PluginDiskRoots, json: PluginJsonTools, state: PluginState, id: string): Promise<void> {
+  const declared = await heldFromState(disk, roots, json, state)
+  for (const [other, records] of Object.entries(state.index.plugins)) {
+    if (other === id || !effective(state.switches, other)) continue
+    const record = records.find((entry) => entry.scope === "user" ||
+      ((entry.scope === "project" || entry.scope === "local") && roots.workspace !== null &&
+       entry.projectPath !== undefined && sameProject(entry.projectPath, roots.workspace, roots.platform)))
+    if (record === undefined) continue
+    const source = await sourceOf(disk, roots, json, state, other, record)
+    if (source === null) throw new Error(`cannot check dependencies of ${other}`)
+    const dependencies = await dependenciesAt(disk, roots, json, source)
+    const marketplace = other.slice(other.lastIndexOf("@") + 1)
+    if (dependencies.some((dependency) => (dependency.includes("@") ? dependency : `${dependency}@${marketplace}`) === id)) {
+      throw new Error(`${id} is required by enabled plugin ${other}`)
     }
-  },
+  }
+  for (const entry of declared) {
+    if (entry.origin !== "declaration" || entry.id === id || !entry.enabled) continue
+    const dependencies = await dependenciesAt(disk, roots, json, entry.source?.path ?? null)
+    if (dependencies.some((dependency) => (dependency.includes("@") ? dependency : `${dependency}@${entry.marketplace}`) === id)) {
+      throw new Error(`${id} is required by enabled plugin ${entry.id}`)
+    }
+  }
+}
 
-  async remove(id, scope, tools) {
-    /* The id is the client's own, and it names the marketplace the pack really
-       came from: a pack this hub never delivered was installed from somewhere
-       else, and this hub's own name would point at a copy that is not there. */
-    await tools.run(PROGRAM, [
-      "plugin",
-      "uninstall",
-      id,
-      "--scope",
-      scope,
-      JSON_FLAG,
-    ])
-    return { message: `${id} removed from Claude Code at ${scope} scope` }
-  },
+function marketChanges(state: PluginState, root: string, json: PluginJsonTools, now: string, statePlatform: PluginDiskRoots["platform"]): PluginDiskChange[] {
+  const changes: PluginDiskChange[] = []
+  const known = state.markets[MARKETPLACE]
+  const knownSource = typeof known === "object" && known !== null ? (known as { source?: unknown }).source : undefined
+  const knownPath = typeof knownSource === "object" && knownSource !== null && (knownSource as { source?: unknown }).source === "directory"
+    ? (knownSource as { path?: unknown }).path : undefined
+  if (known === undefined) {
+    changes.push({
+      ref: { root: "plugins", path: "known_marketplaces.json" },
+      before: state.raw.markets,
+      after: json.editJson(state.raw.markets, [MARKETPLACE], {
+        source: { source: "directory", path: root },
+        installLocation: root,
+        lastUpdated: now,
+      }),
+    })
+  } else if (typeof knownPath !== "string" || normalized(knownPath, statePlatform) !== normalized(root, statePlatform)) {
+    throw new Error(`${MARKETPLACE} marketplace already points at another directory`)
+  }
+  const declared = state.settings.user.extraKnownMarketplaces
+  const declaration = typeof declared === "object" && declared !== null ? (declared as Record<string, unknown>)[MARKETPLACE] : undefined
+  const declaredSource = typeof declaration === "object" && declaration !== null ? (declaration as { source?: unknown }).source : undefined
+  const declaredPath = typeof declaredSource === "object" && declaredSource !== null && (declaredSource as { source?: unknown }).source === "directory"
+    ? (declaredSource as { path?: unknown }).path : undefined
+  if (declaration === undefined) {
+    changes.push({
+      ref: SETTINGS.user,
+      before: state.raw.user,
+      after: json.editJson(state.raw.user, ["extraKnownMarketplaces", MARKETPLACE], { source: { source: "directory", path: root } }),
+    })
+  } else if (typeof declaredPath !== "string" || normalized(declaredPath, statePlatform) !== normalized(root, statePlatform)) {
+    throw new Error(`${MARKETPLACE} marketplace is already declared at another directory`)
+  }
+  return changes
+}
 
-  async setEnabled(id, scope, on, tools) {
-    /* The id is the client's own, for the reason `remove` gives: only the id the
-       agent itself listed names the copy it will find. */
-    await tools.run(PROGRAM, [
-      "plugin",
-      on ? "enable" : "disable",
-      id,
-      "--scope",
-      scope,
-      JSON_FLAG,
-    ])
-    return { message: `${id} ${on ? "enabled" : "disabled"} for Claude Code at ${scope} scope` }
-  },
+function indexChange(state: PluginState, id: string, records: InstalledRecord[] | undefined, json: PluginJsonTools): PluginDiskChange {
+  const ref: PluginDiskRef = { root: "plugins", path: "installed_plugins.json" }
+  const before = state.raw.index
+  if (state.index.document.version === 1) {
+    const plugins: Record<string, InstalledRecord[]> = { ...state.index.plugins }
+    if (records === undefined) delete plugins[id]
+    else plugins[id] = records
+    return { ref, before, after: `${JSON.stringify({ ...state.index.document, version: 2, plugins }, null, 2)}\n` }
+  }
+  return {
+    ref,
+    before,
+    after: before === null
+      ? `${JSON.stringify({ version: 2, plugins: records === undefined ? {} : { [id]: records } }, null, 2)}\n`
+      : json.editJson(before, ["plugins", id], records),
+  }
+}
+
+function cacheRelative(roots: PluginDiskRoots, installPath: string): string | null {
+  const root = `${normalized(roots.plugins, roots.platform)}/cache/`
+  const path = normalized(installPath, roots.platform)
+  if (!path.startsWith(root)) return null
+  const original = installPath.replace(/\\/g, "/")
+  const relative = original.slice(root.length)
+  return relative === "" || relative.split("/").includes("..") ? null : relative
+}
+
+export function createClaudeCodeInstaller(json: PluginJsonTools): PluginInstaller {
+  return {
+    id: CLAUDE_CODE_ID,
+    label: LABEL,
+    places: PLACES,
+
+    async available(tools) {
+      await diskOf(tools).roots(CLAUDE_PLUGIN_ROOTS)
+      return true
+    },
+
+    async held(tools) {
+      const disk = diskOf(tools)
+      const roots = await disk.roots(CLAUDE_PLUGIN_ROOTS)
+      const state = await readState(disk, roots, json)
+      return withPacks(tools, await heldFromState(disk, roots, json, state))
+    },
+
+    async switches(tools) {
+      const disk = diskOf(tools)
+      return (await readState(disk, await disk.roots(CLAUDE_PLUGIN_ROOTS), json)).switches
+    },
+
+    async install(name, scope, tools) {
+      const disk = diskOf(tools)
+      if (scope !== "user" && scope !== "project") throw new Error(`${scope} installs are read-only`)
+      const root = await tools.root()
+      return disk.run(CLAUDE_PLUGIN_ROOTS, async (roots) => {
+        if (normalized(root, roots.platform) !== normalized(roots.library, roots.platform)) {
+          throw new Error("plugin library changed; retry the installation")
+        }
+        if (scope === "project" && roots.workspace === null) throw new Error("Select a workspace before installing into the project")
+        const state = await readState(disk, roots, json)
+        const id = `${name}@${MARKETPLACE}`
+        writable(scope, id)
+        assertUnmanaged(state, id)
+        const manifest = manifestOf(
+          json,
+          await disk.read(roots, { root: "library", path: `${name}/.claude-plugin/plugin.json` }),
+          `${name}/.claude-plugin/plugin.json`,
+        )
+        const alternative = manifest === null
+          ? manifestOf(json, await disk.read(roots, { root: "library", path: `${name}/plugin.json` }), `${name}/plugin.json`) ??
+            manifestOf(json, await disk.read(roots, { root: "library", path: `${name}/.claude-plugin/marketplace.json` }), `${name}/.claude-plugin/marketplace.json`)
+          : null
+        const dependencies = [...dependenciesOf(manifest), ...dependenciesOf(alternative)]
+        if (dependencies.length > 0) {
+          throw new Error(`${name} depends on ${dependencies.join(", ")}; dependencies cannot be installed from files yet`)
+        }
+        const now = new Date().toISOString()
+        const marketUpdates = marketChanges(state, root, json, now, roots.platform)
+        await tools.syncMarketplace()
+        const index = manifestOf(json, await disk.read(roots, { root: "library", path: ".claude-plugin/marketplace.json" }), "marketplace.json")
+        if (!Array.isArray(index?.plugins)) throw new Error("invalid Hub marketplace index")
+        const listed = index.plugins.find((entry) => typeof entry === "object" && entry !== null && (entry as { name?: unknown }).name === name)
+        if (listed === undefined) throw new Error(`${name} is not listed in the Hub marketplace`)
+        const marketVersion = (listed as { version?: unknown }).version
+        const version = (typeof manifest?.version === "string" && manifest.version !== "" ? manifest.version : undefined) ??
+          (typeof marketVersion === "string" && marketVersion !== "" ? marketVersion : "unknown")
+
+        const existing = state.index.plugins[id] ?? []
+        const current = atScope(existing, scope, roots)[0]
+        const destination = `cache/${MARKETPLACE}/${name}/${versionSegment(version)}`
+        const record: InstalledRecord = {
+          ...current,
+          scope,
+          ...(scope === "project" ? { projectPath: current?.projectPath ?? roots.workspace! } : {}),
+          installPath: join(roots.plugins, destination),
+          version,
+          installedAt: current?.installedAt ?? now,
+          lastUpdated: current?.installPath === join(roots.plugins, destination) && current.version === version
+            ? (current.lastUpdated ?? now)
+            : now,
+        }
+        const records = current === undefined
+          ? [...existing, record]
+          : existing.map((one) => (one === current ? record : one))
+        const marker: PluginDiskRef = { root: "plugins", path: `${destination}/.orphaned_at` }
+        const markerText = await disk.read(roots, marker)
+        const changes: PluginDiskChange[] = [
+          ...(markerText === null ? [] : [{ ref: marker, before: markerText, after: null }]),
+          ...marketUpdates,
+          indexChange(state, id, records, json),
+        ]
+        const enabled = withSwitch(state, scope, id, true, json)
+        if (enabled !== null) {
+          const prior = changes.find((change) => change.ref.root === enabled.ref.root && change.ref.path === enabled.ref.path)
+          if (prior === undefined) changes.push(enabled)
+          else prior.after = json.editJson(prior.after, ["enabledPlugins", id], true)
+        }
+        await disk.commit(roots, changes, { name, destination })
+        return {
+          message: `${name} installed for Claude Code at ${scope} scope`,
+          location: record.installPath,
+        }
+      })
+    },
+
+    async remove(id, scope, tools) {
+      const disk = diskOf(tools)
+      writable(scope, id)
+      return disk.run(CLAUDE_PLUGIN_ROOTS, async (roots) => {
+        if (scope === "project" && roots.workspace === null) throw new Error("Select a workspace before removing a project installation")
+        const state = await readState(disk, roots, json)
+        assertUnmanaged(state, id)
+        const existing = state.index.plugins[id] ?? []
+        const targets = atScope(existing, scope, roots)
+        if (targets.length === 0) {
+          const declared = (await heldFromState(disk, roots, json, state)).some((entry) =>
+            entry.id === id && entry.scope === scope && entry.origin === "declaration" && !entry.readOnly)
+          if (!declared) throw new Error(`${id} is not installed for Claude Code at ${scope} scope`)
+          await assertNotRequired(disk, roots, json, state, id)
+          const change = withSwitch(state, scope, id, undefined, json)
+          if (change !== null) await disk.commit(roots, [change])
+          return { message: `${id} removed from Claude Code at ${scope} scope` }
+        }
+        const remaining = existing.filter((record) => !targets.includes(record))
+        await assertNotRequired(disk, roots, json, state, id)
+        const remainingRecords = Object.entries(state.index.plugins).flatMap(([other, records]) => other === id ? remaining : records)
+        const changes: PluginDiskChange[] = []
+        const disabled = withSwitch(state, scope, id, undefined, json)
+        if (disabled !== null) changes.push(disabled)
+        changes.push(indexChange(state, id, remaining.length === 0 ? undefined : remaining, json))
+        const paths = new Set(targets.flatMap((record) => record.installPath === undefined ? [] : [record.installPath]))
+        for (const installPath of paths) {
+          if (remainingRecords.some((record) => record.installPath !== undefined &&
+            normalized(record.installPath, roots.platform) === normalized(installPath, roots.platform))) continue
+          const relative = cacheRelative(roots, installPath)
+          if (relative === null) continue
+          const marker: PluginDiskRef = { root: "plugins", path: `cache/${relative}/.orphaned_at` }
+          changes.push({ ref: marker, before: await disk.read(roots, marker), after: String(Date.now()) })
+        }
+        await disk.commit(roots, changes)
+        return { message: `${id} removed from Claude Code at ${scope} scope` }
+      })
+    },
+
+    async setEnabled(id, scope, on, tools) {
+      const disk = diskOf(tools)
+      writable(scope, id)
+      return disk.run(CLAUDE_PLUGIN_ROOTS, async (roots) => {
+        if (scope === "project" && roots.workspace === null) throw new Error("Select a workspace before switching a project installation")
+        const state = await readState(disk, roots, json)
+        assertUnmanaged(state, id)
+        const records = state.index.plugins[id]
+        const here = records === undefined ? [] : atScope(records, scope, roots)
+        const declared = state.switches[scope]?.[id] !== undefined
+        if (here.length === 0 && !declared && !(scope === "project" && records?.some((record) => record.scope === "user"))) {
+          throw new Error(`${id} is not installed for Claude Code at ${scope} scope`)
+        }
+        if (on) {
+          const dependencies = await dependenciesAt(disk, roots, json, await sourceOf(disk, roots, json, state, id, here[0] ?? records?.[0]))
+          if (dependencies.length > 0) {
+            throw new Error(`${id} depends on ${dependencies.join(", ")}; dependencies cannot be installed from files yet`)
+          }
+        } else {
+          await assertNotRequired(disk, roots, json, state, id)
+        }
+        const change = withSwitch(state, scope, id, on, json)
+        if (change !== null) await disk.commit(roots, [change])
+        return { message: `${id} ${on ? "enabled" : "disabled"} for Claude Code at ${scope} scope` }
+      })
+    },
+  }
 }
