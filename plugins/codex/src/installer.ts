@@ -1,183 +1,136 @@
-/**
- * How Codex installs a plugin, as the extension that knows Codex.
- *
- * Codex reads a marketplace index from a local directory, so this registers the
- * hub's library root as one, then installs a pack from it by name. The root is
- * read from the tools rather than assumed, because the hub decides where its
- * library lives.
- *
- * `config.toml` and the versioned cache under `~/.codex/plugins` are Codex's own
- * documents, with their own history, so nothing here writes them: its CLI
- * records the marketplace and copies the pack itself.
- *
- * A pack is either present for Codex or not, and Codex has no per-plugin switch,
- * so this declares the one scope it has and leaves `setEnabled` out.
- *
- * Types only, and they come from the plugins module because that module owns the
- * contract an installer is written against. A type import is erased, so at run
- * time this extension reads nothing from that package: the registry to register
- * into and the tools to run a program with arrive through the `plugins` service.
- */
-import type { PluginHeld, PluginInstaller, PluginTools } from "./contracts.ts"
+import type { McpTools, PluginDisk, PluginDiskRoots, PluginHeld, PluginInstaller, PluginTools } from "./contracts.ts"
 import { CODEX_ID } from "./locations.ts"
 
-/** The marketplace name the hub's library is registered under. */
 const MARKETPLACE = "context-hub"
+const CONFIG = { root: "config", path: "config.toml" } as const
+const SCOPE = {
+  home: ".codex", homeEnv: "CODEX_HOME", state: "plugins",
+  config: { write: ["config.toml"], read: [] },
+  stateFiles: { write: ["cache/*/*", "cache/*/*/*"], read: ["cache/*/*"] },
+  workspace: { write: [], read: [] },
+  library: { write: [], read: [".agents/plugins/marketplace.json", "*/.codex-plugin/plugin.json", "*/.claude-plugin/plugin.json", "*/plugin.json"] },
+  external: [],
+} as const
 
-/** Codex's program, and the flag that makes it report JSON. */
-const PROGRAM = "codex"
-const JSON_FLAG = "--json"
-
-/** The client's own name, as its rows read. */
-const LABEL = "Codex"
-
-/**
- * Register the library root as a marketplace, and report the root.
- *
- * The catalog is rewritten first: a marketplace registered around an index that
- * does not yet list a pack would leave that pack invisible, and this is the only
- * moment the two are known to be in step.
- */
-async function ensureMarketplace(tools: PluginTools): Promise<string> {
-  await tools.syncMarketplace()
-  const root = await tools.root()
-  /* Registering a marketplace that is already registered reports `alreadyAdded`
-     rather than failing, so this needs no remembered state to stay idempotent. */
-  await tools.run(PROGRAM, ["plugin", "marketplace", "add", root, JSON_FLAG])
-  return root
+function diskOf(tools: PluginTools): PluginDisk {
+  if (!tools.disk) throw new Error("plugin file access is unavailable")
+  return tools.disk
 }
-
-/** The plugin list Codex reports, or nothing. */
-function listed(output: string): { installed?: unknown } {
-  try {
-    const parsed: unknown = JSON.parse(output)
-    return typeof parsed === "object" && parsed !== null
-      ? (parsed as { installed?: unknown })
-      : {}
-  } catch {
-    /* A client that printed prose still succeeded or failed by its exit code. */
-    return {}
+function object(value: unknown): Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value) ? value as Record<string, unknown> : {}
+}
+function identifier(id: string): [string, string] {
+  const match = /^([A-Za-z0-9_-][A-Za-z0-9_.-]*)@([A-Za-z0-9_-][A-Za-z0-9_.-]*)$/.exec(id)
+  if (!match) throw new Error(`invalid plugin id: ${id}`)
+  return [match[1]!, match[2]!]
+}
+function writable(id: string): string {
+  const [name, market] = identifier(id)
+  if (market !== MARKETPLACE) throw new Error("plugin belongs to another marketplace")
+  return name
+}
+function join(root: string, relative: string, platform: PluginDiskRoots["platform"]): string {
+  const separator = platform === "win32" ? "\\" : "/"
+  return `${root.replace(/[\\/]+$/, "")}${separator}${relative.split("/").join(separator)}`
+}
+/** Codex writes verbatim `\\?\` paths; the same directory must not read as a different one. */
+function samePath(a: string, b: string, platform: PluginDiskRoots["platform"]): boolean {
+  const normalize = (value: string): string => {
+    const clean = value.replace(/^\\\\\?\\/, "").replace(/\\/g, "/").replace(/\/+$/, "")
+    return platform === "win32" ? clean.toLowerCase() : clean
   }
+  return normalize(a) === normalize(b)
+}
+function manifest(raw: string | null): Record<string, unknown> {
+  if (raw === null) return {}
+  const value: unknown = JSON.parse(raw)
+  if (typeof value !== "object" || value === null || Array.isArray(value)) throw new Error("invalid plugin manifest")
+  return value as Record<string, unknown>
 }
 
-/** What `codex plugin add --json` reported, or nothing. */
-function reportOf(output: string): { installedPath?: string } {
-  try {
-    const parsed: unknown = JSON.parse(output.trim())
-    return typeof parsed === "object" && parsed !== null
-      ? (parsed as { installedPath?: string })
-      : {}
-  } catch {
-    /* The install already succeeded; a report this build cannot read is not a failure. */
-    return {}
-  }
-}
-
-/**
- * The pack list this client prints, read into the shape this hub records one by.
- *
- * Codex reports no scope of its own — a pack is installed for the machine — so
- * every entry reads as `user`, which is the one scope this installer declares.
- *
- * What the pack itself carries is not in this answer, so `pack` reads empty
- * here; {@link PluginInstaller.held} fills it in by reading each directory.
- *
- * @param output — what `codex plugin list --json` printed.
- * @returns one entry per installed pack, in the order the client listed them.
- */
-export function readHeld(output: string): PluginHeld[] {
-  const { installed } = listed(output)
-  if (!Array.isArray(installed)) return []
-  const found: PluginHeld[] = []
-  for (const value of installed) {
-    if (typeof value !== "object" || value === null) continue
-    const entry = value as Record<string, unknown>
-    if (typeof entry.name !== "string" || entry.name === "") continue
-    /* `--available` is not passed, but a client that lists an uninstalled entry
-       here still says so in this field. */
-    if (entry.installed === false) continue
-    const source = entry.source
-    const path =
-      typeof source === "object" && source !== null
-        ? (source as Record<string, unknown>).path
-        : undefined
-    found.push({
-      name: entry.name,
-      id:
-        typeof entry.pluginId === "string" && entry.pluginId !== ""
-          ? entry.pluginId
-          : entry.name,
-      version: typeof entry.version === "string" ? entry.version : "",
-      scope: "user",
-      enabled: entry.enabled !== false,
-      marketplace:
-        typeof entry.marketplaceName === "string" && entry.marketplaceName !== ""
-          ? entry.marketplaceName
-          : null,
-      ...(typeof path === "string" && path !== "" ? { source: { kind: "local", path } } : {}),
-      pack: { name: "", version: "", description: "" },
-    })
-  }
-  return found
-}
-
-/**
- * Fill in what each pack says about itself, reading it where the pack sits.
- *
- * @param tools — the toolkit the plugins module hands over.
- * @param packs — what the client's own list reported.
- */
-async function withPacks(tools: PluginTools, packs: PluginHeld[]): Promise<PluginHeld[]> {
-  return Promise.all(
-    packs.map(async (pack) =>
-      pack.source === undefined
-        ? pack
-        : { ...pack, pack: await tools.describe(pack.source.path, pack.name).catch(() => pack.pack) }
-    )
-  )
-}
-
-/** Codex, as the plugins module uses it. */
-export const codexInstaller: PluginInstaller = {
-  id: CODEX_ID,
-  label: LABEL,
-  /* Codex installs a plugin for the machine, with no per-project variant, and
-     keeps no switch for one — so its single place names no file and is not the
-     hub's to move. */
-  places: [
-    {
-      id: "codex-user",
-      label: LABEL,
-      scope: "global",
-      scopeWord: "user",
-      switchable: false,
-    },
-  ],
-
-  available: (tools) => tools.has(PROGRAM),
-
-  async held(tools) {
-    return withPacks(tools, readHeld(await tools.run(PROGRAM, ["plugin", "list", JSON_FLAG])))
-  },
-
-  async install(name, _scope, tools) {
-    await ensureMarketplace(tools)
-    const report = reportOf(
-      await tools.run(PROGRAM, ["plugin", "add", `${name}@${MARKETPLACE}`, JSON_FLAG])
-    )
-    return {
-      message: `${name} installed for Codex`,
-      ...(typeof report.installedPath === "string" && report.installedPath !== ""
-        ? { location: report.installedPath }
-        : {}),
+export function createCodexInstaller(toml: Pick<McpTools, "parseToml" | "setTomlEntry" | "setTomlField" | "clearTomlEntry">): PluginInstaller {
+  const parse = (text: string | null) => text === null || text.trim() === "" ? {} : toml.parseToml(text)
+  const entries = async (tools: PluginTools): Promise<PluginHeld[]> => {
+    const disk = diskOf(tools)
+    const roots = await disk.roots(SCOPE)
+    const plugins = object(parse(await disk.read(roots, CONFIG)).plugins)
+    const fallback = object(plugins._default).enabled
+    const result: PluginHeld[] = []
+    for (const [id, value] of Object.entries(plugins)) {
+      if (id === "_default" || typeof value !== "object" || value === null || Array.isArray(value)) continue
+      let name: string, market: string
+      try { [name, market] = identifier(id) } catch { continue }
+      const versions = (await disk.list(roots, { root: "plugins", path: `cache/${market}/${name}` })).filter((entry) => entry.directory).map((entry) => entry.name).sort()
+      if (versions.length === 0) continue
+      const version = versions[versions.length - 1]!
+      const enabled = object(value).enabled
+      const source = join(roots.plugins, `cache/${market}/${name}/${version}`, roots.platform)
+      const pack = await tools.describe(source, name).catch(() => ({ name: "", version: "", description: "" }))
+      result.push({ name, id, version, scope: "user", enabled: typeof enabled === "boolean" ? enabled : typeof fallback === "boolean" ? fallback : true, marketplace: market, readOnly: market !== MARKETPLACE, source: { kind: "local", path: source }, pack })
     }
-  },
-
-  async remove(id, _scope, tools) {
-    /* The id is the client's own, and it names the marketplace the pack really
-       came from: a pack this hub never delivered was installed from somewhere
-       else, and this hub's own name would point at a copy that is not there. */
-    await tools.run(PROGRAM, ["plugin", "remove", id, JSON_FLAG])
-    return { message: `${id} removed from Codex` }
-  },
+    return result
+  }
+  return {
+    id: CODEX_ID, label: "Codex",
+    places: [{ id: "codex-user", label: "Codex", scope: "global", scopeWord: "user", switchable: true, file: "config.toml" }],
+    async available(tools) { try { await diskOf(tools).roots(SCOPE); return true } catch { return false } },
+    held: entries,
+    async switches(tools) { return { user: Object.fromEntries((await entries(tools)).map((entry) => [entry.id, entry.enabled])) } },
+    async install(name, scope, tools) {
+      if (scope !== "user") throw new Error("unsupported plugin scope")
+      writable(`${name}@${MARKETPLACE}`)
+      const disk = diskOf(tools)
+      const packs = await tools.packs()
+      await tools.syncMarketplace([{ path: ".agents/plugins/marketplace.json", document: {
+        name: MARKETPLACE, description: "Plugin packs collected by Context Hub.", interface: { displayName: "Context Hub" },
+        plugins: packs.map((pack) => ({ name: pack.name, source: { source: "local", path: `./${pack.name}` }, policy: { installation: "AVAILABLE" }, category: "Other", description: pack.description, version: pack.version })),
+      } }])
+      return disk.run(SCOPE, async (roots) => {
+        const index = manifest(await disk.read(roots, { root: "library", path: ".agents/plugins/marketplace.json" }))
+        const listed = Array.isArray(index.plugins) ? index.plugins.find((entry) => object(entry).name === name) : undefined
+        if (!listed) throw new Error(`${name} is not listed in the Hub marketplace`)
+        const first = manifest(await disk.read(roots, { root: "library", path: `${name}/.codex-plugin/plugin.json` }))
+        const second = manifest(await disk.read(roots, { root: "library", path: `${name}/.claude-plugin/plugin.json` }))
+        const version = [first.version, second.version, object(listed).version].find((value) => typeof value === "string" && value !== "") ?? "local"
+        if (typeof version !== "string" || !/^[A-Za-z0-9_-][A-Za-z0-9_.-]*$/.test(version) || version === "..") throw new Error("invalid plugin version")
+        const before = await disk.read(roots, CONFIG)
+        const document = parse(before)
+        const existingMarket = object(document.marketplaces)[MARKETPLACE]
+        const market = object(existingMarket)
+        if (existingMarket !== undefined && (market.source_type !== "local" || typeof market.source !== "string" || !samePath(market.source, roots.library, roots.platform))) throw new Error("marketplace points to another directory")
+        let after = existingMarket === undefined ? toml.setTomlEntry(before ?? "", "marketplaces", MARKETPLACE, { source_type: "local", source: roots.library }) : before ?? ""
+        const id = `${name}@${MARKETPLACE}`
+        const existing = object(object(document.plugins)[id])
+        after = Object.keys(existing).length > 0 ? toml.setTomlField(after, "plugins", id, "enabled", true) : toml.setTomlEntry(after, "plugins", id, { enabled: true })
+        const destination = `cache/${MARKETPLACE}/${name}/${version}`
+        await disk.commit(roots, [{ ref: CONFIG, before, after }], { name, destination, replace: true, pruneVersions: true })
+        return { message: `${name} installed for Codex`, location: join(roots.plugins, destination, roots.platform) }
+      })
+    },
+    async remove(id, scope, tools) {
+      if (scope !== "user") throw new Error("unsupported plugin scope")
+      const name = writable(id)
+      const disk = diskOf(tools)
+      return disk.run(SCOPE, async (roots) => {
+        const before = await disk.read(roots, CONFIG)
+        if (!Object.hasOwn(object(parse(before).plugins), id)) throw new Error("plugin is not installed")
+        const after = toml.clearTomlEntry(before ?? "", "plugins", id)
+        await disk.commit(roots, [{ ref: CONFIG, before, after }])
+        await disk.removeDirectory(roots, { root: "plugins", path: `cache/${MARKETPLACE}/${name}` })
+        return { message: `${id} removed from Codex` }
+      })
+    },
+    async setEnabled(id, scope, on, tools) {
+      if (scope !== "user") throw new Error("unsupported plugin scope")
+      writable(id)
+      const disk = diskOf(tools)
+      return disk.run(SCOPE, async (roots) => {
+        const before = await disk.read(roots, CONFIG)
+        if (!Object.hasOwn(object(parse(before).plugins), id)) throw new Error("plugin is not installed")
+        const after = toml.setTomlField(before ?? "", "plugins", id, "enabled", on)
+        await disk.commit(roots, [{ ref: CONFIG, before, after }])
+        return { message: `${id} ${on ? "enabled" : "disabled"} for Codex` }
+      })
+    },
+  }
 }

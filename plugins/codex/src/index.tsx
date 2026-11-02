@@ -13,7 +13,7 @@
 import { useId } from "react"
 
 import type { CodexScope, ExtensionIcon, SkillPlace } from "./contracts.ts"
-import { codexInstaller } from "./installer.ts"
+import { createCodexInstaller } from "./installer.ts"
 import {
   CODEX_ID,
   CODEX_SKILL_DIR,
@@ -97,7 +97,7 @@ export function apply(ctx: CodexScope): void {
   ctx.skills.register({ id: CODEX_ID, places: skillPlaces(icon) })
   ctx.prompts.register(createCodexPrompts(ctx.prompts.tools, ctx.mcp.tools, icon))
   ctx.mcp.register(createCodexMcp(ctx.mcp.tools))
-  ctx.plugins.register(codexInstaller)
+  ctx.plugins.register(createCodexInstaller(ctx.mcp.tools))
 
   ctx.targets.register({
     id: CODEX_ID,
