@@ -264,7 +264,11 @@ export function createClaudeCodeInstaller(json: PluginJsonTools): PluginInstalle
         }
         const now = new Date().toISOString()
         const marketUpdates = marketChanges(state, root, json, now, roots.platform)
-        await tools.syncMarketplace()
+        const packs = await tools.packs()
+        await tools.syncMarketplace([{ path: ".claude-plugin/marketplace.json", document: {
+          name: MARKETPLACE, description: "Plugin packs collected by Context Hub.", owner: { name: "Context Hub" },
+          plugins: packs.map((pack) => ({ name: pack.name, source: `./${pack.name}`, description: pack.description, version: pack.version })),
+        } }])
         const index = manifestOf(json, await disk.read(roots, { root: "library", path: ".claude-plugin/marketplace.json" }), "marketplace.json")
         if (!Array.isArray(index?.plugins)) throw new Error("invalid Hub marketplace index")
         const listed = index.plugins.find((entry) => typeof entry === "object" && entry !== null && (entry as { name?: unknown }).name === name)

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import type { PluginDisk, PluginDiskDeclaration, PluginDiskRoots, PluginJsonTools, PluginTools } from "../src/contracts.ts"
+import { CLAUDE_PLUGIN_ROOTS } from "../src/locations.ts"
 import { createClaudeCodeInstaller } from "../src/installer.ts"
 import { installedIndex, sameProject } from "../src/plugin-state.ts"
 
@@ -28,7 +29,7 @@ const json: PluginJsonTools = {
 
 function fixture(initial: Record<string, string> = {}, workspace: string | null = "/workspace") {
   const files = new Map(Object.entries(initial))
-  const declaration: PluginDiskDeclaration = { configDir: ".claude", configEnv: "CLAUDE_CONFIG_DIR", pluginsDir: "plugins", pluginsEnv: "CLAUDE_CODE_PLUGIN_CACHE_DIR" }
+  const declaration: PluginDiskDeclaration = CLAUDE_PLUGIN_ROOTS
   const roots: PluginDiskRoots = { declaration, config: "/config", plugins: "/plugins", workspace, library: "/library", platform: "posix" }
   const key = (ref: { root: string; path: string }) => `${ref.root}:${ref.path}`
   const disk: PluginDisk = {
@@ -56,6 +57,7 @@ function fixture(initial: Record<string, string> = {}, workspace: string | null 
   const tools: PluginTools = {
     disk,
     root: async () => roots.library,
+    packs: async () => [],
     syncMarketplace: async () => undefined,
     describe: async (_directory, name) => ({ name, version: "", description: "" }),
     ...{ run: () => { throw new Error("CLI was called") }, has: () => { throw new Error("CLI was called") } },

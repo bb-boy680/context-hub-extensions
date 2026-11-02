@@ -118,10 +118,15 @@ export interface PromptProvider {
 }
 
 export interface PluginDiskDeclaration {
-  configDir: string
-  configEnv: string
-  pluginsDir: string
-  pluginsEnv: string
+  home: string
+  homeEnv?: string
+  state: string
+  stateEnv?: string
+  config: { write: readonly string[]; read: readonly string[] }
+  stateFiles: { write: readonly string[]; read: readonly string[] }
+  workspace: { write: readonly string[]; read: readonly string[] }
+  library: { write: readonly string[]; read: readonly string[] }
+  external: readonly string[]
 }
 
 export interface PluginDiskRoots {
@@ -159,7 +164,8 @@ export interface PluginDisk {
 export interface PluginTools {
   disk?: PluginDisk
   root(): Promise<string>
-  syncMarketplace(): Promise<void>
+  packs(): Promise<{ name: string; description: string; version: string }[]>
+  syncMarketplace(indexes: readonly { path: string; document: unknown }[]): Promise<void>
   describe(directory: string, name: string): Promise<{ name: string; version: string; description: string; icon?: string }>
 }
 
