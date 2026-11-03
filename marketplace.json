@@ -10,6 +10,38 @@
   },
   "plugins": [
     {
+      "id": "antigravity",
+      "title": {
+        "en": "Antigravity",
+        "zh-cn": "Antigravity"
+      },
+      "description": {
+        "en": "Connect Antigravity skills, rules, agents, MCP servers and plugin packs.",
+        "zh-cn": "接入 Antigravity 技能、规则、代理、MCP 服务和插件包。"
+      },
+      "icon": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xNDQuMjQ4IDE0OS4wNjJDMTUxLjc0OCAxNTQuNjg4IDE2Mi45OTggMTUwLjkzOCAxNTIuNjg1IDE0MC42MjVDMTIxLjc0OCAxMTAuNjI1IDEyOC4zMSAyOC4xMjUgODkuODcyNyAyOC4xMjVDNTEuNDM1MiAyOC4xMjUgNTcuOTk3NyAxMTAuNjI1IDI3LjA2MDIgMTQwLjYyNUMxNS44MTAyIDE1MS44NzUgMjcuOTk3NyAxNTQuNjg4IDM1LjQ5NzcgMTQ5LjA2MkM2NC41NjAyIDEyOS4zNzUgNjIuNjg1MiA5NC42ODc1IDg5Ljg3MjcgOTQuNjg3NUMxMTcuMDYgOTQuNjg3NSAxMTUuMTg1IDEyOS4zNzUgMTQ0LjI0OCAxNDkuMDYyWiIgZmlsbD0iIzMxODZGRiIvPgo8bWFzayBpZD0ibWFzazBfNjAwMV80MDkiIHN0eWxlPSJtYXNrLXR5cGU6YWxwaGEiIG1hc2tVbml0cz0idXNlclNwYWNlT25Vc2UiIHg9IjIyIiB5PSIyOCIgd2lkdGg9IjEzNiIgaGVpZ2h0PSIxMjUiPgo8cGF0aCBkPSJNMTQ0LjI0OCAxNDkuMDYyQzE1MS43NDggMTU0LjY4OCAxNjIuOTk4IDE1MC45MzggMTUyLjY4NSAxNDAuNjI1QzEyMS43NDggMTEwLjYyNSAxMjguMzEgMjguMTI1IDg5Ljg3MjcgMjguMTI1QzUxLjQzNTIgMjguMTI1IDU3Ljk5NzcgMTEwLjYyNSAyNy4wNjAyIDE0MC42MjVDMTUuODEwMiAxNTEuODc1IDI3Ljk5NzcgMTU0LjY4OCAzNS40OTc3IDE0OS4wNjJDNjQuNTYwMiAxMjkuMzc1IDYyLjY4NTIgOTQuNjg3NSA4OS44NzI3IDk0LjY4NzVDMTE3LjA2IDk0LjY4NzUgMTE1LjE4NSAxMjkuMzc1IDE0NC4yNDggMTQ5LjA2MloiIGZpbGw9IndoaXRlIi8+CjwvbWFzaz4KPGcgbWFzaz0idXJsKCNtYXNrMF82MDAxXzQwOSkiPgo8ZyBmaWx0ZXI9InVybCgjZmlsdGVyMF9mXzYwMDFfNDA5KSI+CjxlbGxpcHNlIGN4PSIzNi42MjI1IiBjeT0iNDMuMDg3MiIgcng9IjM2LjYyMjUiIHJ5PSI0My4wODcyIiB0cmFuc2Zvcm09Im1hdHJpeCgtMC4xMTI3ODQgMC45OTM2MiAtMC45OTM2MiAtMC4xMTI3ODEgMTA2LjU1NyAtMjYuNDg0NykiIGZpbGw9IiNGRkU0MzIiLz4KPC9nPgo8ZyBmaWx0ZXI9InVybCgjZmlsdGVyMV9mXzYwMDFfNDA5KSI+CjxlbGxpcHNlIGN4PSIxNTUuMTYzIiBjeT0iNTQuOTI5MiIgcng9IjQ3LjQxMTgiIHJ5PSI0OC40NTQxIiB0cmFuc2Zvcm09InJvdGF0ZSg3Ni45MjQzIDE1NS4xNjMgNTQuOTI5MikiIGZpbGw9IiNGQzQxM0QiLz4KPC9nPgo8ZyBmaWx0ZXI9InVybCgjZmlsdGVyMl9mXzYwMDFfNDA5KSI+CjxlbGxpcHNlIGN4PSIxNC42MDA2IiBjeT0iNjUuNDQyNSIgcng9IjQ5LjU1MTUiIHJ5PSI2NC4xOTIiIHRyYW5zZm9ybT0icm90YXRlKDc0LjEyNTcgMTQuNjAwNiA2NS40NDI1KSIgZmlsbD0iIzAwQjk1QyIvPgo8L2c+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIzX2ZfNjAwMV80MDkpIj4KPGVsbGlwc2UgY3g9IjE0LjYwMDYiIGN5PSI2NS40NDI1IiByeD0iNDkuNTUxNSIgcnk9IjY0LjE5MiIgdHJhbnNmb3JtPSJyb3RhdGUoNzQuMTI1NyAxNC42MDA2IDY1LjQ0MjUpIiBmaWxsPSIjMDBCOTVDIi8+CjwvZz4KPGcgZmlsdGVyPSJ1cmwoI2ZpbHRlcjRfZl82MDAxXzQwOSkiPgo8ZWxsaXBzZSBjeD0iMTguMTIyNiIgY3k9IjY3LjQxNCIgcng9IjQ4LjU2NzkiIHJ5PSI1My40Njg4IiB0cmFuc2Zvcm09InJvdGF0ZSg0NS42MDY1IDE4LjEyMjYgNjcuNDE0KSIgZmlsbD0iIzAwQjk1QyIvPgo8L2c+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXI1X2ZfNjAwMV80MDkpIj4KPGVsbGlwc2UgY3g9IjEyMS44MzciIGN5PSIxNjYuOTQ1IiByeD0iNDYuNjM1NiIgcnk9IjQ0LjkwODQiIHRyYW5zZm9ybT0icm90YXRlKDc2LjkyNDMgMTIxLjgzNyAxNjYuOTQ1KSIgZmlsbD0iIzMxODZGRiIvPgo8L2c+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXI2X2ZfNjAwMV80MDkpIj4KPGVsbGlwc2UgY3g9IjUzLjk0NTYiIGN5PSI1Ni44OTk3IiByeD0iNTMuOTQ1NiIgcnk9IjU2Ljg5OTciIHRyYW5zZm9ybT0ibWF0cml4KC0wLjQwOTUzOSAwLjkxMjI5MyAtMC45MTIyOTQgLTAuNDA5NTM3IDE2Mi44MTEgLTI1Ljg5NSkiIGZpbGw9IiNGQkJDMDQiLz4KPC9nPgo8ZyBmaWx0ZXI9InVybCgjZmlsdGVyN19mXzYwMDFfNDA5KSI+CjxwYXRoIGQ9Ik00LjIxNTU3IDIzOS4wNjNDLTI1LjMyMzEgMjI3LjQ2NyAyNS4xNTc3IDEzMi4wNjEgMzcuNzEwNSAxMDAuMDg1QzUwLjI2MzQgNjguMTA5NyA4NC4zODUzIDUxLjU4ODggMTEzLjkyNCA2My4xODQ4QzE0My40NjMgNzQuNzgwOSAxNzguNDc0IDEzOC42NSAxNjUuOTIxIDE3MC42MjZDMTUzLjM2OCAyMDIuNjAxIDMzLjc1NDMgMjUwLjY1OSA0LjIxNTU3IDIzOS4wNjNaIiBmaWxsPSIjMzE4NkZGIi8+CjwvZz4KPGcgZmlsdGVyPSJ1cmwoI2ZpbHRlcjhfZl82MDAxXzQwOSkiPgo8cGF0aCBkPSJNMTgzLjE5NyAxMjAuMzE1QzE3NS4yODkgMTI5LjU0NSAxNTQuNjUyIDEyNC44MzkgMTM3LjEwMiAxMDkuODAzQzExOS41NTMgOTQuNzY2OCAxMTEuNzM4IDc1LjA5NTUgMTE5LjY0NiA2NS44NjU2QzEyNy41NTQgNTYuNjM1NyAxNDguMTkxIDYxLjM0MjMgMTY1Ljc0IDc2LjM3ODJDMTgzLjI4OSA5MS40MTQgMTkxLjEwNSAxMTEuMDg1IDE4My4xOTcgMTIwLjMxNVoiIGZpbGw9IiM3NDlCRkYiLz4KPC9nPgo8ZyBmaWx0ZXI9InVybCgjZmlsdGVyOV9mXzYwMDFfNDA5KSI+CjxlbGxpcHNlIGN4PSIxNDguOTI4IiBjeT0iMzYuNzI1MiIgcng9IjcxLjEwMTgiIHJ5PSI0NC4xOTkiIHRyYW5zZm9ybT0icm90YXRlKDM0LjA3NjMgMTQ4LjkyOCAzNi43MjUyKSIgZmlsbD0iI0ZDNDEzRCIvPgo8L2c+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIxMF9mXzYwMDFfNDA5KSI+CjxlbGxpcHNlIGN4PSIzNy44NDgiIGN5PSI0Ni4wMzQ2IiByeD0iMzguMTAwOCIgcnk9IjIyLjE1NzUiIHRyYW5zZm9ybT0icm90YXRlKDExMi41MTYgMzcuODQ4IDQ2LjAzNDYpIiBmaWxsPSIjRkZFRTQ4Ii8+CjwvZz4KPC9nPgo8ZGVmcz4KPGZpbHRlciBpZD0iZmlsdGVyMF9mXzYwMDFfNDA5IiB4PSI0LjA5NTkxIiB5PSItNDQuMTc2MSIgd2lkdGg9IjExMS4wMzciIGhlaWdodD0iOTguNDQxNiIgZmlsdGVyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBjb2xvci1pbnRlcnBvbGF0aW9uLWZpbHRlcnM9InNSR0IiPgo8ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI2LjI1MjM0Ii8+CjwvZmlsdGVyPgo8ZmlsdGVyIGlkPSJmaWx0ZXIxX2ZfNjAwMV80MDkiIHg9IjQ2LjI5NzQiIHk9Ii01My4wMDA5IiB3aWR0aD0iMjE3LjczMSIgaGVpZ2h0PSIyMTUuODYiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMzAuMjI2OCIvPgo8L2ZpbHRlcj4KPGZpbHRlciBpZD0iZmlsdGVyMl9mXzYwMDFfNDA5IiB4PSItMTAwLjAxOCIgeT0iLTM2Ljc1NTgiIHdpZHRoPSIyMjkuMjM4IiBoZWlnaHQ9IjIwNC4zOTciIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMjUuNjk1NyIvPgo8L2ZpbHRlcj4KPGZpbHRlciBpZD0iZmlsdGVyM19mXzYwMDFfNDA5IiB4PSItMTAwLjAxOCIgeT0iLTM2Ljc1NTgiIHdpZHRoPSIyMjkuMjM4IiBoZWlnaHQ9IjIwNC4zOTciIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMjUuNjk1NyIvPgo8L2ZpbHRlcj4KPGZpbHRlciBpZD0iZmlsdGVyNF9mXzYwMDFfNDA5IiB4PSItODQuMzk4NSIgeT0iLTM1LjAwMyIgd2lkdGg9IjIwNS4wNDIiIGhlaWdodD0iMjA0LjgzNCIgZmlsdGVyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBjb2xvci1pbnRlcnBvbGF0aW9uLWZpbHRlcnM9InNSR0IiPgo8ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSIyNS42OTU3Ii8+CjwvZmlsdGVyPgo8ZmlsdGVyIGlkPSJmaWx0ZXI1X2ZfNjAwMV80MDkiIHg9IjI3Ljk5MTUiIHk9IjcxLjU0OTMiIHdpZHRoPSIxODcuNjkxIiBoZWlnaHQ9IjE5MC43OTEiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMjQuNDE4NCIvPgo8L2ZpbHRlcj4KPGZpbHRlciBpZD0iZmlsdGVyNl9mXzYwMDFfNDA5IiB4PSItMTEuODgwOCIgeT0iLTk4LjcwODUiIHdpZHRoPSIyMDEuMzgiIGhlaWdodD0iMTk3LjQ1IiBmaWx0ZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIGNvbG9yLWludGVycG9sYXRpb24tZmlsdGVycz0ic1JHQiI+CjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjIyLjEzMDEiLz4KPC9maWx0ZXI+CjxmaWx0ZXIgaWQ9ImZpbHRlcjdfZl82MDAxXzQwOSIgeD0iLTQ0LjQ0MzIiIHk9IjE5Ljk1MjIiIHdpZHRoPSIyNTIuNTEzIiBoZWlnaHQ9IjI2MC40MDQiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMTkuNzYzMSIvPgo8L2ZpbHRlcj4KPGZpbHRlciBpZD0iZmlsdGVyOF9mXzYwMDFfNDA5IiB4PSI4MS4xOTE1IiB5PSIyNS43NzIyIiB3aWR0aD0iMTQwLjQ2IiBoZWlnaHQ9IjEzNC42MzciIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMTcuNjg0MyIvPgo8L2ZpbHRlcj4KPGZpbHRlciBpZD0iZmlsdGVyOV9mXzYwMDFfNDA5IiB4PSI1NS4xNDk5IiB5PSItNDcuMjUzMSIgd2lkdGg9IjE4Ny41NTUiIGhlaWdodD0iMTY3Ljk1NyIgZmlsdGVyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBjb2xvci1pbnRlcnBvbGF0aW9uLWZpbHRlcnM9InNSR0IiPgo8ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSIxNC45MzY1Ii8+CjwvZmlsdGVyPgo8ZmlsdGVyIGlkPSJmaWx0ZXIxMF9mXzYwMDFfNDA5IiB4PSItMjQuMjYzMyIgeT0iLTI3LjE1MTUiIHdpZHRoPSIxMjQuMjIzIiBoZWlnaHQ9IjE0Ni4zNzIiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMTguNDg2NSIvPgo8L2ZpbHRlcj4KPC9kZWZzPgo8L3N2Zz4K",
+      "author": "Context Hub",
+      "category": "agent",
+      "permissions": [
+        "assets.read",
+        "assets.write",
+        "filesystem"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0",
+          "engines": {
+            "contextHub": ">=0.2.0 <0.7.0"
+          },
+          "source": {
+            "type": "git",
+            "url": "https://github.com/bb-boy680/context-hub-extensions",
+            "path": "plugins/antigravity"
+          }
+        }
+      ]
+    },
+    {
       "id": "claude.code",
       "title": {
         "en": "Claude Code",
@@ -29,7 +61,7 @@
       ],
       "versions": [
         {
-          "version": "0.2.0",
+          "version": "0.3.0",
           "engines": {
             "contextHub": ">=0.2.0 <0.7.0"
           },
@@ -61,7 +93,7 @@
       ],
       "versions": [
         {
-          "version": "0.1.0",
+          "version": "0.2.0",
           "engines": {
             "contextHub": ">=0.2.0 <0.7.0"
           },
@@ -69,6 +101,102 @@
             "type": "git",
             "url": "https://github.com/bb-boy680/context-hub-extensions",
             "path": "plugins/codex"
+          }
+        }
+      ]
+    },
+    {
+      "id": "copilot",
+      "title": {
+        "en": "GitHub Copilot",
+        "zh-cn": "GitHub Copilot"
+      },
+      "description": {
+        "en": "Manage GitHub Copilot skills, MCP servers, instructions, agents and plugin declarations.",
+        "zh-cn": "管理 GitHub Copilot 技能、MCP 服务、指令、代理和插件声明。"
+      },
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMjMuOTIyIDE2Ljk5MmMtLjg2MSAxLjQ5NS01Ljg1OSA1LjAyMy0xMS45MjIgNS4wMjMtNi4wNjMgMC0xMS4wNjEtMy41MjgtMTEuOTIyLTUuMDIzQS42NDEuNjQxIDAgMCAxIDAgMTYuNzM2di0yLjg2OWEuODQxLjg0MSAwIDAgMSAuMDUzLS4yMmMuMzcyLS45MzUgMS4zNDctMi4yOTIgMi42MDUtMi42NTYuMTY3LS40MjkuNDE0LTEuMDU1LjY0NC0xLjUxN2ExMC4xOTUgMTAuMTk1IDAgMCAxLS4wNTItMS4wODZjMC0xLjMzMS4yODItMi40OTkgMS4xMzItMy4zNjguMzk3LS40MDYuODktLjcxNyAxLjQ3NC0uOTUyIDEuMzk5LTEuMTM2IDMuMzkyLTIuMDkzIDYuMTIyLTIuMDkzIDIuNzMxIDAgNC43NjcuOTU3IDYuMTY2IDIuMDkzLjU4NC4yMzUgMS4wNzcuNTQ2IDEuNDc0Ljk1Mi44NS44NjkgMS4xMzIgMi4wMzcgMS4xMzIgMy4zNjggMCAuMzY4LS4wMTQuNzMzLS4wNTIgMS4wODYuMjMuNDYyLjQ3NyAxLjA4OC42NDQgMS41MTcgMS4yNTguMzY0IDIuMjMzIDEuNzIxIDIuNjA1IDIuNjU2YS44MzIuODMyIDAgMCAxIC4wNTMuMjJ2Mi44NjlhLjY0MS42NDEgMCAwIDEtLjA3OC4yNTZaTTEyLjE3MiAxMWgtLjM0NGE0LjMyMyA0LjMyMyAwIDAgMS0uMzU1LjUwOEMxMC43MDMgMTIuNDU1IDkuNTU1IDEzIDcuOTY1IDEzYy0xLjcyNSAwLTIuOTg5LS4zNTktMy43ODItMS4yNTlhMi4wMDUgMi4wMDUgMCAwIDEtLjA4NS0uMTA0TDQgMTEuNzQxdjYuNTg1YzEuNDM1Ljc3OSA0LjUxNCAyLjE3OSA4IDIuMTc5IDMuNDg2IDAgNi41NjUtMS40IDgtMi4xNzl2LTYuNTg1bC0uMDk4LS4xMDRzLS4wMzMuMDQ1LS4wODUuMTA0Yy0uNzkzLjktMi4wNTcgMS4yNTktMy43ODIgMS4yNTktMS41OSAwLTIuNzM4LS41NDUtMy41MDgtMS40OTJhNC4zMjMgNC4zMjMgMCAwIDEtLjM1NS0uNTA4aC0uMDE2LjAxNlptLjY0MS0yLjkzNWMuMTM2IDEuMDU3LjQwMyAxLjkxMy44NzggMi40OTcuNDQyLjU0NCAxLjEzNC45MzggMi4zNDQuOTM4IDEuNTczIDAgMi4yOTItLjMzNyAyLjY1Ny0uNzUxLjM4NC0uNDM1LjU1OC0xLjE1LjU1OC0yLjM2MSAwLTEuMTQtLjI0My0xLjg0Ny0uNzA1LTIuMzE5LS40NzctLjQ4OC0xLjMxOS0uODYyLTIuODI0LTEuMDI1LTEuNDg3LS4xNjEtMi4xOTIuMTM4LTIuNTMzLjUyOS0uMjY5LjMwNy0uNDM3LjgwOC0uNDM4IDEuNTc4di4wMjFjMCAuMjY1LjAyMS41NjIuMDYzLjg5M1ptLTEuNjI2IDBjLjA0Mi0uMzMxLjA2My0uNjI4LjA2My0uODk0di0uMDJjLS4wMDEtLjc3LS4xNjktMS4yNzEtLjQzOC0xLjU3OC0uMzQxLS4zOTEtMS4wNDYtLjY5LTIuNTMzLS41MjktMS41MDUuMTYzLTIuMzQ3LjUzNy0yLjgyNCAxLjAyNS0uNDYyLjQ3Mi0uNzA1IDEuMTc5LS43MDUgMi4zMTkgMCAxLjIxMS4xNzUgMS45MjYuNTU4IDIuMzYxLjM2NS40MTQgMS4wODQuNzUxIDIuNjU3Ljc1MSAxLjIxIDAgMS45MDItLjM5NCAyLjM0NC0uOTM4LjQ3NS0uNTg0Ljc0Mi0xLjQ0Ljg3OC0yLjQ5N1oiLz48cGF0aCBkPSJNMTQuNSAxNC4yNWExIDEgMCAwIDEgMSAxdjJhMSAxIDAgMCAxLTIgMHYtMmExIDEgMCAwIDEgMS0xWm0tNSAwYTEgMSAwIDAgMSAxIDF2MmExIDEgMCAwIDEtMiAwdi0yYTEgMSAwIDAgMSAxLTFaIi8+PC9zdmc+",
+      "author": "Context Hub",
+      "category": "agent",
+      "permissions": [
+        "assets.read",
+        "assets.write",
+        "filesystem"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0",
+          "engines": {
+            "contextHub": ">=0.2.0 <0.7.0"
+          },
+          "source": {
+            "type": "git",
+            "url": "https://github.com/bb-boy680/context-hub-extensions",
+            "path": "plugins/copilot"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cursor",
+      "title": {
+        "en": "Cursor",
+        "zh-cn": "Cursor"
+      },
+      "description": {
+        "en": "Deliver skills, prompts, MCP servers and native plugins to Cursor.",
+        "zh-cn": "将技能、提示词、MCP 服务和原生插件交付给 Cursor。"
+      },
+      "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iRWJlbmVfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCA0NjYuNzMgNTMyLjA5Ij4KICA8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMjkuNi4xLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogMi4xLjEgQnVpbGQgOSkgIC0tPgogIDxkZWZzPgogICAgPHN0eWxlPgogICAgICAuc3QwIHsKICAgICAgICBmaWxsOiAjMjYyNTFlOwogICAgICB9CiAgICA8L3N0eWxlPgogIDwvZGVmcz4KICA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNDU3LjQzLDEyNS45NEwyNDQuNDIsMi45NmMtNi44NC0zLjk1LTE1LjI4LTMuOTUtMjIuMTIsMEw5LjMsMTI1Ljk0Yy01Ljc1LDMuMzItOS4zLDkuNDYtOS4zLDE2LjExdjI0Ny45OWMwLDYuNjUsMy41NSwxMi43OSw5LjMsMTYuMTFsMjEzLjAxLDEyMi45OGM2Ljg0LDMuOTUsMTUuMjgsMy45NSwyMi4xMiwwbDIxMy4wMS0xMjIuOThjNS43NS0zLjMyLDkuMy05LjQ2LDkuMy0xNi4xMXYtMjQ3Ljk5YzAtNi42NS0zLjU1LTEyLjc5LTkuMy0xNi4xMWgtLjAxWk00NDQuMDUsMTUxLjk5bC0yMDUuNjMsMzU2LjE2Yy0xLjM5LDIuNC01LjA2LDEuNDItNS4wNi0xLjM2di0yMzMuMjFjMC00LjY2LTIuNDktOC45Ny02LjUzLTExLjMxTDI0Ljg3LDE0NS42N2MtMi40LTEuMzktMS40Mi01LjA2LDEuMzYtNS4wNmg0MTEuMjZjNS44NCwwLDkuNDksNi4zMyw2LjU3LDExLjM5aC0uMDFaIi8+Cjwvc3ZnPg==",
+      "author": "Context Hub",
+      "category": "agent",
+      "permissions": [
+        "assets.read",
+        "assets.write",
+        "filesystem"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0",
+          "engines": {
+            "contextHub": ">=0.2.0 <0.7.0"
+          },
+          "source": {
+            "type": "git",
+            "url": "https://github.com/bb-boy680/context-hub-extensions",
+            "path": "plugins/cursor"
+          }
+        }
+      ]
+    },
+    {
+      "id": "opencode",
+      "title": {
+        "en": "OpenCode",
+        "zh-cn": "OpenCode"
+      },
+      "description": {
+        "en": "Deliver skills, prompts, memory and MCP servers to OpenCode.",
+        "zh-cn": "将技能、提示词、记忆和 MCP 服务器交付给 OpenCode。"
+      },
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIj48c3ZnIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIGZpbGw9IiMxMzEwMTAiPjwvcmVjdD4KPHBhdGggZD0iTTMyMCAyMjRWMzUySDE5MlYyMjRIMzIwWiIgZmlsbD0iIzVBNTg1OCI+PC9wYXRoPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTM4NCA0MTZIMTI4Vjk2SDM4NFY0MTZaTTMyMCAxNjBIMTkyVjM1MkgzMjBWMTYwWiIgZmlsbD0id2hpdGUiPjwvcGF0aD4KPC9zdmc+PHN0eWxlPkBtZWRpYSAocHJlZmVycy1jb2xvci1zY2hlbWU6IGxpZ2h0KSB7IDpyb290IHsgZmlsdGVyOiBub25lOyB9IH0KQG1lZGlhIChwcmVmZXJzLWNvbG9yLXNjaGVtZTogZGFyaykgeyA6cm9vdCB7IGZpbHRlcjogbm9uZTsgfSB9Cjwvc3R5bGU+PC9zdmc+Cg==",
+      "author": "Context Hub",
+      "category": "agent",
+      "permissions": [
+        "assets.read",
+        "assets.write",
+        "filesystem"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0",
+          "engines": {
+            "contextHub": ">=0.2.0 <0.7.0"
+          },
+          "source": {
+            "type": "git",
+            "url": "https://github.com/bb-boy680/context-hub-extensions",
+            "path": "plugins/opencode"
           }
         }
       ]
@@ -99,6 +227,65 @@
             "type": "git",
             "url": "https://github.com/bb-boy680/context-hub-extensions",
             "path": "plugins/skills.sh"
+          }
+        }
+      ]
+    },
+    {
+      "id": "workbuddy",
+      "title": {
+        "en": "WorkBuddy",
+        "zh-cn": "WorkBuddy"
+      },
+      "description": {
+        "en": "Deliver skills, MCP servers, Coding prompts and native plugins to WorkBuddy.",
+        "zh-cn": "向 WorkBuddy 交付技能、MCP 服务、代码开发提示词与原生插件。"
+      },
+      "icon": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzU0Ml8zMzcwKSI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcng9IjIwIiBmaWxsPSJ1cmwoI3BhaW50MF9saW5lYXJfNTQyXzMzNzApIi8+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIwX2ZfNTQyXzMzNzApIj4KPGNpcmNsZSBjeD0iMzEuMzQxMSIgY3k9IjQzLjYxODMiIHI9IjEyLjg3MDQiIGZpbGw9IiNGRkUzNTUiIGZpbGwtb3BhY2l0eT0iMC40OSIgc3R5bGU9ImZpbGw6I0ZGRTM1NTtmaWxsOmNvbG9yKGRpc3BsYXktcDMgMS4wMDAwIDAuODg5MSAwLjMzNDgpO2ZpbGwtb3BhY2l0eTowLjQ5OyIvPgo8L2c+CjxwYXRoIGQ9Ik0yOC41OTMxIDMuMTI3NjJDMjguOTg1MyAyLjc3NTg1IDI5LjAwOTEgMi43NjIyNiAyOS4yOTY4IDIuNzQ0OTlDMjkuNzYyOCAyLjcxMDk2IDMwLjE4OTQgMi45MzQ4OCAzMC45MTYgMy41OTYzNEMzMi42MTMyIDUuMTM4NzUgMzQuOTc2OSA4LjMwOTA0IDM2LjQ0NjIgMTEuMDE2OEwzNy4wMTM4IDEyLjA2ODJMMzcuODE1NiAxMi40NjY4QzM4LjU4OTYgMTIuODU3OSAzOS44NTkzIDEzLjY1OTMgNDAuMzg5OCAxNC4wODk1QzQwLjYyOTcgMTQuMjg3OCA0MC42NjM4IDE0LjI5MjUgNDAuOTEzMyAxNC4xOTU0QzQyLjAzODggMTMuNzU3MiA0My42NTA2IDE0LjMzODIgNDUuMDcyNyAxNS43MDI0QzQ2LjM1MjkgMTYuOTI5NCA0Ny41Nzk0IDE5LjAyNiA0OC4wNDkxIDIwLjc3NTdDNDguMTE3NyAyMS4wNTc0IDQ4LjIwODcgMjEuNjYyOCA0OC4yNDE5IDIyLjExMzRDNDguMzQ5IDIzLjY5NjQgNDcuODQxNCAyNC45NjA4IDQ2Ljg2MzcgMjUuNTMzMUM0Ni42NjQgMjUuNjQ4NCA0Ni42NTA1IDI1LjY3OTUgNDYuNjU2MSAyNi4xNzc0QzQ2LjcwMTEgMjguNTQ4MSA0Ni4wNjIxIDMwLjkxNDQgNDQuNzc4NSAzMy4yMjIxQzQzLjMyOTMgMzUuODEzMyA0MC43NDg5IDM4LjQ5NDUgMzcuMjU2NiA0MS4wMTk5QzM1LjM4MTMgNDIuMzg0NiAzMC45NDQ1IDQ0Ljk3MDEgMjguOTM4MiA0NS44Nzc4QzI0LjEzMjQgNDguMDQxNCAyMC4yNzk0IDQ4Ljg3MDkgMTYuOTMyOSA0OC40NjA5QzE0LjkzNjggNDguMjE5IDEyLjY3NjkgNDcuNDQgMTEuMzQgNDYuNTM1NUMxMC45ODg1IDQ2LjI5MjUgMTAuOTMyNSA0Ni4yNzc0IDEwLjY2MzcgNDYuMzU0M0M5LjIzMjcgNDYuNzY1MSA3LjM1ODY3IDQ1LjkyMDcgNS43NjY1OSA0NC4xNTM1QzUuMTMxNjUgNDMuNDQ3MSA0LjEwNjUgNDEuNzEyNyAzLjc3NDA0IDQwLjc4NDNDMy4wMDU0IDM4LjYxMTggMy4xNTg1MiAzNi42NTA2IDQuMTgyMzYgMzUuNDc5OUM0LjQ0NjcxIDM1LjE3ODUgNC40NTUxMSAzNS4xNjU4IDQuMzk3MzUgMzQuNjU4OUM0LjMwMTk1IDMzLjgyODkgNC4yNTgzNyAzMi42MDA4IDQuMzAxOTIgMzEuODA4TDQuMzM2NjYgMzEuMDY3NEwzLjIyNTAyIDI5LjEwMUMxLjUwMzMgMjYuMDM3NSAwLjQwOTMyNSAyMy40NjQ1IC0wLjAxMjU2MyAyMS40OTkyQy0wLjIzNTIxOSAyMC40MjE4IC0wLjIyMTE5MyAxOS45NDM2IDAuMDUyMjE4NiAxOS41ODk5QzAuMjE4NzEgMTkuMzc2MyAwLjc2NDkyOCAxOS4xNTQ1IDEuNDIzMjIgMTkuMDMyOUMzLjA4MDQxIDE4Ljc0MiA2LjY5NDY2IDE5LjAwNTYgMTAuNzE1NSAxOS43MTU1TDExLjEzMjkgMTkuNzg4TDEyLjA1MTEgMTguOTc2QzEzLjU3NDcgMTcuNjI2NCAxNC41ODcgMTYuODY5NiAxNi40NTMxIDE1LjcwNkMxOC4zOTgxIDE0LjQ4OTEgMjAuNTkyOSAxMy40ODc3IDIzLjA2NDggMTIuNjk1TDIzLjg1NzcgMTIuNDQxNEwyNC4yOTM5IDExLjI5NjRDMjUuODU0NyA3LjE3NjE1IDI3LjQ1MzMgNC4xMzg0NCAyOC41OTMxIDMuMTI3NjJaTTE1LjUxODIgMjQuMjQzQzEzLjc1NDIgMjUuMjYxNSAxMi44NzE4IDI1Ljc3MDYgMTIuMjIzNiAyNi4zNDEzQzkuNTk4OTMgMjguNjUyNiA4LjYxODExIDMyLjMxMzQgOS43MzU0NSAzNS42Mjc0QzEwLjAxMTQgMzYuNDQ1NyAxMC41MjAxIDM3LjMyODMgMTEuNTM4NiAzOS4wOTIzQzEyLjU1NzEgNDAuODU2NCAxMy4wNjcxIDQxLjczODMgMTMuNjM3OCA0Mi4zODY0QzE1Ljk0OTEgNDUuMDExMiAxOS42MTAzIDQ1Ljk5MjkgMjIuOTI0MyA0NC44NzU1QzIzLjc0MjYgNDQuNTk5NSAyNC42MjQ5IDQ0LjA4OTkgMjYuMzg4OCA0My4wNzE0TDM2LjUzNzUgMzcuMjEyMUMzOC4zMDE2IDM2LjE5MzYgMzkuMTg0IDM1LjY4NDUgMzkuODMyMSAzNS4xMTM3QzQyLjQ1NjggMzIuODAyNCA0My40MzczIDI5LjE0MDkgNDIuMzE5OCAyNS44MjY5QzQyLjA0MzggMjUuMDA4NiA0MS41MzQyIDI0LjEyNjQgNDAuNTE1OCAyMi4zNjI0QzM5LjQ5NzMgMjAuNTk4MyAzOC45ODgyIDE5LjcxNTkgMzguNDE3NSAxOS4wNjc4QzM2LjEwNjIgMTYuNDQzMiAzMi40NDU0IDE1LjQ2MjIgMjkuMTMxNCAxNi41Nzk2QzI4LjMxMzEgMTYuODU1NiAyNy40MzEgMTcuMzY1MSAyNS42NjY5IDE4LjM4MzZMMTUuNTE4MiAyNC4yNDNaIiBmaWxsPSJ1cmwoI3BhaW50MV9saW5lYXJfNTQyXzMzNzApIi8+CjxyZWN0IHg9IjE2LjQ5NjEiIHk9IjMxLjMzNDQiIHdpZHRoPSI0LjAwOTA0IiBoZWlnaHQ9IjguMzI2NDYiIHJ4PSIyLjAwNDUyIiB0cmFuc2Zvcm09InJvdGF0ZSgtMzAgMTYuNDk2MSAzMS4zMzQ0KSIgZmlsbD0id2hpdGUiIHN0eWxlPSJmaWxsOndoaXRlO2ZpbGwtb3BhY2l0eToxOyIvPgo8cmVjdCB4PSIyNy4zMTI1IiB5PSIyNS4wODk0IiB3aWR0aD0iNC4wMDkwNCIgaGVpZ2h0PSI4LjMyNjQ2IiByeD0iMi4wMDQ1MiIgdHJhbnNmb3JtPSJyb3RhdGUoLTMwIDI3LjMxMjUgMjUuMDg5NCkiIGZpbGw9IndoaXRlIiBzdHlsZT0iZmlsbDp3aGl0ZTtmaWxsLW9wYWNpdHk6MTsiLz4KPC9nPgo8ZGVmcz4KPGZpbHRlciBpZD0iZmlsdGVyMF9mXzU0Ml8zMzcwIiB4PSI3LjQ3MDMzIiB5PSIxOS43NDc1IiB3aWR0aD0iNDcuNzQyIiBoZWlnaHQ9IjQ3Ljc0MTYiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJCYWNrZ3JvdW5kSW1hZ2VGaXgiIHJlc3VsdD0ic2hhcGUiLz4KPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iNS41MDAxOSIgcmVzdWx0PSJlZmZlY3QxX2ZvcmVncm91bmRCbHVyXzU0Ml8zMzcwIi8+CjwvZmlsdGVyPgo8bGluZWFyR3JhZGllbnQgaWQ9InBhaW50MF9saW5lYXJfNTQyXzMzNzAiIHgxPSIyMCIgeTE9IjAiIHgyPSIyMCIgeTI9IjQwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiMwRUM4QTkiIHN0eWxlPSJzdG9wLWNvbG9yOiMwRUM4QTk7c3RvcC1jb2xvcjpjb2xvcihkaXNwbGF5LXAzIDAuMDU2NSAwLjc4MzcgMC42NjI1KTtzdG9wLW9wYWNpdHk6MTsiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMDFDODg2IiBzdHlsZT0ic3RvcC1jb2xvcjojMDFDODg2O3N0b3AtY29sb3I6Y29sb3IoZGlzcGxheS1wMyAwLjAwMjEgMC43ODU4IDAuNTI0Nik7c3RvcC1vcGFjaXR5OjE7Ii8+CjwvbGluZWFyR3JhZGllbnQ+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQxX2xpbmVhcl81NDJfMzM3MCIgeDE9IjE0LjY2NDIiIHkxPSIxMS4wNzgzIiB4Mj0iMzMuMzc2MiIgeTI9IjQzLjQ4ODUiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0id2hpdGUiIHN0b3Atb3BhY2l0eT0iMC44IiBzdHlsZT0ic3RvcC1jb2xvcjp3aGl0ZTtzdG9wLW9wYWNpdHk6MC44OyIvPgo8c3RvcCBvZmZzZXQ9IjAuNDM3Njg5IiBzdG9wLWNvbG9yPSJ3aGl0ZSIgc3R5bGU9InN0b3AtY29sb3I6d2hpdGU7c3RvcC1vcGFjaXR5OjE7Ii8+CjwvbGluZWFyR3JhZGllbnQ+CjxjbGlwUGF0aCBpZD0iY2xpcDBfNTQyXzMzNzAiPgo8cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0id2hpdGUiIHN0eWxlPSJmaWxsOndoaXRlO2ZpbGwtb3BhY2l0eToxOyIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo=",
+      "author": "Context Hub",
+      "category": "agent",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "engines": {
+            "contextHub": ">=0.2.0 <0.7.0"
+          },
+          "source": {
+            "type": "git",
+            "url": "https://github.com/bb-boy680/context-hub-extensions",
+            "path": "plugins/workbuddy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "zcode",
+      "title": {
+        "en": "ZCode",
+        "zh-cn": "ZCode"
+      },
+      "description": {
+        "en": "Manage ZCode skills, MCP servers, prompts and native plugin packs.",
+        "zh-cn": "管理 ZCode 技能、MCP、提示词与原生插件包。"
+      },
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMTgiIGhlaWdodD0iMTAwIiBmaWxsPSJub25lIiB2aWV3Qm94PSIwIDAgMjU2IDIxOCIgY2xhc3M9InNocmluay0wIHRleHQtY3VycmVudCBoLWF1dG8gdy01LjUiIGFyaWEtaGlkZGVuPSJ0cnVlIiBmb2N1c2FibGU9ImZhbHNlIj48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik0xMzQuNCAwLjEzMDE1MkwxMTYuNDggMjUuNjAyMkMxMTMuNjY1IDI5LjU2OTkgMTA5LjA1NCAzMi4wMDE5IDEwNC4wNjQgMzIuMDAxOUg2LjM5OTlWMEM2LjM5OTkgMC4xMzAxNDkgMTM0LjQgMC4xMzAxNTIgMTM0LjQgMC4xMzAxNTJaIj48L3BhdGg+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBkPSJNMjU2IDAuMTMwMTI3TDEwMi40MDEgMjE3LjczMkgwTDE1My41OTkgMC4xMzAxMjdIMjU2WiI+PC9wYXRoPjxwYXRoIGZpbGw9ImN1cnJlbnRDb2xvciIgZD0iTTEyMS42MDEgMjE3LjczMkwxMzkuNjUgMTkyLjEzNEMxNDIuNDY1IDE4OC4xNjYgMTQ3LjA3NiAxODUuNzM0IDE1Mi4wNjcgMTg1LjczNEgyNDkuNjA0VjIxNy43MzZIMTIxLjYwMVYyMTcuNzMyWiI+PC9wYXRoPjwvc3ZnPg==",
+      "author": "Context Hub",
+      "category": "agent",
+      "permissions": [
+        "assets.read",
+        "assets.write",
+        "filesystem"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0",
+          "engines": {
+            "contextHub": ">=0.2.0 <0.7.0"
+          },
+          "source": {
+            "type": "git",
+            "url": "https://github.com/bb-boy680/context-hub-extensions",
+            "path": "plugins/zcode"
           }
         }
       ]

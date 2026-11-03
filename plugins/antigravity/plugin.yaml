@@ -1,0 +1,14 @@
+id: antigravity
+name:
+  en: Antigravity
+  zh-cn: Antigravity
+engines:
+  contextHub: ">=0.2.0 <0.7.0"
+description:
+  en: Connect Antigravity skills, rules, agents, MCP servers and plugin packs.
+  zh-cn: 接入 Antigravity 技能、规则、代理、MCP 服务和插件包。
+icon: assets/icon.svg
+category: agent
+permissions: [assets.read, assets.write, filesystem]
+author: Context Hub
+inject: [skills, prompts, mcp, plugins, targets, locales]

@@ -1,0 +1,13 @@
+id: workbuddy
+name:
+  en: WorkBuddy
+  zh-cn: WorkBuddy
+engines:
+  contextHub: ">=0.2.0 <0.7.0"
+description:
+  en: Deliver skills, MCP servers, Coding prompts and native plugins to WorkBuddy.
+  zh-cn: 向 WorkBuddy 交付技能、MCP 服务、代码开发提示词与原生插件。
+icon: assets/icon.svg
+category: agent
+inject: [skills, mcp, prompts, plugins, targets, locales]
+author: Context Hub

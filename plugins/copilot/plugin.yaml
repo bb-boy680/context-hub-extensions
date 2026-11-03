@@ -1,0 +1,13 @@
+id: copilot
+name:
+  en: GitHub Copilot
+  zh-cn: GitHub Copilot
+engines:
+  contextHub: ">=0.2.0 <0.7.0"
+description:
+  en: Manage GitHub Copilot skills, MCP servers, instructions, agents and plugin declarations.
+  zh-cn: 管理 GitHub Copilot 技能、MCP 服务、指令、代理和插件声明。
+icon: assets/icon.svg
+category: agent
+permissions: [assets.read, assets.write, filesystem]
+inject: [skills, prompts, mcp, plugins, targets, locales]
