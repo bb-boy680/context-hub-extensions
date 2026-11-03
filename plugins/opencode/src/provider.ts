@@ -168,6 +168,7 @@ export function createOpenCodeMcp(tools: McpTools): McpProvider {
       id: place.id,
       label: place.label,
       switchable: true,
+      installable: place.installable,
       scope: place.scope,
       file: place.file,
     })),

@@ -52,14 +52,14 @@ OpenCode removes both native places without touching the shared one.
 
 Each row is one physical file, and the label names it:
 
-| Place id | Scope | Label | File |
-| --- | --- | --- | --- |
-| `opencode-global-jsonc` | global | `OpenCode · opencode.jsonc` | `~/.config/opencode/opencode.jsonc` |
-| `opencode-global-json` | global | `OpenCode · opencode.json` | `~/.config/opencode/opencode.json` |
-| `opencode-workspace-jsonc` | workspace | `OpenCode · opencode.jsonc` | `<workspace>/opencode.jsonc` |
-| `opencode-workspace-json` | workspace | `OpenCode · opencode.json` | `<workspace>/opencode.json` |
-| `opencode-dotdir-jsonc` | workspace | `OpenCode · .opencode/opencode.jsonc` | `<workspace>/.opencode/opencode.jsonc` |
-| `opencode-dotdir-json` | workspace | `OpenCode · .opencode/opencode.json` | `<workspace>/.opencode/opencode.json` |
+| Place id | Scope | Label | File | Use |
+| --- | --- | --- | --- | --- |
+| `opencode-global-jsonc` | global | `OpenCode · opencode.jsonc` | `~/.config/opencode/opencode.jsonc` | Scan only |
+| `opencode-global-json` | global | `OpenCode · opencode.json` | `~/.config/opencode/opencode.json` | Install |
+| `opencode-workspace-jsonc` | workspace | `OpenCode · opencode.jsonc` | `<workspace>/opencode.jsonc` | Scan only |
+| `opencode-workspace-json` | workspace | `OpenCode · opencode.json` | `<workspace>/opencode.json` | Install |
+| `opencode-dotdir-jsonc` | workspace | `OpenCode · .opencode/opencode.jsonc` | `<workspace>/.opencode/opencode.jsonc` | Scan only |
+| `opencode-dotdir-json` | workspace | `OpenCode · .opencode/opencode.json` | `<workspace>/.opencode/opencode.json` | Scan only |
 
 Only native OpenCode V2 configuration is read or written: servers live at
 `mcp.servers.<name>`, the switch is the entry's `disabled` boolean, a local

@@ -50,6 +50,7 @@ export interface OpenCodeMcpPlace {
   label: string
   scope: "global" | "workspace"
   file: string
+  installable?: boolean
 }
 
 /**
@@ -65,36 +66,42 @@ export const OPENCODE_MCP_PLACES: readonly OpenCodeMcpPlace[] = [
     label: "OpenCode · opencode.jsonc",
     scope: "global",
     file: ".config/opencode/opencode.jsonc",
+    installable: false,
   },
   {
     id: "opencode-global-json",
     label: "OpenCode · opencode.json",
     scope: "global",
     file: ".config/opencode/opencode.json",
+    installable: true,
   },
   {
     id: "opencode-workspace-jsonc",
     label: "OpenCode · opencode.jsonc",
     scope: "workspace",
     file: "opencode.jsonc",
+    installable: false,
   },
   {
     id: "opencode-workspace-json",
     label: "OpenCode · opencode.json",
     scope: "workspace",
     file: "opencode.json",
+    installable: true,
   },
   {
     id: "opencode-dotdir-jsonc",
     label: "OpenCode · .opencode/opencode.jsonc",
     scope: "workspace",
     file: ".opencode/opencode.jsonc",
+    installable: false,
   },
   {
     id: "opencode-dotdir-json",
     label: "OpenCode · .opencode/opencode.json",
     scope: "workspace",
     file: ".opencode/opencode.json",
+    installable: false,
   },
 ]
 

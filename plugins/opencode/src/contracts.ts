@@ -59,6 +59,7 @@ export interface McpPlace {
   id: string
   label: string
   switchable: boolean
+  installable?: boolean
   scope: "global" | "workspace"
   file: string
 }
