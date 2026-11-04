@@ -148,9 +148,10 @@ export async function prepareSetEnabled(
   if (!id.endsWith("@local") || !safePluginSegment(id.slice(0, -"@local".length))) throw new Error("第三方插件由 Qoder 管理")
   if (!["user", "project", "local"].includes(scope) || typeof on !== "boolean") throw new Error("无效插件开关参数")
   if (scope !== "user" && roots.workspace === null) throw new Error("未选择工作区")
-  const records = (state.registry.plugins[id] ?? []).filter((row) =>
+  const installed = state.registry.plugins[id] ?? []
+  const records = installed.filter((row) =>
     scope === "user" ? row.scope === "user" : applies(row, roots))
-  if (records.length === 0) throw new Error("插件未安装")
+  if (records.length === 0) throw new Error(installed.length === 0 ? "插件未安装" : "不能扩大或改变插件作用域")
   for (const row of records) {
     if (!await ownedAt(disk, roots, state, id, row)) throw new Error("插件无法证明归属，拒绝修改")
   }
