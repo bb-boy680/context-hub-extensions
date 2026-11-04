@@ -7,10 +7,15 @@ var CLAUDE_CODE_MCP_KEY = "mcpServers";
 var CLAUDE_CODE_DISABLED_KEY = "disabledMcpServers";
 var CLAUDE_CODE_SETTINGS_FILE = ".claude/settings.json";
 var CLAUDE_PLUGIN_ROOTS = {
-  configDir: ".claude",
-  configEnv: "CLAUDE_CONFIG_DIR",
-  pluginsDir: "plugins",
-  pluginsEnv: "CLAUDE_CODE_PLUGIN_CACHE_DIR"
+  home: ".claude",
+  homeEnv: "CLAUDE_CONFIG_DIR",
+  state: "plugins",
+  stateEnv: "CLAUDE_CODE_PLUGIN_CACHE_DIR",
+  config: { write: ["settings.json"], read: ["skills", "skills/*", "skills/*/.claude-plugin/plugin.json"] },
+  stateFiles: { write: ["installed_plugins.json", "known_marketplaces.json", "cache/*/*/*", "cache/*/*/*/.orphaned_at"], read: [] },
+  workspace: { write: [".claude/settings.json", ".claude/settings.local.json"], read: [".claude/skills", ".claude/skills/*", ".claude/skills/*/.claude-plugin/plugin.json"] },
+  library: { write: [], read: [".claude-plugin/marketplace.json", "*/.claude-plugin/plugin.json", "*/.claude-plugin/marketplace.json", "*/plugin.json"] },
+  external: [".claude-plugin/marketplace.json", ".claude-plugin/plugin.json"]
 };
 var CLAUDE_CODE_COMMAND_DIR = ".claude/commands";
 var CLAUDE_CODE_RULE_DIR = ".claude/rules";
@@ -402,7 +407,13 @@ function createClaudeCodeInstaller(json) {
         }
         const now = (/* @__PURE__ */ new Date()).toISOString();
         const marketUpdates = marketChanges(state, root, json, now, roots.platform);
-        await tools.syncMarketplace();
+        const packs = await tools.packs();
+        await tools.syncMarketplace([{ path: ".claude-plugin/marketplace.json", document: {
+          name: MARKETPLACE,
+          description: "Plugin packs collected by Context Hub.",
+          owner: { name: "Context Hub" },
+          plugins: packs.map((pack) => ({ name: pack.name, source: `./${pack.name}`, description: pack.description, version: pack.version }))
+        } }]);
         const index = manifestOf(json, await disk.read(roots, { root: "library", path: ".claude-plugin/marketplace.json" }), "marketplace.json");
         if (!Array.isArray(index?.plugins)) throw new Error("invalid Hub marketplace index");
         const listed = index.plugins.find((entry) => typeof entry === "object" && entry !== null && entry.name === name);
