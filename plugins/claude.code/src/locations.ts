@@ -55,6 +55,16 @@ export const CLAUDE_CODE_SETTINGS_FILE = ".claude/settings.json"
 /** The node that file keeps the switches under, keyed by plugin id. */
 export const CLAUDE_CODE_ENABLED_KEY = "enabledPlugins"
 
+/** File roots used by the plugin installer, resolved by the host. */
+export const CLAUDE_PLUGIN_ROOTS = {
+  home: ".claude", homeEnv: "CLAUDE_CONFIG_DIR", state: "plugins", stateEnv: "CLAUDE_CODE_PLUGIN_CACHE_DIR",
+  config: { write: ["settings.json"], read: ["skills", "skills/*", "skills/*/.claude-plugin/plugin.json"] },
+  stateFiles: { write: ["installed_plugins.json", "known_marketplaces.json", "cache/*/*/*", "cache/*/*/*/.orphaned_at"], read: [] },
+  workspace: { write: [".claude/settings.json", ".claude/settings.local.json"], read: [".claude/skills", ".claude/skills/*", ".claude/skills/*/.claude-plugin/plugin.json"] },
+  library: { write: [], read: [".claude-plugin/marketplace.json", "*/.claude-plugin/plugin.json", "*/.claude-plugin/marketplace.json", "*/plugin.json"] },
+  external: [".claude-plugin/marketplace.json", ".claude-plugin/plugin.json"],
+} as const
+
 /**
  * Where Claude Code reads slash commands, relative to the workspace and to the
  * home directory alike: `.claude/commands` under a project, `~/.claude/commands`

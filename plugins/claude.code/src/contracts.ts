@@ -117,7 +117,63 @@ export interface PromptProvider {
   ): Promise<boolean>
 }
 
-export type PluginTools = any
+export interface PluginDiskDeclaration {
+  home: string
+  homeEnv?: string
+  state: string
+  stateEnv?: string
+  config: { write: readonly string[]; read: readonly string[] }
+  stateFiles: { write: readonly string[]; read: readonly string[] }
+  workspace: { write: readonly string[]; read: readonly string[] }
+  library: { write: readonly string[]; read: readonly string[] }
+  external: readonly string[]
+}
+
+export interface PluginDiskRoots {
+  declaration: PluginDiskDeclaration
+  config: string
+  plugins: string
+  workspace: string | null
+  library: string
+  platform: "win32" | "posix"
+  token?: string
+}
+
+export interface PluginDiskRef {
+  root: "config" | "plugins" | "workspace" | "library"
+  path: string
+}
+
+export interface PluginDiskChange {
+  ref: PluginDiskRef
+  before: string | null
+  after: string | null
+}
+
+export interface PluginDisk {
+  roots(declaration: PluginDiskDeclaration): Promise<PluginDiskRoots>
+  read(roots: PluginDiskRoots, ref: PluginDiskRef): Promise<string | null>
+  list(roots: PluginDiskRoots, ref: PluginDiskRef): Promise<{ name: string; directory: boolean }[]>
+  path(roots: PluginDiskRoots, ref: PluginDiskRef): Promise<string>
+  external(roots: PluginDiskRoots, directory: string, relative: string): Promise<string>
+  readExternal(roots: PluginDiskRoots, directory: string, relative: string): Promise<string | null>
+  commit(roots: PluginDiskRoots, changes: readonly PluginDiskChange[], copy?: { name: string; destination: string }): Promise<void>
+  run<T>(declaration: PluginDiskDeclaration, work: (roots: PluginDiskRoots) => Promise<T>): Promise<T>
+}
+
+export interface PluginTools {
+  disk?: PluginDisk
+  root(): Promise<string>
+  packs(): Promise<{ name: string; description: string; version: string }[]>
+  syncMarketplace(indexes: readonly { path: string; document: unknown }[]): Promise<void>
+  describe(directory: string, name: string): Promise<{ name: string; version: string; description: string; icon?: string }>
+}
+
+export interface PluginJsonTools {
+  readJsonObject(text: string | null): Record<string, unknown> | null
+  editJson(text: string | null, path: readonly (string | number)[], value: unknown): string
+}
+
 export type PluginSwitches = Record<string, Record<string, boolean>>
 export type PluginScope = "global" | "workspace" | string
 
@@ -138,6 +194,8 @@ export interface PluginHeld {
   scope: string
   enabled: boolean
   marketplace: string
+  origin?: "record" | "declaration" | "skills-dir"
+  readOnly?: boolean
   source?: { kind: "local"; path: string }
   pack: { name: string; version: string; description: string }
 }

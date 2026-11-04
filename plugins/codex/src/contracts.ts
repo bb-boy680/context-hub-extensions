@@ -105,6 +105,7 @@ export interface PluginHeld {
   version: string
   scope: string
   enabled: boolean
+  readOnly?: boolean
   marketplace: string | null
   source?: { kind: "local"; path: string }
   pack: PackDescription
@@ -118,9 +119,32 @@ export interface PluginInstallReport {
 
 export type PluginSwitches = Record<string, Record<string, boolean>>
 
+export interface PluginDiskDeclaration {
+  home: string; homeEnv?: string; state: string; stateEnv?: string
+  config: { write: readonly string[]; read: readonly string[] }
+  stateFiles: { write: readonly string[]; read: readonly string[] }
+  workspace: { write: readonly string[]; read: readonly string[] }
+  library: { write: readonly string[]; read: readonly string[] }
+  external: readonly string[]
+}
+export interface PluginDiskRoots {
+  declaration: PluginDiskDeclaration; config: string; plugins: string; workspace: string | null; library: string; platform: "win32" | "posix"; token?: string
+}
+export interface PluginDiskRef { root: "config" | "plugins" | "workspace" | "library"; path: string }
+export interface PluginDisk {
+  roots(scope: PluginDiskDeclaration): Promise<PluginDiskRoots>
+  read(roots: PluginDiskRoots, ref: PluginDiskRef): Promise<string | null>
+  list(roots: PluginDiskRoots, ref: PluginDiskRef): Promise<{ name: string; directory: boolean }[]>
+  removeDirectory(roots: PluginDiskRoots, ref: PluginDiskRef): Promise<void>
+  commit(roots: PluginDiskRoots, changes: readonly { ref: PluginDiskRef; before: string | null; after: string | null }[], copy?: { name: string; destination: string; replace?: boolean; pruneVersions?: boolean }): Promise<void>
+  run<T>(scope: PluginDiskDeclaration, work: (roots: PluginDiskRoots) => Promise<T>): Promise<T>
+}
+
 export interface PluginTools {
+  disk?: PluginDisk
+  packs(): Promise<{ name: string; description: string; version: string }[]>
   root(): Promise<string>
-  syncMarketplace(): Promise<void>
+  syncMarketplace(indexes: readonly { path: string; document: unknown }[]): Promise<void>
   run(program: string, args: readonly string[]): Promise<string>
   files: unknown
   has(program: string): Promise<boolean>

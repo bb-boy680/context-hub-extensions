@@ -37,6 +37,40 @@ The project's own `CLAUDE.md` is not offered: it is a shared file, and an
 action that edits it under the same words as a private file would hide the
 difference.
 
+## Plugin installation
+
+The plugin installer reads and writes Claude Code's files through the Context Hub
+host. It does not run or locate the `claude` executable. A compatible host must
+provide the plugin file channel; an older host reports that it is unsupported.
+
+User settings are read from `$CLAUDE_CONFIG_DIR/settings.json`, defaulting to
+`~/.claude/settings.json`. Plugin state is under `$CLAUDE_CODE_PLUGIN_CACHE_DIR`,
+or `<Claude config>/plugins` when that variable is absent. Project settings are
+under the selected workspace's `.claude/`. The environment is the one inherited
+by the Hub host, which may differ from a terminal running Claude Code.
+
+Installations use `name@context-hub`, a local marketplace pointing at the Hub
+plugin library, a versioned cache, the installation index, and the selected
+scope's settings. Claude Code loads relative sources from the library itself:
+deleting the library's plugin directory prevents those plugins from loading,
+even when a cache exists. File changes become visible to Claude Code after a new
+session or `/reload-plugins`; Hub reports configuration, not runtime load status.
+
+User and project installations can be managed. Local, managed and skills-directory
+records are shown as read-only. The file adapter does not evaluate remote managed
+policies or operating-system policy stores; use Claude Code's own tooling in a
+policy-managed environment. Plugin dependencies are not installed automatically:
+installing or enabling a plugin with declared dependencies is refused. Disabling
+or uninstalling a plugin required by another enabled plugin is also refused.
+Uninstall preserves plugin data, options and secrets and marks an unreferenced
+cache for Claude Code's own cleanup. File installation does not run plugin scripts
+or install Node/Python dependencies.
+
+Claude Code's on-disk installation index is not a stable published write API.
+The compatibility checks use Claude Code 2.1.296 on Windows; a later client may
+change its format. Hub checks file snapshots and serializes its own operations,
+but cannot lock other processes writing the same files.
+
 ## Build
 
 ```sh

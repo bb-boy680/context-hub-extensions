@@ -1,0 +1,33 @@
+export const messages = {
+  "trae.ide": "Trae IDE (CN)",
+  "trae.cli": "TRAE CLI 2.0",
+  "trae.error.unknownPlace": "Unknown Trae location: {place}",
+  "trae.error.unknownForm": "Unknown Trae form: {form}",
+  "trae.error.parse": "Could not parse {file}.",
+  "trae.error.invalid": "Invalid configuration in {file}.",
+  "trae.error.invalidEntry": "Cannot safely change server {name}.",
+  "trae.error.refused": "Could not safely update {file}.",
+  "trae.error.sse": "Trae IDE MCP does not accept SSE delivery.",
+  "trae.error.stdioOnly": "TRAE CLI MCP accepts stdio declarations only.",
+  "trae.error.env": "TRAE CLI MCP environment variables are not confirmed.",
+  "trae.error.command": "The MCP command is invalid.",
+  "trae.error.name": "The rule name is not safe: {name}",
+  "trae.error.handwritten": "The rule already exists and is not owned by Context Hub: {file}",
+}
+
+export const zhMessages: Record<keyof typeof messages, string> = {
+  "trae.ide": "Trae IDE（中国版）",
+  "trae.cli": "TRAE CLI 2.0",
+  "trae.error.unknownPlace": "未知的 Trae 位置：{place}",
+  "trae.error.unknownForm": "未知的 Trae 表单：{form}",
+  "trae.error.parse": "无法解析 {file}。",
+  "trae.error.invalid": "{file} 中的配置结构无效。",
+  "trae.error.invalidEntry": "无法安全修改服务器 {name}。",
+  "trae.error.refused": "无法安全更新 {file}。",
+  "trae.error.sse": "Trae IDE MCP 不接受 SSE 交付。",
+  "trae.error.stdioOnly": "TRAE CLI MCP 只接受 stdio 声明。",
+  "trae.error.env": "尚未确认 TRAE CLI MCP 的环境变量配置。",
+  "trae.error.command": "MCP 命令无效。",
+  "trae.error.name": "规则名称不安全：{name}",
+  "trae.error.handwritten": "规则文件已存在且不属于 Context Hub：{file}",
+}

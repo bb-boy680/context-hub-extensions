@@ -1,0 +1,13 @@
+id: qoder
+name:
+  en: Qoder CLI
+  zh-cn: Qoder CLI
+engines:
+  contextHub: ">=0.2.0 <0.7.0"
+description:
+  en: Manage Qoder CLI skills, MCP servers, prompts and native plugin installations.
+  zh-cn: 管理 Qoder CLI 技能、MCP、提示词和原生插件安装。
+icon: assets/icon.png
+category: agent
+permissions: [assets.read, assets.write, filesystem]
+inject: [skills, prompts, mcp, plugins, targets, locales]

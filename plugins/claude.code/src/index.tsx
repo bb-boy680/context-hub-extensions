@@ -12,7 +12,7 @@
  * page's import map; the services arrive through the context.
  */
 import type { ExtensionIcon, SkillPlace } from "./contracts.ts"
-import { claudeCodeInstaller } from "./installer.ts"
+import { createClaudeCodeInstaller } from "./installer.ts"
 import {
   CLAUDE_CODE_ID,
   CLAUDE_CODE_SKILL_DIR,
@@ -81,7 +81,7 @@ export function apply(ctx: any): void {
      installed as a folder: such a directory imports nothing. */
   ctx.mcp.register(createClaudeCodeMcp(ctx.mcp.tools))
 
-  ctx.plugins.register(claudeCodeInstaller)
+  ctx.plugins.register(createClaudeCodeInstaller(ctx.mcp.tools))
 
   ctx.targets.register({
     id: CLAUDE_CODE_ID,

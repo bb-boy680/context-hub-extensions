@@ -1,0 +1,26 @@
+export const messages = {
+  "antigravity.tab": "Antigravity",
+  "antigravity.menu.skill": "Skill",
+  "antigravity.menu.skill.remove": "Remove skill",
+  "antigravity.menu.instructions": "Global instructions",
+  "antigravity.menu.instructions.remove": "Remove from global instructions",
+  "antigravity.error.unknownPlace": "Unknown Antigravity location: {place}",
+  "antigravity.error.unknownForm": "Unknown Antigravity form: {form}",
+  "antigravity.error.refused": "Antigravity file operation failed",
+  "antigravity.error.unsupported": "Unsupported Antigravity MCP server: {name}",
+  "antigravity.error.conflict": "The file is not owned by Context Hub: {file}",
+  "antigravity.error.tooLarge": "Antigravity file exceeds 24,000 bytes: {file}",
+}
+export const zhMessages = {
+  "antigravity.tab": "Antigravity",
+  "antigravity.menu.skill": "技能",
+  "antigravity.menu.skill.remove": "移除技能",
+  "antigravity.menu.instructions": "全局指令",
+  "antigravity.menu.instructions.remove": "从全局指令中移除",
+  "antigravity.error.unknownPlace": "未知的 Antigravity 位置：{place}",
+  "antigravity.error.unknownForm": "未知的 Antigravity 形式：{form}",
+  "antigravity.error.refused": "Antigravity 文件操作失败",
+  "antigravity.error.unsupported": "不支持的 Antigravity MCP 服务：{name}",
+  "antigravity.error.conflict": "文件不属于 Context Hub：{file}",
+  "antigravity.error.tooLarge": "Antigravity 文件超过 24,000 字节：{file}",
+}

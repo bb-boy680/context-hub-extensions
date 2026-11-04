@@ -1,0 +1,14 @@
+id: kimi
+name:
+  en: Kimi Code
+  zh-cn: Kimi Code
+engines:
+  contextHub: ">=0.2.0 <0.7.0"
+description:
+  en: Deliver skills, prompts, MCP servers and plugins to Kimi Code CLI.
+  zh-cn: 将技能、提示词、MCP 服务器和插件交付给 Kimi Code CLI。
+icon: assets/icon.png
+category: agent
+permissions: [assets.read, assets.write, filesystem]
+inject: [skills, mcp, prompts, plugins, targets, locales]
+author: Context Hub

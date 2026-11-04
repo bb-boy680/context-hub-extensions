@@ -1,0 +1,14 @@
+id: opencode
+name:
+  en: OpenCode
+  zh-cn: OpenCode
+engines:
+  contextHub: ">=0.2.0 <0.7.0"
+description:
+  en: Deliver skills, prompts, memory and MCP servers to OpenCode.
+  zh-cn: 将技能、提示词、记忆和 MCP 服务器交付给 OpenCode。
+icon: assets/icon.svg
+category: agent
+permissions: [assets.read, assets.write, filesystem]
+inject: [skills, prompts, mcp, targets, locales]
+author: Context Hub

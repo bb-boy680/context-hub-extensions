@@ -34,8 +34,8 @@ README.md         this file
     workspace place, and registering it again would list one file twice.
 - MCP provider: `~/.codex/config.toml`, table `[mcp_servers]`, with Codex's
   `enabled` field as the switch.
-- Plugin installer: `codex plugin marketplace add` and `codex plugin add`; one
-  machine-wide place, with no per-plugin enable/disable.
+- Plugin installer: reads and writes `config.toml` and the plugin cache directly;
+  one machine-wide place supports install, enable, disable and removal.
 - Target: id `hub.target.codex`, supporting skills, MCP, memory and agents, with
   the paths Codex reads.
 - English messages under the `codex.*` namespace.
@@ -68,8 +68,8 @@ can still be cleaned up.
 
 ## Requirements
 
-The extension drives the `codex` program on PATH and needs a build with the
-`codex plugin` subcommands. It was verified against `codex-cli 0.144.6`.
+Plugin installation uses the host's file channel and does not require the
+`codex` executable. It was checked against `codex-cli 0.166.0`.
 
 ## Build and test
 

@@ -1,0 +1,31 @@
+export const workBuddyMessages: Record<string, string> = {
+  "workbuddy.tab": "WorkBuddy",
+  "workbuddy.coding": "WorkBuddy Coding",
+  "workbuddy.menu.instructions": "Coding instructions",
+  "workbuddy.menu.instructions.remove": "Remove Coding instructions",
+  "workbuddy.error.unknownPlace": "Unknown WorkBuddy location: {place}",
+  "workbuddy.error.unknownForm": "Unknown WorkBuddy form: {form}",
+  "workbuddy.error.refused": "Cannot write {file}",
+  "workbuddy.error.handwritten": "The file {file} is not managed by Context Hub",
+  "workbuddy.error.sectionBroken": "Incomplete Context Hub section {slug} in {file}",
+  "workbuddy.error.invalidMcp": "Invalid MCP server container in {file}",
+  "workbuddy.error.invalidEntry": "Unsupported MCP server entry: {name}",
+  "workbuddy.error.transport": "WorkBuddy MCP delivery currently supports stdio only",
+  "workbuddy.error.switch": "WorkBuddy MCP switching is not supported",
+}
+
+export const workBuddyZhMessages: Record<string, string> = {
+  "workbuddy.tab": "WorkBuddy",
+  "workbuddy.coding": "WorkBuddy 代码开发",
+  "workbuddy.menu.instructions": "代码开发指令",
+  "workbuddy.menu.instructions.remove": "移除代码开发指令",
+  "workbuddy.error.unknownPlace": "未知 WorkBuddy 位置：{place}",
+  "workbuddy.error.unknownForm": "未知 WorkBuddy 形式：{form}",
+  "workbuddy.error.refused": "无法写入 {file}",
+  "workbuddy.error.handwritten": "文件 {file} 不由 Context Hub 管理",
+  "workbuddy.error.sectionBroken": "{file} 中的 Context Hub 段落 {slug} 不完整",
+  "workbuddy.error.invalidMcp": "{file} 中的 MCP 服务容器无效",
+  "workbuddy.error.invalidEntry": "不支持的 MCP 服务配置：{name}",
+  "workbuddy.error.transport": "WorkBuddy MCP 交付目前仅支持 stdio",
+  "workbuddy.error.switch": "不支持切换 WorkBuddy MCP 状态",
+}

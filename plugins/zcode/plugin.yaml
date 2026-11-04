@@ -1,0 +1,13 @@
+id: zcode
+name:
+  en: ZCode
+  zh-cn: ZCode
+engines:
+  contextHub: ">=0.2.0 <0.7.0"
+description:
+  en: Manage ZCode skills, MCP servers, prompts and native plugin packs.
+  zh-cn: 管理 ZCode 技能、MCP、提示词与原生插件包。
+icon: assets/icon.svg
+category: agent
+permissions: [assets.read, assets.write, filesystem]
+inject: [skills, prompts, mcp, plugins, targets, locales]
