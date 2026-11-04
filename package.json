@@ -9,7 +9,7 @@
     "build:marketplace": "node scripts/build-marketplace.mjs",
     "changelog": "node scripts/changelog.mjs",
     "lint": "eslint plugins",
-    "test": "pnpm -r --if-present test",
+    "test": "node --test scripts/__test__/*.test.mjs && pnpm -r --if-present test",
     "typecheck": "pnpm -r typecheck"
   },
   "devDependencies": {

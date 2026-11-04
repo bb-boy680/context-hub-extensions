@@ -4,11 +4,11 @@ import { CURSOR_ID } from "./locations.ts"
 export function createCursorPrompts(tools: PromptTools, icon: ExtensionIcon): PromptProvider {
   const agent = { id: "agent", labelKey: "prompts.menu.agent", removeLabelKey: "prompts.menu.agent.remove" }
   const places: PromptPlace[] = [
-    { id: "cursor", agent: CURSOR_ID, labelKey: "cursor.tab", icon, scope: "workspace", order: 20, where: ".cursor", forms: [
+    { id: "cursor", agent: CURSOR_ID, labelKey: "cursor.tab", icon, scope: "workspace", where: ".cursor", forms: [
       { id: "commands", labelKey: "prompts.menu.commands", removeLabelKey: "prompts.menu.commands.remove" },
       { id: "rule", labelKey: "cursor.menu.rule", removeLabelKey: "cursor.menu.rule.remove" }, agent,
     ] },
-    { id: "cursor-global", agent: CURSOR_ID, labelKey: "cursor.tab", icon, scope: "global", order: 20, where: "~/.cursor", forms: [agent] },
+    { id: "cursor-global", agent: CURSOR_ID, labelKey: "cursor.tab", icon, scope: "global", where: "~/.cursor", forms: [agent] },
   ]
   const placeOf = (id: string) => {
     const place = places.find((item) => item.id === id)

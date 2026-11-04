@@ -61,7 +61,6 @@ export interface PromptPlace {
   labelKey: string
   icon: ExtensionIcon
   scope: PromptScope
-  order: number
   generatedOnly?: boolean
   where?: string
   forms: readonly PromptForm[]

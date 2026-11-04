@@ -27,9 +27,9 @@ describe("Qoder 注册", () => {
     const { skills, targets, locales } = registered()
     expect(skills).toHaveLength(1)
     expect(skills[0]!.id).toBe("hub.target.qoder")
-    expect(skills[0]!.places.map(({ id, scope, dir, order }) => ({ id, scope, dir, order }))).toEqual([
-      { id: "qoder", scope: "workspace", dir: ".qoder/skills", order: 20 },
-      { id: "qoder-global", scope: "global", dir: ".qoder/skills", order: 20 },
+    expect(skills[0]!.places.map(({ id, scope, dir }) => ({ id, scope, dir }))).toEqual([
+      { id: "qoder", scope: "workspace", dir: ".qoder/skills" },
+      { id: "qoder-global", scope: "global", dir: ".qoder/skills" },
     ])
     expect(targets[0]!.id).toBe(skills[0]!.id)
     expect(targets[0]!.supports).toEqual(["skill", "mcp", "memory", "agent"])

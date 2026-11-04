@@ -22,8 +22,8 @@ export function apply(ctx: DeepSeekHarnessScope): void {
   ctx.skills.register({
     id: DEEPSEEK_HARNESS_ID,
     places: [
-      { id: "deepseek-harness", labelKey: "deepseekHarness.tab", icon: DeepSeekHarnessIcon, scope: "workspace", dir: DEEPSEEK_SKILL_DIR, order: 20 },
-      { id: "deepseek-harness-global", labelKey: "deepseekHarness.tab", icon: DeepSeekHarnessIcon, scope: "global", dir: DEEPSEEK_SKILL_DIR, order: 20 },
+      { id: "deepseek-harness", labelKey: "deepseekHarness.tab", icon: DeepSeekHarnessIcon, scope: "workspace", dir: DEEPSEEK_SKILL_DIR },
+      { id: "deepseek-harness-global", labelKey: "deepseekHarness.tab", icon: DeepSeekHarnessIcon, scope: "global", dir: DEEPSEEK_SKILL_DIR },
     ],
   })
   ctx.prompts.register(createDeepSeekHarnessPrompts(DeepSeekHarnessIcon, ctx.prompts.tools))

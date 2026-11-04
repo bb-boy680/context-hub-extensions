@@ -6,8 +6,8 @@ export function createQoderPrompts(icon: ExtensionIcon, tools: PromptTools): Pro
   const rule = { id: "rule", labelKey: "prompts.menu.rule", removeLabelKey: "prompts.menu.rule.remove" }
   const agent = { id: "agent", labelKey: "prompts.menu.agent", removeLabelKey: "prompts.menu.agent.remove" }
   const places: PromptPlace[] = [
-    { id: "qoder-global", agent: QODER_ID, labelKey: "qoder.tab", icon, scope: "global", order: 20, where: "~/.qoder", forms: [commands, rule, agent, { id: "instructions", labelKey: "qoder.menu.instructions", removeLabelKey: "qoder.menu.instructions.remove" }] },
-    { id: "qoder", agent: QODER_ID, labelKey: "qoder.tab", icon, scope: "workspace", order: 20, where: ".qoder", forms: [commands, rule, agent] },
+    { id: "qoder-global", agent: QODER_ID, labelKey: "qoder.tab", icon, scope: "global", where: "~/.qoder", forms: [commands, rule, agent, { id: "instructions", labelKey: "qoder.menu.instructions", removeLabelKey: "qoder.menu.instructions.remove" }] },
+    { id: "qoder", agent: QODER_ID, labelKey: "qoder.tab", icon, scope: "workspace", where: ".qoder", forms: [commands, rule, agent] },
   ]
   const fail = (key: string, params?: Record<string, string>, error?: unknown): Error => new tools.PromptError(
     `qoder.error.${key}`, params, error instanceof Error ? error.message : error === undefined ? undefined : String(error)

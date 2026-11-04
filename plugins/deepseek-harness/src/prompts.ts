@@ -52,7 +52,7 @@ export function createDeepSeekHarnessPrompts(icon: ExtensionIcon, tools: PromptT
     id: DEEPSEEK_HARNESS_ID,
     places: [{
       id: PLACE, agent: DEEPSEEK_HARNESS_ID, labelKey: "deepseekHarness.tab", icon,
-      scope: "global", order: 20, where: "~/.dsh", generatedOnly: true,
+      scope: "global", where: "~/.dsh", generatedOnly: true,
       forms: [{ id: "instructions", labelKey: "deepseekHarness.menu.instructions", removeLabelKey: "deepseekHarness.menu.instructions.remove" }],
     }],
     async held(io, place, prompt): Promise<Record<string, boolean>> {

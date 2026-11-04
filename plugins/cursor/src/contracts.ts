@@ -18,7 +18,6 @@ export interface SkillPlace {
   icon: ExtensionIcon
   scope: "workspace" | "global"
   dir: string
-  order: number
 }
 
 export type McpDeclaration =
@@ -245,7 +244,6 @@ export interface PromptPlace {
   labelKey: string
   icon: ExtensionIcon
   scope: PromptScope
-  order: number
   generatedOnly?: boolean
   where?: string
   forms: readonly PromptForm[]

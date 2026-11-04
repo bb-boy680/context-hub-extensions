@@ -29,7 +29,7 @@ export function createTraeIdePrompts(icon: ExtensionIcon, tools: PromptTools): P
   }
   return {
     id: IDE_ID,
-    places: [{ id: PLACE, agent: IDE_ID, labelKey: "trae.ide", icon, scope: "workspace", order: 20, where: IDE_RULES,
+    places: [{ id: PLACE, agent: IDE_ID, labelKey: "trae.ide", icon, scope: "workspace", where: IDE_RULES,
       forms: [{ id: FORM, labelKey: "prompts.menu.rule", removeLabelKey: "prompts.menu.rule.remove" }] }],
     async held(io: PromptIo, place, prompt): Promise<Readonly<Record<string, boolean>>> {
       const { slug, ref } = refOf(place, prompt)

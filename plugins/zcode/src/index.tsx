@@ -16,8 +16,8 @@ const ZCodeIcon: ExtensionIcon = ({ className, "aria-hidden": ariaHidden }) => (
 
 function skillPlaces(icon: ExtensionIcon): SkillPlace[] {
   return [
-    { id: "zcode", labelKey: "zcode.tab", icon, scope: "workspace", dir: ZCODE_SKILL_DIR, order: 20 },
-    { id: "zcode-global", labelKey: "zcode.tab", icon, scope: "global", dir: ZCODE_SKILL_DIR, order: 20 },
+    { id: "zcode", labelKey: "zcode.tab", icon, scope: "workspace", dir: ZCODE_SKILL_DIR },
+    { id: "zcode-global", labelKey: "zcode.tab", icon, scope: "global", dir: ZCODE_SKILL_DIR },
   ]
 }
 

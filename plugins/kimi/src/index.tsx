@@ -12,8 +12,8 @@ const KimiIcon: ExtensionIcon = ({ className, "aria-hidden": ariaHidden }) => (
 
 export function apply(ctx: KimiScope): void {
   ctx.skills.register({ id: KIMI_CODE_ID, places: [
-    { id: "kimi", labelKey: "kimi.tab", icon: KimiIcon, scope: "workspace", dir: KIMI_SKILL_DIR, order: 20 },
-    { id: "kimi-global", labelKey: "kimi.tab", icon: KimiIcon, scope: "global", dir: KIMI_SKILL_DIR, order: 20 },
+    { id: "kimi", labelKey: "kimi.tab", icon: KimiIcon, scope: "workspace", dir: KIMI_SKILL_DIR },
+    { id: "kimi-global", labelKey: "kimi.tab", icon: KimiIcon, scope: "global", dir: KIMI_SKILL_DIR },
   ] })
   ctx.mcp.register(createKimiMcp(ctx.mcp.tools))
   ctx.prompts.register(createKimiPrompts(KimiIcon, ctx.prompts.tools))

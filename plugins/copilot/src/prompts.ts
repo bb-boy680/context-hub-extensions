@@ -8,9 +8,9 @@ export function createCopilotPrompts(tools: PromptTools, icon: ExtensionIcon): P
     { id: "agent", labelKey: "prompts.menu.agent" },
   ]
   const places: PromptPlace[] = [
-    { id: "copilot-prompts", agent: COPILOT_ID, labelKey: "copilot.tab", icon, scope: "workspace", order: 20, where: ".github", forms },
-    { id: "copilot-prompts-global", agent: COPILOT_ID, labelKey: "copilot.tab", icon, scope: "global", order: 20, where: "~/.copilot", forms },
-    { id: "copilot-prompts-vscode", agent: COPILOT_ID, labelKey: "copilot.vscode", icon, scope: "workspace", order: 21, where: ".github/prompts", forms: [{ id: "commands", labelKey: "prompts.menu.commands" }] },
+    { id: "copilot-prompts", agent: COPILOT_ID, labelKey: "copilot.tab", icon, scope: "workspace", where: ".github", forms },
+    { id: "copilot-prompts-global", agent: COPILOT_ID, labelKey: "copilot.tab", icon, scope: "global", where: "~/.copilot", forms },
+    { id: "copilot-prompts-vscode", agent: COPILOT_ID, labelKey: "copilot.vscode", icon, scope: "workspace", where: ".github/prompts", forms: [{ id: "commands", labelKey: "prompts.menu.commands" }] },
   ]
   const placeOf = (id: string) => {
     const place = places.find((p) => p.id === id)

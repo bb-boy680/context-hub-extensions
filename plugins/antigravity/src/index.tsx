@@ -10,7 +10,7 @@ const icon: ExtensionIcon = ({ className, "aria-hidden": ariaHidden }) => (
 )
 
 export function apply(ctx: AntigravityScope): void {
-  ctx.skills.register({ id: ANTIGRAVITY_ID, places: [{ id: "antigravity-global", labelKey: "antigravity.tab", icon, scope: "global", dir: GLOBAL_SKILLS, order: 20 }] })
+  ctx.skills.register({ id: ANTIGRAVITY_ID, places: [{ id: "antigravity-global", labelKey: "antigravity.tab", icon, scope: "global", dir: GLOBAL_SKILLS }] })
   ctx.mcp.register(createAntigravityMcp(ctx.mcp.tools))
   ctx.prompts.register(createAntigravityPrompts(icon, ctx.prompts.tools))
   ctx.plugins.registerManifests([".antigravity-plugin/plugin.json"])

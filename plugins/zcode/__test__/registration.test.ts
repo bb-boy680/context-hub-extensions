@@ -25,9 +25,9 @@ describe("ZCode 注册", () => {
     const { skills, targets, locales } = registered()
     expect(skills).toHaveLength(1)
     expect(skills[0]!.id).toBe("hub.target.zcode")
-    expect(skills[0]!.places.map(({ id, scope, dir, order }) => ({ id, scope, dir, order }))).toEqual([
-      { id: "zcode", scope: "workspace", dir: ".zcode/skills", order: 20 },
-      { id: "zcode-global", scope: "global", dir: ".zcode/skills", order: 20 },
+    expect(skills[0]!.places.map(({ id, scope, dir }) => ({ id, scope, dir }))).toEqual([
+      { id: "zcode", scope: "workspace", dir: ".zcode/skills" },
+      { id: "zcode-global", scope: "global", dir: ".zcode/skills" },
     ])
     expect(targets).toHaveLength(1)
     expect(targets[0]!.id).toBe(skills[0]!.id)

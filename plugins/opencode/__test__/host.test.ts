@@ -487,7 +487,6 @@ describeHost("real host toolkits", () => {
             icon: () => null,
             scope: "workspace",
             dir: ".agents/skills",
-            order: 10,
           },
         ],
       }
@@ -500,7 +499,6 @@ describeHost("real host toolkits", () => {
             icon: () => null,
             scope: "workspace",
             dir: ".claude/skills",
-            order: 20,
           },
           {
             id: "claude-code-global",
@@ -508,7 +506,6 @@ describeHost("real host toolkits", () => {
             icon: () => null,
             scope: "global",
             dir: ".claude/skills",
-            order: 20,
           },
         ],
       }

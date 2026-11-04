@@ -72,7 +72,6 @@ function skillPlaces(icon: ExtensionIcon): SkillPlace[] {
       icon,
       scope: "workspace",
       dir: CODEX_SKILL_DIR,
-      order: 20,
     },
     {
       id: "codex-global",
@@ -80,7 +79,6 @@ function skillPlaces(icon: ExtensionIcon): SkillPlace[] {
       icon,
       scope: "global",
       dir: CODEX_SKILL_DIR,
-      order: 20,
     },
   ]
 }

@@ -231,6 +231,14 @@ async function pluginEntry(dir, defaults) {
   }
 }
 
+export async function collectEntries(entries, read) {
+  const plugins = []
+  for (const entry of entries) {
+    if (entry.isDirectory()) plugins.push(await read(entry.name))
+  }
+  return plugins
+}
+
 async function main() {
   const config = object(await yaml(CONFIG), "marketplace.yaml")
   const defaults = {
@@ -245,16 +253,7 @@ async function main() {
 
   const entries = await fs.readdir(PLUGINS, { withFileTypes: true }).catch(() => null)
   if (entries === null) fail("there is no plugins directory")
-  const dirs = entries
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort()
-
-  const plugins = []
-  for (const dir of dirs) {
-    plugins.push(await pluginEntry(dir, defaults))
-  }
-  plugins.sort((left, right) => left.id.localeCompare(right.id))
+  const plugins = await collectEntries(entries, (dir) => pluginEntry(dir, defaults))
 
   const index = {
     format: 1,
@@ -268,7 +267,9 @@ async function main() {
   )
 }
 
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : String(error))
-  process.exitCode = 1
-})
+if (process.argv[1] !== undefined && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((error) => {
+    console.error(error instanceof Error ? error.message : String(error))
+    process.exitCode = 1
+  })
+}

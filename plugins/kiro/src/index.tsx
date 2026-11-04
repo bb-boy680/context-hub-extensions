@@ -11,8 +11,8 @@ const KiroIcon: ExtensionIcon = ({ className, "aria-hidden": ariaHidden }) => (
 
 export function apply(ctx: KiroScope): void {
   const places: SkillPlace[] = [
-    { id: "kiro", labelKey: "kiro.tab", icon: KiroIcon, scope: "workspace", dir: SKILL_DIR, order: 20 },
-    { id: "kiro-global", labelKey: "kiro.tab", icon: KiroIcon, scope: "global", dir: SKILL_DIR, order: 20 },
+    { id: "kiro", labelKey: "kiro.tab", icon: KiroIcon, scope: "workspace", dir: SKILL_DIR },
+    { id: "kiro-global", labelKey: "kiro.tab", icon: KiroIcon, scope: "global", dir: SKILL_DIR },
   ]
   ctx.skills.register({ id: KIRO_ID, places })
   ctx.prompts.register(createKiroPrompts(ctx.prompts.tools, KiroIcon))
