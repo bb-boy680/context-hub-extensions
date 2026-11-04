@@ -39,7 +39,7 @@ list. Nobody pushes to main directly, administrators included.
 ## Write a plugin
 
 1. Copy `plugins/claude.code` for a plugin with a React surface, or
-   `plugins/skills.sh` for one that only registers a service. Change the
+   `plugins/deepseek-harness` for one that only registers services. Change the
    directory name, `package.json`'s `name` and `version`, `plugin.yaml`'s `id`
    and metadata, and the entry code. The directory name must equal the manifest
    id.
@@ -80,19 +80,19 @@ list. Nobody pushes to main directly, administrators included.
 ## `plugin.yaml`
 
 ```yaml
-id: skills.sh
+id: my.plugin
 name:
-  en: skills.sh
-  zh-cn: skills.sh
+  en: My Plugin
+  zh-cn: 我的插件
 engines:
-  contextHub: ">=0.0.1-beta.5 <0.7.0"
+  contextHub: ">=0.2.1 <0.7.0"
 description:
-  en: Search the public skills.sh catalog and install a result into this hub.
-  zh-cn: 搜索公开的 skills.sh 技能目录，并把结果安装到本 hub。
+  en: What this plugin adds to the hub.
+  zh-cn: 这个插件为 hub 增加什么。
 icon: assets/icon.svg
-category: source
-permissions: [network]
-inject: [skillRegistries]
+category: agent
+permissions: [assets.read, assets.write]
+inject: [skills, locales]
 ```
 
 - `name` and `description` are a string or a locale table with an `en` entry.
