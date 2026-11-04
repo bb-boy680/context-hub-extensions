@@ -53,7 +53,6 @@ function skillPlaces(icon: ExtensionIcon): SkillPlace[] {
       icon,
       scope: "workspace",
       dir: OPENCODE_SKILL_DIR,
-      order: 20,
     },
     {
       id: "opencode-global",
@@ -61,7 +60,6 @@ function skillPlaces(icon: ExtensionIcon): SkillPlace[] {
       icon,
       scope: "global",
       dir: OPENCODE_GLOBAL_SKILL_DIR,
-      order: 20,
     },
   ]
 }

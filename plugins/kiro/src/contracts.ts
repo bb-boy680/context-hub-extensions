@@ -1,6 +1,6 @@
 export type ExtensionIcon = (props: { className?: string; "aria-hidden"?: boolean }) => unknown
 export interface SkillPlace {
-  id: string; labelKey: string; icon: ExtensionIcon; scope: "workspace" | "global"; dir: string; order: number
+  id: string; labelKey: string; icon: ExtensionIcon; scope: "workspace" | "global"; dir: string
 }
 export type McpDeclaration =
   | { transport: "stdio"; command: string; args: string[]; env: Record<string, string> }
@@ -39,7 +39,7 @@ export interface PromptIo { files: PromptFiles; workspace(): Promise<string | nu
 export interface PromptFormOption { id: string; labelKey: string; removeLabelKey?: string }
 export interface PromptForm { id: string; labelKey: string; removeLabelKey?: string; options?: readonly PromptFormOption[] }
 export interface PromptPlace {
-  id: string; agent: string; labelKey: string; icon: ExtensionIcon; scope: PromptScope; order: number
+  id: string; agent: string; labelKey: string; icon: ExtensionIcon; scope: PromptScope
   where?: string; forms: readonly PromptForm[]
 }
 export interface PromptTools {

@@ -49,7 +49,6 @@ function skillPlaces(icon: ExtensionIcon): SkillPlace[] {
       icon,
       scope: "workspace",
       dir: CLAUDE_CODE_SKILL_DIR,
-      order: 20,
     },
     {
       id: "claude-code-global",
@@ -57,7 +56,6 @@ function skillPlaces(icon: ExtensionIcon): SkillPlace[] {
       icon,
       scope: "global",
       dir: CLAUDE_CODE_SKILL_DIR,
-      order: 20,
     },
   ]
 }

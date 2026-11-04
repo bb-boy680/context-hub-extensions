@@ -468,7 +468,6 @@ function createOpenCodePrompts(icon, tools) {
       labelKey: "opencode.tab",
       icon,
       scope: "global",
-      order: 20,
       where: "~/.config/opencode",
       forms: formsOf(true)
     },
@@ -478,7 +477,6 @@ function createOpenCodePrompts(icon, tools) {
       labelKey: "opencode.tab",
       icon,
       scope: "workspace",
-      order: 20,
       where: ".opencode",
       forms: formsOf(false)
     }
@@ -605,16 +603,14 @@ function skillPlaces(icon) {
       labelKey: "opencode.tab",
       icon,
       scope: "workspace",
-      dir: OPENCODE_SKILL_DIR,
-      order: 20
+      dir: OPENCODE_SKILL_DIR
     },
     {
       id: "opencode-global",
       labelKey: "opencode.tab",
       icon,
       scope: "global",
-      dir: OPENCODE_GLOBAL_SKILL_DIR,
-      order: 20
+      dir: OPENCODE_GLOBAL_SKILL_DIR
     }
   ];
 }

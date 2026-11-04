@@ -9,7 +9,6 @@ export interface SkillPlace {
   icon: ExtensionIcon
   scope: "workspace" | "global"
   dir: string
-  order: number
 }
 
 export interface SkillProvider { id: string; places: readonly SkillPlace[] }
@@ -76,7 +75,7 @@ export interface PromptTools {
 }
 export interface PromptPlace {
   id: string; agent: string; labelKey: string; icon: ExtensionIcon
-  scope: "workspace" | "global"; order: number; where: string
+  scope: "workspace" | "global"; where: string
   forms: readonly { id: string; labelKey: string; removeLabelKey: string }[]
 }
 export interface PromptProvider {

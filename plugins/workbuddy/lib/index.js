@@ -649,7 +649,6 @@ function createWorkBuddyPrompts(icon, tools) {
       labelKey: "workbuddy.coding",
       icon,
       scope: "global",
-      order: 20,
       where: "~/.codebuddy",
       forms: formsOf(true)
     },
@@ -659,7 +658,6 @@ function createWorkBuddyPrompts(icon, tools) {
       labelKey: "workbuddy.coding",
       icon,
       scope: "workspace",
-      order: 20,
       where: ".codebuddy",
       forms: formsOf(false)
     }
@@ -782,8 +780,8 @@ var WorkBuddyIcon = ({ className, "aria-hidden": ariaHidden }) => /* @__PURE__ *
 function apply(ctx) {
   ctx.plugins.registerManifests([".codebuddy-plugin/plugin.json"]);
   ctx.skills.register({ id: WORKBUDDY_ID, places: [
-    { id: "workbuddy", labelKey: "workbuddy.tab", icon: WorkBuddyIcon, scope: "workspace", dir: SKILL_DIR, order: 20 },
-    { id: "workbuddy-global", labelKey: "workbuddy.tab", icon: WorkBuddyIcon, scope: "global", dir: SKILL_DIR, order: 20 }
+    { id: "workbuddy", labelKey: "workbuddy.tab", icon: WorkBuddyIcon, scope: "workspace", dir: SKILL_DIR },
+    { id: "workbuddy-global", labelKey: "workbuddy.tab", icon: WorkBuddyIcon, scope: "global", dir: SKILL_DIR }
   ] });
   ctx.mcp.register(createWorkBuddyMcp(ctx.mcp.tools));
   ctx.prompts.register(createWorkBuddyPrompts(WorkBuddyIcon, ctx.prompts.tools));

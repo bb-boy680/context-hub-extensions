@@ -137,7 +137,7 @@ describeHost("host file ports and editors", () => {
     const providers: SkillProvider[] = []
     apply({ skills: { register: (provider) => providers.push(provider) }, mcp: { tools: host.mcp, register: () => undefined },
       prompts: { tools: host.prompts, register: () => undefined }, targets: { register: () => undefined }, locales: { register: () => undefined } })
-    const shared = { id: "shared", shared: true, places: [{ id: "shared", labelKey: "shared", icon: () => null, scope: "workspace" as const, dir: ".agents/skills", order: 10 }] }
+    const shared = { id: "shared", shared: true, places: [{ id: "shared", labelKey: "shared", icon: () => null, scope: "workspace" as const, dir: ".agents/skills" }] }
     const places = host.readablePlaces([shared, ...providers], ["hub.target.trae-ide", "hub.target.trae-cli"])
     expect(places.map((place) => place.dir)).toEqual([".agents/skills", ".trae/skills", ".trae-cn/skills"])
     const store = await host.skillStore({ home, folder, userHome })

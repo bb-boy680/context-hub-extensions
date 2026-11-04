@@ -14,8 +14,8 @@ export function createKimiPrompts(icon: ExtensionIcon, tools: PromptTools): Prom
     { id: "instructions", labelKey: "kimi.menu.instructions", removeLabelKey: "kimi.menu.instructions.remove" },
   ]
   const places: PromptPlace[] = [
-    { id: "kimi-global", agent: KIMI_CODE_ID, labelKey: "kimi.tab", icon, scope: "global", order: 20, where: "~/.kimi-code", forms },
-    { id: "kimi", agent: KIMI_CODE_ID, labelKey: "kimi.tab", icon, scope: "workspace", order: 20, where: ".kimi-code", forms },
+    { id: "kimi-global", agent: KIMI_CODE_ID, labelKey: "kimi.tab", icon, scope: "global", where: "~/.kimi-code", forms },
+    { id: "kimi", agent: KIMI_CODE_ID, labelKey: "kimi.tab", icon, scope: "workspace", where: ".kimi-code", forms },
   ]
   const target = (id: string, prompt: Prompt, form: string, option?: string) => {
     const place = places.find((item) => item.id === id)

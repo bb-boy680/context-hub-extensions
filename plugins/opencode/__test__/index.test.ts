@@ -76,7 +76,6 @@ describe("the skills places", () => {
         icon: expect.any(Function),
         scope: "workspace",
         dir: ".opencode/skills",
-        order: 20,
       },
       {
         id: "opencode-global",
@@ -84,7 +83,6 @@ describe("the skills places", () => {
         icon: expect.any(Function),
         scope: "global",
         dir: ".config/opencode/skills",
-        order: 20,
       },
     ])
   })

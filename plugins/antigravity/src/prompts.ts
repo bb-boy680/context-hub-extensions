@@ -11,8 +11,8 @@ const globalForms: PromptForm[] = [
 
 export function createAntigravityPrompts(icon: ExtensionIcon, tools: PromptTools): PromptProvider {
   const places: PromptPlace[] = [
-    { id: "antigravity-global", agent: ANTIGRAVITY_ID, labelKey: "antigravity.tab", icon, scope: "global", order: 20, where: "~/.gemini", forms: globalForms },
-    { id: "antigravity", agent: ANTIGRAVITY_ID, labelKey: "antigravity.tab", icon, scope: "workspace", order: 20, where: ".agents", forms: [rule] },
+    { id: "antigravity-global", agent: ANTIGRAVITY_ID, labelKey: "antigravity.tab", icon, scope: "global", where: "~/.gemini", forms: globalForms },
+    { id: "antigravity", agent: ANTIGRAVITY_ID, labelKey: "antigravity.tab", icon, scope: "workspace", where: ".agents", forms: [rule] },
   ]
   const placeOf = (id: string): PromptPlace => {
     const place = places.find((one) => one.id === id)

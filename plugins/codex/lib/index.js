@@ -344,7 +344,6 @@ function createCodexPrompts(promptTools, mcp, icon) {
       labelKey: "codex.tab",
       icon,
       scope: "global",
-      order: 20,
       where: "~/.codex",
       forms: formsOf(true)
     },
@@ -354,7 +353,6 @@ function createCodexPrompts(promptTools, mcp, icon) {
       labelKey: "codex.tab",
       icon,
       scope: "workspace",
-      order: 20,
       where: ".codex",
       forms: formsOf(false)
     }
@@ -523,16 +521,14 @@ function skillPlaces(icon) {
       labelKey: "codex.tab",
       icon,
       scope: "workspace",
-      dir: CODEX_SKILL_DIR,
-      order: 20
+      dir: CODEX_SKILL_DIR
     },
     {
       id: "codex-global",
       labelKey: "codex.tab",
       icon,
       scope: "global",
-      dir: CODEX_SKILL_DIR,
-      order: 20
+      dir: CODEX_SKILL_DIR
     }
   ];
 }

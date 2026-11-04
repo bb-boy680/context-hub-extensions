@@ -214,8 +214,8 @@ function createQoderPrompts(icon, tools) {
   const rule = { id: "rule", labelKey: "prompts.menu.rule", removeLabelKey: "prompts.menu.rule.remove" };
   const agent = { id: "agent", labelKey: "prompts.menu.agent", removeLabelKey: "prompts.menu.agent.remove" };
   const places = [
-    { id: "qoder-global", agent: QODER_ID, labelKey: "qoder.tab", icon, scope: "global", order: 20, where: "~/.qoder", forms: [commands, rule, agent, { id: "instructions", labelKey: "qoder.menu.instructions", removeLabelKey: "qoder.menu.instructions.remove" }] },
-    { id: "qoder", agent: QODER_ID, labelKey: "qoder.tab", icon, scope: "workspace", order: 20, where: ".qoder", forms: [commands, rule, agent] }
+    { id: "qoder-global", agent: QODER_ID, labelKey: "qoder.tab", icon, scope: "global", where: "~/.qoder", forms: [commands, rule, agent, { id: "instructions", labelKey: "qoder.menu.instructions", removeLabelKey: "qoder.menu.instructions.remove" }] },
+    { id: "qoder", agent: QODER_ID, labelKey: "qoder.tab", icon, scope: "workspace", where: ".qoder", forms: [commands, rule, agent] }
   ];
   const fail = (key, params, error) => new tools.PromptError(
     `qoder.error.${key}`,
@@ -880,8 +880,8 @@ import { jsx } from "react/jsx-runtime";
 var QoderIcon = ({ className, "aria-hidden": ariaHidden }) => /* @__PURE__ */ jsx("img", { src: icon_default, alt: ariaHidden ? "" : "Qoder CLI", className, "aria-hidden": ariaHidden });
 function skillPlaces(icon) {
   return [
-    { id: "qoder", labelKey: "qoder.tab", icon, scope: "workspace", dir: QODER_SKILL_DIR, order: 20 },
-    { id: "qoder-global", labelKey: "qoder.tab", icon, scope: "global", dir: QODER_SKILL_DIR, order: 20 }
+    { id: "qoder", labelKey: "qoder.tab", icon, scope: "workspace", dir: QODER_SKILL_DIR },
+    { id: "qoder-global", labelKey: "qoder.tab", icon, scope: "global", dir: QODER_SKILL_DIR }
   ];
 }
 function apply(ctx) {

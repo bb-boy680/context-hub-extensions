@@ -145,8 +145,8 @@ var globalForms = [
 ];
 function createAntigravityPrompts(icon2, tools) {
   const places = [
-    { id: "antigravity-global", agent: ANTIGRAVITY_ID, labelKey: "antigravity.tab", icon: icon2, scope: "global", order: 20, where: "~/.gemini", forms: globalForms },
-    { id: "antigravity", agent: ANTIGRAVITY_ID, labelKey: "antigravity.tab", icon: icon2, scope: "workspace", order: 20, where: ".agents", forms: [rule] }
+    { id: "antigravity-global", agent: ANTIGRAVITY_ID, labelKey: "antigravity.tab", icon: icon2, scope: "global", where: "~/.gemini", forms: globalForms },
+    { id: "antigravity", agent: ANTIGRAVITY_ID, labelKey: "antigravity.tab", icon: icon2, scope: "workspace", where: ".agents", forms: [rule] }
   ];
   const placeOf = (id) => {
     const place = places.find((one) => one.id === id);
@@ -438,7 +438,7 @@ function createAntigravityInstaller(json) {
 import { jsx } from "react/jsx-runtime";
 var icon = ({ className, "aria-hidden": ariaHidden }) => /* @__PURE__ */ jsx("img", { src: "/hub/extensions/antigravity/assets/icon.svg", className, "aria-hidden": ariaHidden, alt: "" });
 function apply(ctx) {
-  ctx.skills.register({ id: ANTIGRAVITY_ID, places: [{ id: "antigravity-global", labelKey: "antigravity.tab", icon, scope: "global", dir: GLOBAL_SKILLS, order: 20 }] });
+  ctx.skills.register({ id: ANTIGRAVITY_ID, places: [{ id: "antigravity-global", labelKey: "antigravity.tab", icon, scope: "global", dir: GLOBAL_SKILLS }] });
   ctx.mcp.register(createAntigravityMcp(ctx.mcp.tools));
   ctx.prompts.register(createAntigravityPrompts(icon, ctx.prompts.tools));
   ctx.plugins.registerManifests([".antigravity-plugin/plugin.json"]);

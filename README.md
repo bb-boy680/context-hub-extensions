@@ -126,7 +126,7 @@ each `plugins/*/{plugin.yaml,package.json}` and writes `marketplace.json`:
   `plugin.yaml.engines`.
 - `source` points at the repository's `plugins/<id>` directory.
 - the icon is inlined as a `data:image/...;base64,` URL.
-- plugins are sorted by id; no timestamps, so two builds are byte-identical.
+- plugins retain the directory discovery order; filesystem enumeration may differ across systems.
 
 Rules enforced by the generator:
 

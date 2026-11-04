@@ -206,8 +206,8 @@ function createZCodePrompts(icon, tools) {
   const commands = { id: "commands", labelKey: "prompts.menu.commands", removeLabelKey: "prompts.menu.commands.remove" };
   const agent = { id: "agent", labelKey: "prompts.menu.agent", removeLabelKey: "prompts.menu.agent.remove" };
   const places = [
-    { id: "zcode-global", agent: ZCODE_ID, labelKey: "zcode.tab", icon, scope: "global", order: 20, where: "~/.zcode", forms: [commands, agent, { id: "instructions", labelKey: "zcode.menu.instructions", removeLabelKey: "zcode.menu.instructions.remove" }] },
-    { id: "zcode", agent: ZCODE_ID, labelKey: "zcode.tab", icon, scope: "workspace", order: 20, where: ".zcode", forms: [commands, agent] }
+    { id: "zcode-global", agent: ZCODE_ID, labelKey: "zcode.tab", icon, scope: "global", where: "~/.zcode", forms: [commands, agent, { id: "instructions", labelKey: "zcode.menu.instructions", removeLabelKey: "zcode.menu.instructions.remove" }] },
+    { id: "zcode", agent: ZCODE_ID, labelKey: "zcode.tab", icon, scope: "workspace", where: ".zcode", forms: [commands, agent] }
   ];
   const fail = (key, params, failure) => new tools.PromptError(
     `zcode.error.${key}`,
@@ -659,8 +659,8 @@ var ZCodeIcon = ({ className, "aria-hidden": ariaHidden }) => /* @__PURE__ */ js
 ] });
 function skillPlaces(icon) {
   return [
-    { id: "zcode", labelKey: "zcode.tab", icon, scope: "workspace", dir: ZCODE_SKILL_DIR, order: 20 },
-    { id: "zcode-global", labelKey: "zcode.tab", icon, scope: "global", dir: ZCODE_SKILL_DIR, order: 20 }
+    { id: "zcode", labelKey: "zcode.tab", icon, scope: "workspace", dir: ZCODE_SKILL_DIR },
+    { id: "zcode-global", labelKey: "zcode.tab", icon, scope: "global", dir: ZCODE_SKILL_DIR }
   ];
 }
 function apply(ctx) {

@@ -157,7 +157,6 @@ ${body}`;
       labelKey: "trae.ide",
       icon,
       scope: "workspace",
-      order: 20,
       where: IDE_RULES,
       forms: [{ id: FORM, labelKey: "prompts.menu.rule", removeLabelKey: "prompts.menu.rule.remove" }]
     }],
@@ -319,8 +318,8 @@ import { jsx } from "react/jsx-runtime";
 var TraeIcon = ({ className, "aria-hidden": ariaHidden }) => /* @__PURE__ */ jsx("img", { src: "/hub/extensions/trae/assets/icon.png", className, "aria-hidden": ariaHidden, alt: "" });
 function apply(ctx) {
   ctx.skills.register({ id: IDE_ID, places: [
-    { id: "trae-ide-skills", labelKey: "trae.ide", icon: TraeIcon, scope: "workspace", dir: IDE_PROJECT_SKILLS, order: 20 },
-    { id: "trae-ide-skills-global", labelKey: "trae.ide", icon: TraeIcon, scope: "global", dir: IDE_GLOBAL_SKILLS, order: 20 }
+    { id: "trae-ide-skills", labelKey: "trae.ide", icon: TraeIcon, scope: "workspace", dir: IDE_PROJECT_SKILLS },
+    { id: "trae-ide-skills-global", labelKey: "trae.ide", icon: TraeIcon, scope: "global", dir: IDE_GLOBAL_SKILLS }
   ] });
   ctx.skills.register({ id: CLI_ID, places: [] });
   ctx.mcp.register(createTraeIdeMcp(ctx.mcp.tools));

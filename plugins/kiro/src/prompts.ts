@@ -7,8 +7,8 @@ const instructions: PromptForm = { id: "instructions", labelKey: "kiro.menu.inst
 
 export function createKiroPrompts(tools: PromptTools, icon: ExtensionIcon): PromptProvider {
   const places: PromptPlace[] = [
-    { id: "kiro", agent: KIRO_ID, labelKey: "kiro.tab", icon, scope: "workspace", order: 20, where: ".kiro", forms: [rule, agent] },
-    { id: "kiro-global", agent: KIRO_ID, labelKey: "kiro.tab", icon, scope: "global", order: 20, where: "~/.kiro", forms: [rule, agent, instructions] },
+    { id: "kiro", agent: KIRO_ID, labelKey: "kiro.tab", icon, scope: "workspace", where: ".kiro", forms: [rule, agent] },
+    { id: "kiro-global", agent: KIRO_ID, labelKey: "kiro.tab", icon, scope: "global", where: "~/.kiro", forms: [rule, agent, instructions] },
   ]
   const placeOf = (id: string): PromptPlace => {
     const place = places.find((item) => item.id === id)

@@ -10,8 +10,8 @@ const forms: PromptForm[] = [
 
 export function createQwenCodePrompts(icon: ExtensionIcon, tools: PromptTools): PromptProvider {
   const places: PromptPlace[] = [
-    { id: "qwen-code", agent: QWEN_ID, labelKey: "qwen-code.tab", icon, scope: "workspace", order: 20, where: ".qwen", forms },
-    { id: "qwen-code-global", agent: QWEN_ID, labelKey: "qwen-code.tab", icon, scope: "global", order: 20, where: "~/.qwen", forms },
+    { id: "qwen-code", agent: QWEN_ID, labelKey: "qwen-code.tab", icon, scope: "workspace", where: ".qwen", forms },
+    { id: "qwen-code-global", agent: QWEN_ID, labelKey: "qwen-code.tab", icon, scope: "global", where: "~/.qwen", forms },
   ]
   const placeOf = (id: string): PromptPlace => {
     const place = places.find(item => item.id === id)

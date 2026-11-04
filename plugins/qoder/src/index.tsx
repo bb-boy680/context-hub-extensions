@@ -12,8 +12,8 @@ const QoderIcon: ExtensionIcon = ({ className, "aria-hidden": ariaHidden }) => (
 
 function skillPlaces(icon: ExtensionIcon): SkillPlace[] {
   return [
-    { id: "qoder", labelKey: "qoder.tab", icon, scope: "workspace", dir: QODER_SKILL_DIR, order: 20 },
-    { id: "qoder-global", labelKey: "qoder.tab", icon, scope: "global", dir: QODER_SKILL_DIR, order: 20 },
+    { id: "qoder", labelKey: "qoder.tab", icon, scope: "workspace", dir: QODER_SKILL_DIR },
+    { id: "qoder-global", labelKey: "qoder.tab", icon, scope: "global", dir: QODER_SKILL_DIR },
   ]
 }
 

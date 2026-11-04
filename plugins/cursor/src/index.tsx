@@ -12,8 +12,8 @@ const CursorIcon: ExtensionIcon = ({ className, "aria-hidden": ariaHidden }) => 
 export function apply(ctx: CursorScope): void {
   if (typeof ctx.plugins.registerManifests !== "function") throw new Error("This Context Hub version lacks native plugin manifest registration")
   const places: SkillPlace[] = [
-    { id: "cursor", labelKey: "cursor.tab", icon: CursorIcon, scope: "workspace", dir: CURSOR_SKILL_DIR, order: 20 },
-    { id: "cursor-global", labelKey: "cursor.tab", icon: CursorIcon, scope: "global", dir: CURSOR_SKILL_DIR, order: 20 },
+    { id: "cursor", labelKey: "cursor.tab", icon: CursorIcon, scope: "workspace", dir: CURSOR_SKILL_DIR },
+    { id: "cursor-global", labelKey: "cursor.tab", icon: CursorIcon, scope: "global", dir: CURSOR_SKILL_DIR },
   ]
   ctx.skills.register({ id: CURSOR_ID, places })
   ctx.prompts.register(createCursorPrompts(ctx.prompts.tools, CursorIcon))

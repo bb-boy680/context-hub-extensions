@@ -11,8 +11,8 @@ const TraeIcon: ExtensionIcon = ({ className, "aria-hidden": ariaHidden }) => (
 
 export function apply(ctx: TraeScope): void {
   ctx.skills.register({ id: IDE_ID, places: [
-    { id: "trae-ide-skills", labelKey: "trae.ide", icon: TraeIcon, scope: "workspace", dir: IDE_PROJECT_SKILLS, order: 20 },
-    { id: "trae-ide-skills-global", labelKey: "trae.ide", icon: TraeIcon, scope: "global", dir: IDE_GLOBAL_SKILLS, order: 20 },
+    { id: "trae-ide-skills", labelKey: "trae.ide", icon: TraeIcon, scope: "workspace", dir: IDE_PROJECT_SKILLS },
+    { id: "trae-ide-skills-global", labelKey: "trae.ide", icon: TraeIcon, scope: "global", dir: IDE_GLOBAL_SKILLS },
   ] })
   ctx.skills.register({ id: CLI_ID, places: [] })
   ctx.mcp.register(createTraeIdeMcp(ctx.mcp.tools))

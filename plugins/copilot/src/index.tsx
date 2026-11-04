@@ -8,8 +8,8 @@ import { createCopilotPrompts } from "./prompts.ts"
 
 export function apply(ctx: CopilotScope): void {
   ctx.skills.register({ id: COPILOT_ID, places: [
-    { id: "copilot-skills", labelKey: "copilot.tab", icon: CopilotIcon, scope: "workspace", dir: ".github/skills", order: 20 },
-    { id: "copilot-skills-global", labelKey: "copilot.tab", icon: CopilotIcon, scope: "global", dir: ".copilot/skills", order: 20 },
+    { id: "copilot-skills", labelKey: "copilot.tab", icon: CopilotIcon, scope: "workspace", dir: ".github/skills" },
+    { id: "copilot-skills-global", labelKey: "copilot.tab", icon: CopilotIcon, scope: "global", dir: ".copilot/skills" },
   ] })
   ctx.mcp.register(createCopilotMcp(ctx.mcp.tools))
   ctx.prompts.register(createCopilotPrompts(ctx.prompts.tools, CopilotIcon))

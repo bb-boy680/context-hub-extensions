@@ -365,9 +365,9 @@ function createCopilotPrompts(tools, icon) {
     { id: "agent", labelKey: "prompts.menu.agent" }
   ];
   const places2 = [
-    { id: "copilot-prompts", agent: COPILOT_ID, labelKey: "copilot.tab", icon, scope: "workspace", order: 20, where: ".github", forms },
-    { id: "copilot-prompts-global", agent: COPILOT_ID, labelKey: "copilot.tab", icon, scope: "global", order: 20, where: "~/.copilot", forms },
-    { id: "copilot-prompts-vscode", agent: COPILOT_ID, labelKey: "copilot.vscode", icon, scope: "workspace", order: 21, where: ".github/prompts", forms: [{ id: "commands", labelKey: "prompts.menu.commands" }] }
+    { id: "copilot-prompts", agent: COPILOT_ID, labelKey: "copilot.tab", icon, scope: "workspace", where: ".github", forms },
+    { id: "copilot-prompts-global", agent: COPILOT_ID, labelKey: "copilot.tab", icon, scope: "global", where: "~/.copilot", forms },
+    { id: "copilot-prompts-vscode", agent: COPILOT_ID, labelKey: "copilot.vscode", icon, scope: "workspace", where: ".github/prompts", forms: [{ id: "commands", labelKey: "prompts.menu.commands" }] }
   ];
   const placeOf = (id) => {
     const place = places2.find((p) => p.id === id);
@@ -441,8 +441,8 @@ ${body}
 // src/index.tsx
 function apply(ctx) {
   ctx.skills.register({ id: COPILOT_ID, places: [
-    { id: "copilot-skills", labelKey: "copilot.tab", icon: CopilotIcon, scope: "workspace", dir: ".github/skills", order: 20 },
-    { id: "copilot-skills-global", labelKey: "copilot.tab", icon: CopilotIcon, scope: "global", dir: ".copilot/skills", order: 20 }
+    { id: "copilot-skills", labelKey: "copilot.tab", icon: CopilotIcon, scope: "workspace", dir: ".github/skills" },
+    { id: "copilot-skills-global", labelKey: "copilot.tab", icon: CopilotIcon, scope: "global", dir: ".copilot/skills" }
   ] });
   ctx.mcp.register(createCopilotMcp(ctx.mcp.tools));
   ctx.prompts.register(createCopilotPrompts(ctx.prompts.tools, CopilotIcon));

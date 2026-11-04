@@ -11,8 +11,8 @@ const QwenIcon: ExtensionIcon = ({ className, "aria-hidden": ariaHidden }) => (
 
 export function apply(ctx: QwenScope): void {
   ctx.skills.register({ id: QWEN_ID, places: [
-    { id: "qwen-code", labelKey: "qwen-code.tab", icon: QwenIcon, scope: "workspace", dir: QWEN_SKILL_DIR, order: 20 },
-    { id: "qwen-code-global", labelKey: "qwen-code.tab", icon: QwenIcon, scope: "global", dir: QWEN_SKILL_DIR, order: 20 },
+    { id: "qwen-code", labelKey: "qwen-code.tab", icon: QwenIcon, scope: "workspace", dir: QWEN_SKILL_DIR },
+    { id: "qwen-code-global", labelKey: "qwen-code.tab", icon: QwenIcon, scope: "global", dir: QWEN_SKILL_DIR },
   ] })
   ctx.mcp.register(createQwenCodeMcp(ctx.mcp.tools))
   ctx.prompts.register(createQwenCodePrompts(QwenIcon, ctx.prompts.tools))

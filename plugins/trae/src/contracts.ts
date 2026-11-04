@@ -9,7 +9,6 @@ export interface SkillPlace {
   icon: ExtensionIcon
   scope: "workspace" | "global"
   dir: string
-  order: number
 }
 
 export interface SkillProvider {
@@ -56,7 +55,7 @@ export interface PromptIo {
 }
 export interface PromptProvider {
   id: string
-  places: readonly { id: string; agent: string; labelKey: string; icon: ExtensionIcon; scope: "workspace" | "global"; order: number; where?: string; forms: readonly { id: string; labelKey: string; removeLabelKey?: string }[] }[]
+  places: readonly { id: string; agent: string; labelKey: string; icon: ExtensionIcon; scope: "workspace" | "global"; where?: string; forms: readonly { id: string; labelKey: string; removeLabelKey?: string }[] }[]
   held(io: PromptIo, place: string, prompt: Prompt): Promise<Readonly<Record<string, boolean>>>
   install(io: PromptIo, place: string, prompt: Prompt, form: string, option?: string): Promise<void>
   remove(io: PromptIo, place: string, prompt: Prompt, form: string, option?: string): Promise<boolean>

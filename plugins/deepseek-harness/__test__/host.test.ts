@@ -64,7 +64,7 @@ describeHost("real host skills port", () => {
     } as DeepSeekHarnessScope)
     const shared: SkillProvider = {
       id: "hub.skill.catalog", shared: true,
-      places: [{ id: "workspace", labelKey: "skills.tab.workspace", icon: () => null, scope: "workspace", dir: ".agents/skills", order: 10 }],
+      places: [{ id: "workspace", labelKey: "skills.tab.workspace", icon: () => null, scope: "workspace", dir: ".agents/skills" }],
     }
     expect(readablePlaces([shared, ...providers], []).map((p) => p.dir)).toEqual([".agents/skills"])
     const places = readablePlaces([shared, ...providers], ["hub.target.deepseek-harness"])

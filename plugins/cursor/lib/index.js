@@ -123,12 +123,12 @@ function createCursorMcp(tools) {
 function createCursorPrompts(tools, icon) {
   const agent = { id: "agent", labelKey: "prompts.menu.agent", removeLabelKey: "prompts.menu.agent.remove" };
   const places = [
-    { id: "cursor", agent: CURSOR_ID, labelKey: "cursor.tab", icon, scope: "workspace", order: 20, where: ".cursor", forms: [
+    { id: "cursor", agent: CURSOR_ID, labelKey: "cursor.tab", icon, scope: "workspace", where: ".cursor", forms: [
       { id: "commands", labelKey: "prompts.menu.commands", removeLabelKey: "prompts.menu.commands.remove" },
       { id: "rule", labelKey: "cursor.menu.rule", removeLabelKey: "cursor.menu.rule.remove" },
       agent
     ] },
-    { id: "cursor-global", agent: CURSOR_ID, labelKey: "cursor.tab", icon, scope: "global", order: 20, where: "~/.cursor", forms: [agent] }
+    { id: "cursor-global", agent: CURSOR_ID, labelKey: "cursor.tab", icon, scope: "global", where: "~/.cursor", forms: [agent] }
   ];
   const placeOf = (id) => {
     const place = places.find((item) => item.id === id);
@@ -409,8 +409,8 @@ var CursorIcon = ({ className, "aria-hidden": ariaHidden }) => /* @__PURE__ */ j
 function apply(ctx) {
   if (typeof ctx.plugins.registerManifests !== "function") throw new Error("This Context Hub version lacks native plugin manifest registration");
   const places = [
-    { id: "cursor", labelKey: "cursor.tab", icon: CursorIcon, scope: "workspace", dir: CURSOR_SKILL_DIR, order: 20 },
-    { id: "cursor-global", labelKey: "cursor.tab", icon: CursorIcon, scope: "global", dir: CURSOR_SKILL_DIR, order: 20 }
+    { id: "cursor", labelKey: "cursor.tab", icon: CursorIcon, scope: "workspace", dir: CURSOR_SKILL_DIR },
+    { id: "cursor-global", labelKey: "cursor.tab", icon: CursorIcon, scope: "global", dir: CURSOR_SKILL_DIR }
   ];
   ctx.skills.register({ id: CURSOR_ID, places });
   ctx.prompts.register(createCursorPrompts(ctx.prompts.tools, CursorIcon));

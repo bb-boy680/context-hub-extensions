@@ -35,8 +35,8 @@ describe("DeepSeek Harness registration", () => {
     expect(skills[0]?.id).toBe(targets[0]?.id)
     expect(skills[0]?.shared).toBeUndefined()
     expect(skills[0]?.places).toEqual([
-      { id: "deepseek-harness", labelKey: "deepseekHarness.tab", icon: expect.any(Function), scope: "workspace", dir: ".dsh/skills", order: 20 },
-      { id: "deepseek-harness-global", labelKey: "deepseekHarness.tab", icon: expect.any(Function), scope: "global", dir: ".dsh/skills", order: 20 },
+      { id: "deepseek-harness", labelKey: "deepseekHarness.tab", icon: expect.any(Function), scope: "workspace", dir: ".dsh/skills" },
+      { id: "deepseek-harness-global", labelKey: "deepseekHarness.tab", icon: expect.any(Function), scope: "global", dir: ".dsh/skills" },
     ])
     const icon = targets[0]?.icon({ className: "icon", "aria-hidden": true }) as { props: Record<string, unknown> }
     expect(icon.props).toMatchObject({ src: "/hub/extensions/deepseek-harness/assets/icon.svg", className: "icon", "aria-hidden": true, alt: "" })

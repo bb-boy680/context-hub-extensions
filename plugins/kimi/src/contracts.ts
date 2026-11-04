@@ -18,7 +18,6 @@ export interface SkillPlace {
   icon: ExtensionIcon
   scope: "global" | "workspace"
   dir: string
-  order: number
 }
 
 export interface SkillProvider {
@@ -170,7 +169,6 @@ export interface PromptPlace {
   labelKey: string
   icon: ExtensionIcon
   scope: PromptScope
-  order: number
   generatedOnly?: boolean
   where?: string
   forms: readonly PromptForm[]
