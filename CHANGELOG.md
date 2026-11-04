@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.3.0 (2026-11-04)
+
+### Features
+
+- **plugins:** add DeepSeek Harness, Trae, Qoder, Kiro, Qwen Code and Kimi ([dfbfe60](https://github.com/bb-boy680/context-hub-extensions/commit/dfbfe60ed2e9582e53e4affc98301606a4dae7d8))
+- **opencode:** use one MCP install target per scope ([cae0190](https://github.com/bb-boy680/context-hub-extensions/commit/cae019060434d6fd0ee168b8b4f4a28188332e66))
+- add six agent extensions ([5036f32](https://github.com/bb-boy680/context-hub-extensions/commit/5036f32c986aaea194487a316e010bad7f5d5893))
+- **codex:** install plugins through the host file channel ([25fea87](https://github.com/bb-boy680/context-hub-extensions/commit/25fea8770498e3e147c784f89b06c5aa0fe151f8))
+- **claude.code:** adopt the generic plugin file scope ([9b0db4d](https://github.com/bb-boy680/context-hub-extensions/commit/9b0db4d749bbe2de31cc425dea4b26ab4c31cddb))
+- **claude.code:** install plugins through the host file channel ([964dfd7](https://github.com/bb-boy680/context-hub-extensions/commit/964dfd7f226746b38312b190b407913fdf48dd52))
+
+### Bug Fixes
+
+- **qoder:** report a scope change instead of a missing plugin ([17c4a3e](https://github.com/bb-boy680/context-hub-extensions/commit/17c4a3e44bd7c49505228337300d30e34e05af38))
+
+### Chores
+
+- **plugins:** remove skills.sh from the market ([e5541ae](https://github.com/bb-boy680/context-hub-extensions/commit/e5541aec24b7544a0d1ba4317a72307d40fc177d))
+
+**Full Changelog**: https://github.com/bb-boy680/context-hub-extensions/compare/v0.2.0...v0.3.0
+
 ## v0.2.0 (2026-10-20)
 
 ### Features
