@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.3.1 (2026-11-04)
+
+### Refactoring
+
+- **plugins:** drop place order and keep discovery order ([9909a24](https://github.com/bb-boy680/context-hub-extensions/commit/9909a24c45dd2908576121fb1bc2b993461a82a6))
+
+**Full Changelog**: https://github.com/bb-boy680/context-hub-extensions/compare/v0.3.0...v0.3.1
+
 ## v0.3.0 (2026-11-04)
 
 ### Features
