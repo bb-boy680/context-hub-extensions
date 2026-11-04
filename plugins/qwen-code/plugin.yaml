@@ -1,0 +1,13 @@
+id: qwen-code
+name:
+  en: Qwen Code
+  zh-cn: Qwen Code
+engines:
+  contextHub: ">=0.2.0 <0.7.0"
+description:
+  en: Integrate Qwen Code with Context Hub.
+  zh-cn: 将 Qwen Code 接入 Context Hub。
+icon: assets/icon.png
+category: agent
+permissions: [assets.read, assets.write, filesystem]
+inject: [skills, prompts, mcp, plugins, targets, locales]

@@ -1,0 +1,26 @@
+export const qwenMessages = {
+  "qwen-code.tab": "Qwen Code",
+  "qwen-code.menu.skill": "Skill",
+  "qwen-code.menu.skill.remove": "Remove skill",
+  "qwen-code.menu.instructions": "Instructions",
+  "qwen-code.menu.instructions.remove": "Remove instructions",
+  "qwen-code.error.unknownForm": "Unknown Qwen Code form: {form}",
+  "qwen-code.error.invalidName": "The generated filename is invalid.",
+  "qwen-code.error.conflict": "Cannot safely change {file}.",
+  "qwen-code.error.unknownPlace": "Unknown Qwen Code place: {place}",
+  "qwen-code.error.invalidMcp": "Invalid Qwen Code MCP configuration.",
+  "qwen-code.error.mcpConflict": "This MCP entry cannot be safely changed.",
+}
+export const qwenZhMessages = {
+  "qwen-code.tab": "Qwen Code",
+  "qwen-code.menu.skill": "技能",
+  "qwen-code.menu.skill.remove": "移除技能",
+  "qwen-code.menu.instructions": "指令",
+  "qwen-code.menu.instructions.remove": "移除指令",
+  "qwen-code.error.unknownForm": "未知的 Qwen Code 形式：{form}",
+  "qwen-code.error.invalidName": "生成的文件名无效。",
+  "qwen-code.error.conflict": "无法安全修改 {file}。",
+  "qwen-code.error.unknownPlace": "未知的 Qwen Code 位置：{place}",
+  "qwen-code.error.invalidMcp": "Qwen Code MCP 配置无效。",
+  "qwen-code.error.mcpConflict": "无法安全修改此 MCP 条目。",
+}

@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "plugins": {
+    "sample@local": [
+      {
+        "scope": "user",
+        "installPath": "/fixture/plugins/cache/local/sample/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-11-03T00:00:00.000Z"
+      },
+      {
+        "scope": "project",
+        "projectPath": "/fixture/projects/one",
+        "installPath": "/fixture/plugins/cache/local/sample/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-11-03T00:00:00.000Z"
+      },
+      {
+        "scope": "local",
+        "projectPath": "/fixture/projects/two",
+        "installPath": "/fixture/plugins/cache/local/sample/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-11-03T00:00:00.000Z"
+      }
+    ]
+  }
+}

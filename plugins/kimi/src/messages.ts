@@ -1,0 +1,31 @@
+export const kimiMessages = {
+  "kimi.tab": "Kimi Code",
+  "kimi.menu.instructions": "Add to instructions",
+  "kimi.menu.instructions.remove": "Remove from instructions",
+  "kimi.error.unknownPlace": "Unknown Kimi location: {place}",
+  "kimi.error.unknownForm": "Unknown Kimi delivery form: {form}",
+  "kimi.error.parse": "Cannot read Kimi configuration: {file}",
+  "kimi.error.invalidEntry": "Invalid Kimi MCP server: {name}",
+  "kimi.error.missingEntry": "Kimi MCP server not found: {name}",
+  "kimi.error.scope": "Invalid scope for Kimi location: {place}",
+  "kimi.error.transport": "Cannot change transport while {name} has additional settings",
+  "kimi.error.sectionBroken": "Incomplete or repeated instruction markers in {file}",
+  "kimi.error.handwritten": "The existing file is not managed by Context Hub: {file}",
+  "kimi.error.agentName": "Kimi agent names must use lowercase ASCII letters, digits and hyphens: {name}",
+}
+
+export const kimiZhMessages = {
+  "kimi.tab": "Kimi Code",
+  "kimi.menu.instructions": "添加到指令",
+  "kimi.menu.instructions.remove": "从指令中移除",
+  "kimi.error.unknownPlace": "未知的 Kimi 位置：{place}",
+  "kimi.error.unknownForm": "未知的 Kimi 交付形式：{form}",
+  "kimi.error.parse": "无法读取 Kimi 配置：{file}",
+  "kimi.error.invalidEntry": "无效的 Kimi MCP 服务器：{name}",
+  "kimi.error.missingEntry": "找不到 Kimi MCP 服务器：{name}",
+  "kimi.error.scope": "Kimi 位置的作用域无效：{place}",
+  "kimi.error.transport": "{name} 包含额外配置，无法更换传输方式",
+  "kimi.error.sectionBroken": "指令文件中的标记不完整或重复：{file}",
+  "kimi.error.handwritten": "现有文件不由 Context Hub 管理：{file}",
+  "kimi.error.agentName": "Kimi Agent 名称只能包含小写英文字母、数字和连字符：{name}",
+}

@@ -1,0 +1,14 @@
+id: deepseek-harness
+name:
+  en: DeepSeek Harness
+  zh-cn: DeepSeek Harness
+engines:
+  contextHub: ">=0.2.0 <0.7.0"
+description:
+  en: Integrate DeepSeek Harness assets with Context Hub.
+  zh-cn: 将 DeepSeek Harness 资产接入 Context Hub。
+icon: assets/icon.svg
+category: agent
+permissions: [assets.read, assets.write, filesystem]
+inject: [skills, prompts, mcp, plugins, targets, locales]
+author: Context Hub
