@@ -130,8 +130,8 @@ var agent = { id: "agent", labelKey: "prompts.menu.agent", removeLabelKey: "prom
 var instructions = { id: "instructions", labelKey: "kiro.menu.instructions", options: [{ id: "agents", labelKey: "kiro.menu.instructions", removeLabelKey: "kiro.menu.instructions.remove" }] };
 function createKiroPrompts(tools, icon) {
   const places = [
-    { id: "kiro", agent: KIRO_ID, labelKey: "kiro.tab", icon, scope: "workspace", order: 20, where: ".kiro", forms: [rule, agent] },
-    { id: "kiro-global", agent: KIRO_ID, labelKey: "kiro.tab", icon, scope: "global", order: 20, where: "~/.kiro", forms: [rule, agent, instructions] }
+    { id: "kiro", agent: KIRO_ID, labelKey: "kiro.tab", icon, scope: "workspace", where: ".kiro", forms: [rule, agent] },
+    { id: "kiro-global", agent: KIRO_ID, labelKey: "kiro.tab", icon, scope: "global", where: "~/.kiro", forms: [rule, agent, instructions] }
   ];
   const placeOf = (id) => {
     const place = places.find((item) => item.id === id);
@@ -392,8 +392,8 @@ import { jsx } from "react/jsx-runtime";
 var KiroIcon = ({ className, "aria-hidden": ariaHidden }) => /* @__PURE__ */ jsx("img", { src: "/hub/extensions/kiro/assets/icon.svg", alt: "", className, "aria-hidden": ariaHidden });
 function apply(ctx) {
   const places = [
-    { id: "kiro", labelKey: "kiro.tab", icon: KiroIcon, scope: "workspace", dir: SKILL_DIR, order: 20 },
-    { id: "kiro-global", labelKey: "kiro.tab", icon: KiroIcon, scope: "global", dir: SKILL_DIR, order: 20 }
+    { id: "kiro", labelKey: "kiro.tab", icon: KiroIcon, scope: "workspace", dir: SKILL_DIR },
+    { id: "kiro-global", labelKey: "kiro.tab", icon: KiroIcon, scope: "global", dir: SKILL_DIR }
   ];
   ctx.skills.register({ id: KIRO_ID, places });
   ctx.prompts.register(createKiroPrompts(ctx.prompts.tools, KiroIcon));

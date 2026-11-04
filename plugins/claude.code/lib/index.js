@@ -739,7 +739,6 @@ function createClaudeCodePrompts(icon, tools) {
       labelKey: "claudeCode.tab",
       icon,
       scope: "workspace",
-      order: 20,
       where: ".claude",
       forms: formsOf(false)
     },
@@ -749,7 +748,6 @@ function createClaudeCodePrompts(icon, tools) {
       labelKey: "claudeCode.tab",
       icon,
       scope: "global",
-      order: 20,
       where: "~/.claude",
       forms: formsOf(true)
     }
@@ -863,16 +861,14 @@ function skillPlaces(icon) {
       labelKey: "claudeCode.tab",
       icon,
       scope: "workspace",
-      dir: CLAUDE_CODE_SKILL_DIR,
-      order: 20
+      dir: CLAUDE_CODE_SKILL_DIR
     },
     {
       id: "claude-code-global",
       labelKey: "claudeCode.tab",
       icon,
       scope: "global",
-      dir: CLAUDE_CODE_SKILL_DIR,
-      order: 20
+      dir: CLAUDE_CODE_SKILL_DIR
     }
   ];
 }

@@ -141,8 +141,8 @@ function createKimiPrompts(icon, tools) {
     { id: "instructions", labelKey: "kimi.menu.instructions", removeLabelKey: "kimi.menu.instructions.remove" }
   ];
   const places2 = [
-    { id: "kimi-global", agent: KIMI_CODE_ID, labelKey: "kimi.tab", icon, scope: "global", order: 20, where: "~/.kimi-code", forms },
-    { id: "kimi", agent: KIMI_CODE_ID, labelKey: "kimi.tab", icon, scope: "workspace", order: 20, where: ".kimi-code", forms }
+    { id: "kimi-global", agent: KIMI_CODE_ID, labelKey: "kimi.tab", icon, scope: "global", where: "~/.kimi-code", forms },
+    { id: "kimi", agent: KIMI_CODE_ID, labelKey: "kimi.tab", icon, scope: "workspace", where: ".kimi-code", forms }
   ];
   const target = (id, prompt, form, option) => {
     const place = places2.find((item) => item.id === id);
@@ -397,8 +397,8 @@ var KimiIcon = ({ className, "aria-hidden": ariaHidden }) => /* @__PURE__ */ jsx
 );
 function apply(ctx) {
   ctx.skills.register({ id: KIMI_CODE_ID, places: [
-    { id: "kimi", labelKey: "kimi.tab", icon: KimiIcon, scope: "workspace", dir: KIMI_SKILL_DIR, order: 20 },
-    { id: "kimi-global", labelKey: "kimi.tab", icon: KimiIcon, scope: "global", dir: KIMI_SKILL_DIR, order: 20 }
+    { id: "kimi", labelKey: "kimi.tab", icon: KimiIcon, scope: "workspace", dir: KIMI_SKILL_DIR },
+    { id: "kimi-global", labelKey: "kimi.tab", icon: KimiIcon, scope: "global", dir: KIMI_SKILL_DIR }
   ] });
   ctx.mcp.register(createKimiMcp(ctx.mcp.tools));
   ctx.prompts.register(createKimiPrompts(KimiIcon, ctx.prompts.tools));
